@@ -50,9 +50,6 @@ SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".tsv"}
 IS_CLOUD = os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes") \
     or os.environ.get("STREAMLIT_SHARING_MODE") is not None
 
-# Password to access "Manage Sources" and "Automation" pages.
-# Set via the ADMIN_PASSWORD environment variable, or change the default here.
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "snowcalendar2026")
 
 # ---------------------------------------------------------------------------
 # Config helpers
@@ -1456,41 +1453,16 @@ def main():
     )
 
     # Navigation
-    # Admin unlock via password
-    if "admin_unlocked" not in st.session_state:
-        st.session_state["admin_unlocked"] = False
-
     if IS_CLOUD:
-        all_nav = ["Calendar", "Manage Sources"]
+        nav_options = ["Calendar", "Manage Sources"]
     else:
-        all_nav = ["Calendar", "Manage Sources", "Automation"]
-
-    if st.session_state["admin_unlocked"]:
-        nav_options = all_nav
-    else:
-        nav_options = ["Calendar"]
+        nav_options = ["Calendar", "Manage Sources", "Automation"]
 
     page = st.sidebar.radio(
         "Navigation",
         options=nav_options,
         index=0,
     )
-
-    # Admin login / logout in sidebar
-    st.sidebar.divider()
-    if st.session_state["admin_unlocked"]:
-        if st.sidebar.button("Lock admin", key="admin_lock"):
-            st.session_state["admin_unlocked"] = False
-            st.rerun()
-    else:
-        with st.sidebar.expander("Admin login"):
-            pwd = st.text_input("Password", type="password", key="admin_pwd_input")
-            if st.button("Unlock", key="admin_unlock_btn"):
-                if pwd == ADMIN_PASSWORD:
-                    st.session_state["admin_unlocked"] = True
-                    st.rerun()
-                else:
-                    st.error("Incorrect password.")
 
     st.sidebar.divider()
 
