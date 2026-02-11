@@ -50,6 +50,25 @@ SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".tsv"}
 IS_CLOUD = os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes") \
     or os.environ.get("STREAMLIT_SHARING_MODE") is not None
 
+# Admin email(s) — only these users can see "Manage Sources" and "Automation".
+# Everyone else sees only the Calendar. Add more emails separated by commas.
+ADMIN_EMAILS = {
+    e.strip().lower()
+    for e in os.environ.get("ADMIN_EMAILS", "kevin.nguyen@snowflake.com").split(",")
+    if e.strip()
+}
+
+
+def is_admin() -> bool:
+    """Return True if the current viewer is an admin (or running locally)."""
+    if not IS_CLOUD:
+        return True  # local dev — always admin
+    try:
+        email = st.experimental_user.email or ""
+    except AttributeError:
+        return True  # fallback if API unavailable
+    return email.strip().lower() in ADMIN_EMAILS
+
 # ---------------------------------------------------------------------------
 # Config helpers
 # ---------------------------------------------------------------------------
@@ -1452,10 +1471,14 @@ def main():
     )
 
     # Navigation
-    if IS_CLOUD:
-        nav_options = ["Calendar", "Manage Sources"]
+    admin = is_admin()
+    if admin:
+        if IS_CLOUD:
+            nav_options = ["Calendar", "Manage Sources"]
+        else:
+            nav_options = ["Calendar", "Manage Sources", "Automation"]
     else:
-        nav_options = ["Calendar", "Manage Sources", "Automation"]
+        nav_options = ["Calendar"]
 
     page = st.sidebar.radio(
         "Navigation",
