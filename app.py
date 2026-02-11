@@ -50,24 +50,9 @@ SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".tsv"}
 IS_CLOUD = os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes") \
     or os.environ.get("STREAMLIT_SHARING_MODE") is not None
 
-# Admin email(s) — only these users can see "Manage Sources" and "Automation".
-# Everyone else sees only the Calendar. Add more emails separated by commas.
-ADMIN_EMAILS = {
-    e.strip().lower()
-    for e in os.environ.get("ADMIN_EMAILS", "kevin.nguyen@snowflake.com").split(",")
-    if e.strip()
-}
-
-
-def is_admin() -> bool:
-    """Return True if the current viewer is an admin (or running locally)."""
-    try:
-        email = (st.experimental_user.email or "").strip().lower()
-    except AttributeError:
-        return True  # local dev or old Streamlit — always admin
-    if not email:
-        return True  # no email available (local dev) — always admin
-    return email in ADMIN_EMAILS
+# Password to access "Manage Sources" and "Automation" pages.
+# Set via the ADMIN_PASSWORD environment variable, or change the default here.
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "snowcalendar2026")
 
 # ---------------------------------------------------------------------------
 # Config helpers
@@ -1471,12 +1456,17 @@ def main():
     )
 
     # Navigation
-    admin = is_admin()
-    if admin:
-        if IS_CLOUD:
-            nav_options = ["Calendar", "Manage Sources"]
-        else:
-            nav_options = ["Calendar", "Manage Sources", "Automation"]
+    # Admin unlock via password
+    if "admin_unlocked" not in st.session_state:
+        st.session_state["admin_unlocked"] = False
+
+    if IS_CLOUD:
+        all_nav = ["Calendar", "Manage Sources"]
+    else:
+        all_nav = ["Calendar", "Manage Sources", "Automation"]
+
+    if st.session_state["admin_unlocked"]:
+        nav_options = all_nav
     else:
         nav_options = ["Calendar"]
 
@@ -1485,6 +1475,22 @@ def main():
         options=nav_options,
         index=0,
     )
+
+    # Admin login / logout in sidebar
+    st.sidebar.divider()
+    if st.session_state["admin_unlocked"]:
+        if st.sidebar.button("Lock admin", key="admin_lock"):
+            st.session_state["admin_unlocked"] = False
+            st.rerun()
+    else:
+        with st.sidebar.expander("Admin login"):
+            pwd = st.text_input("Password", type="password", key="admin_pwd_input")
+            if st.button("Unlock", key="admin_unlock_btn"):
+                if pwd == ADMIN_PASSWORD:
+                    st.session_state["admin_unlocked"] = True
+                    st.rerun()
+                else:
+                    st.error("Incorrect password.")
 
     st.sidebar.divider()
 
