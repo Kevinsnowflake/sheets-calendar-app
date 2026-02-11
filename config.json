@@ -1,0 +1,88 @@
+{
+  "sheets": [
+    {
+      "name": "Medium (Kevin)",
+      "file_path": "data/Snowflake Medium Calendar - Stories in queue_review.csv",
+      "default_color": "#3788d8",
+      "source_type": "upload",
+      "mapping": {
+        "title": "Title",
+        "start": "Date",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "column": "WG"
+          }
+        ]
+      },
+      "source_url": "https://docs.google.com/spreadsheets/d/1Ibhyx15DKrbaVFiLWyjm8_F2mvMgOeScywgluS28xIc/edit?gid=907472790#gid=907472790&range=A1"
+    },
+    {
+      "name": "Conferences/Events (Aba)",
+      "file_path": "data/FY27 Devrel Developer Conferences & Events  - Confirmed Conference List.csv",
+      "default_color": "#e5383b",
+      "source_type": "upload",
+      "mapping": {
+        "title": "Activity\nFY27 Developer & Community Events",
+        "start": "Date",
+        "location": "Location",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "column": "Product Category"
+          }
+        ]
+      },
+      "source_url": "https://docs.google.com/spreadsheets/d/1ubAmYhZaACbn_mMzpGcVnRUFCZOKtgFzY-jYfN4K0dk/edit?gid=2004912422#gid=2004912422"
+    },
+    {
+      "name": "SVAI Events (Chad)",
+      "file_path": "data/SVAI Hub Event Schedule - Event Calendar.csv",
+      "default_color": "#2d6a4f",
+      "source_type": "upload",
+      "mapping": {
+        "title": "Event Name",
+        "start": "Date",
+        "location": "Location"
+      },
+      "source_url": "https://docs.google.com/spreadsheets/d/1pt5qSF5wgDk6y_dltEAAtBVDj441M-YaXTN0nsFqyQU/edit?gid=1233501903#gid=1233501903"
+    },
+    {
+      "name": "Campaigns (Kevin)",
+      "file_path": "data/Product_DevRel Calendar - Campaign Events.csv",
+      "default_color": "#7209b7",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/1D8qT7hNGiG-aEdg60xx2Wh14L02vqUge6-kFb1iWU3c/edit?gid=907472790#gid=907472790&range=A1",
+      "mapping": {
+        "title": "Event",
+        "start": "Date",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "column": "Working Group"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Coco Use Skill (Krista)",
+      "file_path": "data/Cortex Code Use Case_Skills Playlist - Master Video Playlist_1.csv",
+      "default_color": "#e76f51",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/1jhgTkQVCD1k6secIkLea4zoN2G4Akw2eRPHMvljCtLg/edit?gid=0#gid=0&range=A1",
+      "header_row": 10,
+      "mapping": {
+        "title": "Use Case Title",
+        "start": "Footage by",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "static": true,
+            "static_value": "AI"
+          }
+        ]
+      }
+    }
+  ],
+  "watch_folders": []
+}

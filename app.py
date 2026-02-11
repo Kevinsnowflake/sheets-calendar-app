@@ -1,0 +1,1512 @@
+import json
+import os
+import re
+import shutil
+import time
+from datetime import datetime, date
+from pathlib import Path
+
+import pandas as pd
+import streamlit as st
+from streamlit_calendar import calendar
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+APP_DIR = Path(__file__).parent
+CONFIG_PATH = APP_DIR / "config.json"
+DATA_DIR = APP_DIR / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+REQUIRED_FIELDS = ["title", "start"]
+OPTIONAL_FIELDS = ["end", "description", "location", "color"]
+ALL_FIELDS = REQUIRED_FIELDS + OPTIONAL_FIELDS
+
+FIELD_DESCRIPTIONS = {
+    "title": "Event title (required)",
+    "start": "Start date / datetime (required)",
+    "end": "End date / datetime",
+    "description": "Event description",
+    "location": "Event location",
+    "color": "Event colour (hex code or CSS colour name)",
+}
+
+DEFAULT_COLORS = [
+    "#3788d8",  # blue
+    "#e5383b",  # red
+    "#2d6a4f",  # green
+    "#7209b7",  # purple
+    "#e76f51",  # orange
+    "#219ebc",  # teal
+    "#f4a261",  # amber
+    "#6d6875",  # grey-purple
+]
+
+SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".tsv"}
+
+# Set to True when deploying to Streamlit Community Cloud (or any remote host).
+# Hides local-only features: "Link to file on disk", "Watch a folder",
+# refresh folder sync, and auto-refresh.
+IS_CLOUD = os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes") \
+    or os.environ.get("STREAMLIT_SHARING_MODE") is not None
+
+# ---------------------------------------------------------------------------
+# Config helpers
+# ---------------------------------------------------------------------------
+
+def load_config() -> dict:
+    """Load sheet configurations from JSON file."""
+    if CONFIG_PATH.exists():
+        with open(CONFIG_PATH, "r") as f:
+            return json.load(f)
+    return {"sheets": [], "watch_folders": []}
+
+
+def save_config(config: dict):
+    """Persist sheet configurations to JSON file."""
+    with open(CONFIG_PATH, "w") as f:
+        json.dump(config, f, indent=2)
+
+
+# ---------------------------------------------------------------------------
+# File helpers
+# ---------------------------------------------------------------------------
+
+def save_uploaded_file(uploaded_file) -> Path:
+    """Save an uploaded file to the data/ directory and return its path."""
+    dest = DATA_DIR / uploaded_file.name
+    counter = 1
+    while dest.exists():
+        stem = Path(uploaded_file.name).stem
+        suffix = Path(uploaded_file.name).suffix
+        dest = DATA_DIR / f"{stem}_{counter}{suffix}"
+        counter += 1
+    with open(dest, "wb") as f:
+        f.write(uploaded_file.getbuffer())
+    return dest
+
+
+def read_file_to_df(file_path: str | Path, header_row: int = 1) -> pd.DataFrame:
+    """Read a CSV, TSV, or Excel file into a DataFrame (all strings).
+
+    ``header_row`` is 1-based (row 1 = first row, the default).  Rows above
+    the header row are skipped automatically.
+    """
+    path = Path(file_path)
+    # Resolve relative paths against the app directory so "data/foo.csv" works
+    if not path.is_absolute():
+        path = APP_DIR / path
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: {path}")
+    pandas_header = max(header_row - 1, 0)  # pandas uses 0-based index
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        return pd.read_csv(path, header=pandas_header, dtype=str, keep_default_na=False)
+    elif suffix == ".tsv":
+        return pd.read_csv(path, sep="\t", header=pandas_header, dtype=str, keep_default_na=False)
+    elif suffix in (".xlsx", ".xls"):
+        return pd.read_excel(path, header=pandas_header, dtype=str, keep_default_na=False)
+    else:
+        raise ValueError(f"Unsupported file type: {suffix}")
+
+
+def get_file_headers(file_path: str | Path, header_row: int = 1) -> list[str]:
+    """Return column headers from a data file."""
+    df = read_file_to_df(file_path, header_row)
+    return list(df.columns)
+
+
+def resolve_path(raw: str) -> Path:
+    """Expand ~ and resolve a path string."""
+    return Path(raw).expanduser().resolve()
+
+
+def discover_files_in_folder(folder: str | Path) -> list[Path]:
+    """Return all supported data files in a folder (non-recursive)."""
+    folder = resolve_path(str(folder))
+    if not folder.is_dir():
+        return []
+    return sorted(
+        p for p in folder.iterdir()
+        if p.is_file() and p.suffix.lower() in SUPPORTED_EXTENSIONS
+    )
+
+
+def file_mod_time(path: str | Path) -> str:
+    """Return human-readable modification time for a file."""
+    p = Path(path)
+    if not p.is_absolute():
+        p = APP_DIR / p
+    if p.exists():
+        ts = p.stat().st_mtime
+        return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
+    return "file missing"
+
+
+def _match_file_to_source(filename: str, config: dict) -> int | None:
+    """Return the config['sheets'] index that matches *filename*, or None."""
+    stem = Path(filename).stem
+    for idx, s in enumerate(config.get("sheets", [])):
+        if s.get("source_type") != "upload":
+            continue
+        stored_name = Path(s.get("file_path", "")).name
+        stored_stem = Path(stored_name).stem
+        # Exact filename match
+        if filename == stored_name:
+            return idx
+        # Match ignoring _N suffix that save_uploaded_file may have added
+        base = re.sub(r"_\d+$", "", stored_stem)
+        if stem == base or stem == stored_stem:
+            return idx
+    return None
+
+
+def sync_refresh_folder(config: dict) -> int:
+    """Scan the configured refresh folder and overwrite stale source files.
+
+    Returns the number of sources that were refreshed.
+    """
+    folder_raw = config.get("refresh_folder", "").strip()
+    if not folder_raw:
+        return 0
+    folder = resolve_path(folder_raw)
+    if not folder.is_dir():
+        return 0
+
+    refreshed = 0
+    for fp in folder.iterdir():
+        if not fp.is_file() or fp.suffix.lower() not in SUPPORTED_EXTENSIONS:
+            continue
+        idx = _match_file_to_source(fp.name, config)
+        if idx is None:
+            continue
+        stored_path = Path(config["sheets"][idx]["file_path"])
+        # Only copy if the file in the refresh folder is newer
+        if stored_path.exists():
+            if fp.stat().st_mtime <= stored_path.stat().st_mtime:
+                continue
+        # Copy the newer file over the stored one
+        shutil.copy2(fp, stored_path)
+        refreshed += 1
+    return refreshed
+
+
+# ---------------------------------------------------------------------------
+# Date parsing
+# ---------------------------------------------------------------------------
+
+def _has_time(fmt: str) -> bool:
+    """Return True if a strptime format string includes a time component."""
+    return any(code in fmt for code in ("%H", "%I", "%M", "%S", "%p"))
+
+
+def parse_date(value) -> str | None:
+    """Best-effort parse of a date/datetime string into ISO format.
+
+    Returns a date-only string (``2025-03-15``) when there is no time
+    component, so FullCalendar treats the event as all-day.  Returns a
+    full ISO datetime (``2025-03-15T14:30:00``) when time info is present.
+    """
+    if pd.isna(value) or value == "":
+        return None
+    if isinstance(value, (datetime, date)):
+        if isinstance(value, datetime) and (value.hour or value.minute or value.second):
+            return value.isoformat()
+        return value.date().isoformat() if isinstance(value, datetime) else value.isoformat()
+    value = str(value).strip()
+
+    # --- Formats that include a year ---
+    for fmt in (
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M",
+        "%Y-%m-%d",
+        "%m/%d/%Y %H:%M:%S",
+        "%m/%d/%Y %H:%M",
+        "%m/%d/%Y",
+        "%m/%d/%y",
+        "%d/%m/%Y",
+        "%d-%m-%Y",
+        "%B %d, %Y",
+        "%b %d, %Y",
+        "%Y/%m/%d",
+    ):
+        try:
+            parsed = datetime.strptime(value, fmt)
+            if _has_time(fmt):
+                return parsed.isoformat()
+            return parsed.date().isoformat()
+        except ValueError:
+            continue
+
+    # --- Formats without a year (assume current year) ---
+    current_year = datetime.now().year
+    for fmt in (
+        "%B %d",      # March 3
+        "%b %d",      # Mar 4, Feb 3
+        "%B %dst",    # March 1st
+        "%B %dnd",    # March 2nd
+        "%B %drd",    # March 3rd
+        "%B %dth",    # March 4th
+        "%b %dst",
+        "%b %dnd",
+        "%b %drd",
+        "%b %dth",
+        "%d %B",      # 3 March
+        "%d %b",      # 3 Mar
+    ):
+        try:
+            parsed = datetime.strptime(value, fmt)
+            return parsed.replace(year=current_year).date().isoformat()
+        except ValueError:
+            continue
+
+    # --- Fallback: pandas parser (handles many other formats) ---
+    try:
+        parsed = pd.to_datetime(value)
+        if parsed.hour or parsed.minute or parsed.second:
+            return parsed.isoformat()
+        return parsed.date().isoformat()
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Build calendar events
+# ---------------------------------------------------------------------------
+
+def rows_to_events(
+    df: pd.DataFrame,
+    mapping: dict,
+    sheet_name: str,
+    sheet_color: str,
+    source_url: str = "",
+) -> list[dict]:
+    """Convert DataFrame rows into FullCalendar event dicts."""
+    events: list[dict] = []
+    for _, row in df.iterrows():
+        title = str(row.get(mapping["title"], "")).strip()
+        start = parse_date(row.get(mapping["start"]))
+        if not title or not start:
+            continue
+
+        event: dict = {
+            "title": title,
+            "start": start,
+            "allDay": "T" not in start,
+        }
+
+        if "end" in mapping and mapping["end"]:
+            end = parse_date(row.get(mapping["end"]))
+            if end:
+                event["end"] = end
+                event["allDay"] = "T" not in start and "T" not in end
+
+        if "color" in mapping and mapping["color"]:
+            row_color = str(row.get(mapping["color"], "")).strip()
+            event["color"] = row_color if row_color else sheet_color
+        else:
+            event["color"] = sheet_color
+
+        ext: dict = {"source": sheet_name}
+        if source_url:
+            ext["source_url"] = source_url
+        if "description" in mapping and mapping["description"]:
+            ext["description"] = str(row.get(mapping["description"], ""))
+        if "location" in mapping and mapping["location"]:
+            ext["location"] = str(row.get(mapping["location"], ""))
+
+        # Custom fields
+        custom_data: dict[str, str] = {}
+        for cf in mapping.get("custom_fields", []):
+            if cf.get("static"):
+                val = cf.get("static_value", "").strip()
+            else:
+                val = str(row.get(cf.get("column", ""), "")).strip()
+            if val:
+                custom_data[cf["label"]] = val
+        if custom_data:
+            ext["custom"] = custom_data
+
+        event["extendedProps"] = ext
+
+        events.append(event)
+    return events
+
+
+def build_events(config: dict) -> list[dict]:
+    """Read data from every configured source and return FullCalendar events."""
+    events: list[dict] = []
+
+    # --- Individual file sources ---
+    for idx, sheet_cfg in enumerate(config.get("sheets", [])):
+        file_path = sheet_cfg.get("file_path", "")
+        mapping = sheet_cfg.get("mapping", {})
+        sheet_color = sheet_cfg.get("default_color", DEFAULT_COLORS[idx % len(DEFAULT_COLORS)])
+        sheet_name = sheet_cfg.get("name", f"Source {idx + 1}")
+
+        if "title" not in mapping or "start" not in mapping:
+            continue
+        header_row = sheet_cfg.get("header_row", 1)
+        try:
+            df = read_file_to_df(file_path, header_row)
+        except Exception as e:
+            st.warning(f"Could not load **{sheet_name}**: {e}")
+            continue
+
+        source_url = sheet_cfg.get("source_url", "")
+        events.extend(rows_to_events(df, mapping, sheet_name, sheet_color, source_url))
+
+    # --- Watch-folder sources ---
+    for wf in config.get("watch_folders", []):
+        folder_path = wf.get("folder_path", "")
+        mapping = wf.get("mapping", {})
+        wf_color = wf.get("default_color", "#3788d8")
+        wf_name = wf.get("name", folder_path)
+        wf_source_url = wf.get("source_url", "")
+        wf_header_row = wf.get("header_row", 1)
+
+        if "title" not in mapping or "start" not in mapping:
+            continue
+
+        files = discover_files_in_folder(folder_path)
+        for fp in files:
+            try:
+                df = read_file_to_df(fp, wf_header_row)
+            except Exception as e:
+                st.warning(f"Could not load **{fp.name}** from {wf_name}: {e}")
+                continue
+            source_label = f"{wf_name} / {fp.name}"
+            events.extend(rows_to_events(df, mapping, source_label, wf_color, wf_source_url))
+
+    return events
+
+
+# ---------------------------------------------------------------------------
+# Column mapping form (reusable)
+# ---------------------------------------------------------------------------
+
+def _init_custom_fields(form_key: str, existing: list[dict] | None = None):
+    """Initialise session-state list for custom field rows in a mapping form."""
+    key = f"_custom_fields_{form_key}"
+    if key not in st.session_state:
+        st.session_state[key] = list(existing) if existing else []
+    return key
+
+
+def render_column_mapping_form(
+    headers: list[str],
+    form_key: str,
+    existing_mapping: dict | None = None,
+) -> dict | None:
+    """Show a column-mapping form and return the mapping if saved, else None.
+
+    The returned dict always contains:
+      - Standard field keys (title, start, end, ...)
+      - A ``custom_fields`` key with a list of {label, column} dicts
+    """
+    existing_mapping = existing_mapping or {}
+    existing_custom: list[dict] = existing_mapping.get("custom_fields", [])
+    cf_key = _init_custom_fields(form_key, existing_custom)
+
+    # --- Button to add another custom row (outside the form) ---
+    add_col1, add_col2 = st.columns([3, 1])
+    with add_col2:
+        if st.button("+ Add custom field", key=f"{form_key}_add_cf"):
+            st.session_state[cf_key].append({"label": "", "column": ""})
+            st.rerun()
+
+    with st.form(form_key):
+        st.markdown("**Standard fields** — map each calendar field to a column:")
+        mapping: dict = {}
+        none_option = ["-- none --"]
+        for field in ALL_FIELDS:
+            label = FIELD_DESCRIPTIONS.get(field, field)
+            default_idx = 0
+            existing_col = existing_mapping.get(field, "")
+            if existing_col in headers:
+                default_idx = headers.index(existing_col) + 1
+            else:
+                for i, h in enumerate(headers):
+                    if h.lower().replace(" ", "_") == field or field in h.lower():
+                        default_idx = i + 1
+                        break
+            choice = st.selectbox(
+                label,
+                options=none_option + headers,
+                index=default_idx,
+                key=f"{form_key}_{field}",
+            )
+            if choice != "-- none --":
+                mapping[field] = choice
+
+        # --- Custom fields ---
+        custom_entries: list[dict] = st.session_state[cf_key]
+        if custom_entries:
+            st.markdown("**Custom fields** — these will show up in the event detail panel:")
+        saved_custom: list[dict] = []
+        for ci, cf in enumerate(custom_entries):
+            c1, c2, c3, c4, c5 = st.columns([2, 1, 2, 2, 1])
+            with c1:
+                cf_label = st.text_input(
+                    "Display label",
+                    value=cf.get("label", ""),
+                    key=f"{form_key}_cf_label_{ci}",
+                    placeholder="e.g. Organizer",
+                )
+            with c2:
+                use_static = st.checkbox(
+                    "Static text",
+                    value=cf.get("static", False),
+                    key=f"{form_key}_cf_static_{ci}",
+                    help="Check this to use a fixed text value instead of a column.",
+                )
+            with c3:
+                default_col_idx = 0
+                if cf.get("column", "") in headers:
+                    default_col_idx = headers.index(cf["column"]) + 1
+                cf_column = st.selectbox(
+                    "Column",
+                    options=none_option + headers,
+                    index=default_col_idx,
+                    key=f"{form_key}_cf_col_{ci}",
+                )
+            with c4:
+                cf_value = st.text_input(
+                    "Static value",
+                    value=cf.get("static_value", ""),
+                    key=f"{form_key}_cf_val_{ci}",
+                    placeholder="e.g. Marketing Team",
+                )
+            with c5:
+                remove = st.form_submit_button(
+                    f"Remove #{ci + 1}",
+                    type="secondary",
+                )
+                if remove:
+                    st.session_state[cf_key].pop(ci)
+                    st.rerun()
+
+            if cf_label.strip():
+                if use_static and cf_value.strip():
+                    saved_custom.append({
+                        "label": cf_label.strip(),
+                        "static": True,
+                        "static_value": cf_value.strip(),
+                    })
+                elif not use_static and cf_column != "-- none --":
+                    saved_custom.append({
+                        "label": cf_label.strip(),
+                        "column": cf_column,
+                    })
+
+        if st.form_submit_button("Save mapping"):
+            if "title" not in mapping or "start" not in mapping:
+                st.error("You must map at least **title** and **start** columns.")
+                return None
+            mapping["custom_fields"] = saved_custom
+            # Clean up session state
+            if cf_key in st.session_state:
+                del st.session_state[cf_key]
+            return mapping
+    return None
+
+
+# ---------------------------------------------------------------------------
+# UI – Manage Sources page
+# ---------------------------------------------------------------------------
+
+def render_manage_sheets():
+    """Page for adding, editing, and removing data sources."""
+    config = load_config()
+    if "watch_folders" not in config:
+        config["watch_folders"] = []
+
+    st.header("Manage Data Sources")
+
+    if IS_CLOUD:
+        add_options = ["Upload a file"]
+    else:
+        add_options = ["Upload a file", "Link to a file on disk", "Watch a folder"]
+
+    add_method = st.radio(
+        "How would you like to add data?",
+        options=add_options,
+        horizontal=True,
+    )
+
+    # ==================================================================
+    # TAB 1 – Upload a file
+    # ==================================================================
+    if add_method == "Upload a file":
+        st.subheader("Upload a file")
+        st.caption("Export from Google Sheets: **File → Download → CSV (.csv)**")
+
+        with st.form("add_upload_form", clear_on_submit=True):
+            new_name = st.text_input("Friendly name", placeholder="e.g. Team Birthdays")
+            uploaded = st.file_uploader(
+                "Upload a file",
+                type=["csv", "xlsx", "xls", "tsv"],
+            )
+            new_source_url = st.text_input(
+                "Original Google Sheet link (optional)",
+                placeholder="https://docs.google.com/spreadsheets/d/...",
+                help="Shown when someone clicks an event so they can open the original sheet.",
+            )
+            new_header_row = st.number_input(
+                "Header row",
+                min_value=1,
+                value=1,
+                step=1,
+                help="Which row contains the column headers? (1 = first row)",
+            )
+            new_color = st.color_picker(
+                "Default event colour",
+                value=DEFAULT_COLORS[len(config["sheets"]) % len(DEFAULT_COLORS)],
+            )
+            submitted = st.form_submit_button("Upload & read columns")
+
+        if submitted and uploaded:
+            try:
+                saved_path = save_uploaded_file(uploaded)
+                headers = get_file_headers(saved_path, int(new_header_row))
+                st.session_state["_new_sheet_headers"] = headers
+                st.session_state["_new_sheet_meta"] = {
+                    "name": new_name or uploaded.name,
+                    "file_path": str(saved_path.relative_to(APP_DIR)),
+                    "default_color": new_color,
+                    "source_type": "upload",
+                    "source_url": new_source_url.strip(),
+                    "header_row": int(new_header_row),
+                }
+            except Exception as e:
+                st.error(f"Failed to read file: {e}")
+
+    # ==================================================================
+    # TAB 2 – Link to a file on disk
+    # ==================================================================
+    elif add_method == "Link to a file on disk":
+        st.subheader("Link to a file on disk")
+        st.caption(
+            "Point to a CSV/Excel file on your computer. "
+            "When you re-export to the **same file path**, the calendar updates automatically."
+        )
+
+        with st.form("add_linked_form"):
+            new_name = st.text_input("Friendly name", placeholder="e.g. Marketing Events")
+            file_path_input = st.text_input(
+                "Full file path",
+                placeholder="~/Downloads/events.csv",
+                help="Supports ~ for your home directory.",
+            )
+            new_source_url = st.text_input(
+                "Original Google Sheet link (optional)",
+                placeholder="https://docs.google.com/spreadsheets/d/...",
+                help="Shown when someone clicks an event so they can open the original sheet.",
+            )
+            new_header_row = st.number_input(
+                "Header row",
+                min_value=1,
+                value=1,
+                step=1,
+                help="Which row contains the column headers? (1 = first row)",
+            )
+            new_color = st.color_picker(
+                "Default event colour",
+                value=DEFAULT_COLORS[len(config["sheets"]) % len(DEFAULT_COLORS)],
+            )
+            submitted = st.form_submit_button("Read columns")
+
+        if submitted and file_path_input:
+            resolved = resolve_path(file_path_input)
+            if not resolved.exists():
+                st.error(f"File not found: `{resolved}`")
+            elif resolved.suffix.lower() not in SUPPORTED_EXTENSIONS:
+                st.error(f"Unsupported file type: `{resolved.suffix}`. Use CSV, TSV, XLSX, or XLS.")
+            else:
+                try:
+                    headers = get_file_headers(resolved, int(new_header_row))
+                    st.session_state["_new_sheet_headers"] = headers
+                    st.session_state["_new_sheet_meta"] = {
+                        "name": new_name or resolved.stem,
+                        "file_path": str(resolved),
+                        "default_color": new_color,
+                        "source_type": "linked",
+                        "source_url": new_source_url.strip(),
+                        "header_row": int(new_header_row),
+                    }
+                except Exception as e:
+                    st.error(f"Failed to read file: {e}")
+
+    # ==================================================================
+    # TAB 3 – Watch a folder
+    # ==================================================================
+    elif add_method == "Watch a folder":
+        st.subheader("Watch a folder")
+        st.caption(
+            "Point to a folder on your computer. Every CSV/Excel file inside it "
+            "will be loaded using the **same column mapping**. Drop new files in "
+            "to add more events — no app changes needed."
+        )
+
+        with st.form("add_folder_form"):
+            wf_name = st.text_input("Friendly name", placeholder="e.g. All Event Exports")
+            folder_input = st.text_input(
+                "Folder path",
+                placeholder="~/Documents/event-exports",
+            )
+            wf_source_url = st.text_input(
+                "Original Google Sheet link (optional)",
+                placeholder="https://docs.google.com/spreadsheets/d/...",
+                help="Shown when someone clicks an event so they can open the original sheet.",
+            )
+            wf_header_row = st.number_input(
+                "Header row",
+                min_value=1,
+                value=1,
+                step=1,
+                help="Which row contains the column headers? (1 = first row)",
+            )
+            wf_color = st.color_picker(
+                "Default event colour",
+                value=DEFAULT_COLORS[
+                    (len(config["sheets"]) + len(config["watch_folders"])) % len(DEFAULT_COLORS)
+                ],
+            )
+            submitted = st.form_submit_button("Scan folder")
+
+        if submitted and folder_input:
+            resolved_folder = resolve_path(folder_input)
+            if not resolved_folder.is_dir():
+                st.error(f"Not a valid directory: `{resolved_folder}`")
+            else:
+                files = discover_files_in_folder(resolved_folder)
+                if not files:
+                    st.warning("No CSV / Excel / TSV files found in that folder.")
+                else:
+                    st.success(f"Found **{len(files)}** file(s): {', '.join(f.name for f in files)}")
+                    try:
+                        headers = get_file_headers(files[0], int(wf_header_row))
+                        st.session_state["_new_wf_headers"] = headers
+                        st.session_state["_new_wf_meta"] = {
+                            "name": wf_name or resolved_folder.name,
+                            "folder_path": str(resolved_folder),
+                            "default_color": wf_color,
+                            "source_url": wf_source_url.strip(),
+                            "header_row": int(wf_header_row),
+                        }
+                    except Exception as e:
+                        st.error(f"Failed to read {files[0].name}: {e}")
+
+    # ------------------------------------------------------------------
+    # Column mapping for new individual source (upload or linked)
+    # ------------------------------------------------------------------
+    if "_new_sheet_headers" in st.session_state:
+        headers = st.session_state["_new_sheet_headers"]
+        meta = st.session_state["_new_sheet_meta"]
+        st.divider()
+        st.markdown(f"**Columns found in *{meta['name']}*:** `{'`, `'.join(headers)}`")
+
+        mapping = render_column_mapping_form(headers, "map_new_source")
+        if mapping is not None:
+            sheet_entry = {**meta, "mapping": mapping}
+            config["sheets"].append(sheet_entry)
+            save_config(config)
+            del st.session_state["_new_sheet_headers"]
+            del st.session_state["_new_sheet_meta"]
+            st.success(f"**{meta['name']}** added!")
+            st.rerun()
+
+    # ------------------------------------------------------------------
+    # Column mapping for new watch folder
+    # ------------------------------------------------------------------
+    if "_new_wf_headers" in st.session_state:
+        headers = st.session_state["_new_wf_headers"]
+        meta = st.session_state["_new_wf_meta"]
+        st.divider()
+        st.markdown(
+            f"**Columns from first file in *{meta['name']}*:** `{'`, `'.join(headers)}`  \n"
+            f"This mapping will apply to **all** files in the folder."
+        )
+
+        mapping = render_column_mapping_form(headers, "map_new_wf")
+        if mapping is not None:
+            wf_entry = {**meta, "mapping": mapping}
+            config["watch_folders"].append(wf_entry)
+            save_config(config)
+            del st.session_state["_new_wf_headers"]
+            del st.session_state["_new_wf_meta"]
+            st.success(f"Watch folder **{meta['name']}** added!")
+            st.rerun()
+
+    # ==================================================================
+    # Refresh Folder (local mode only)
+    # ==================================================================
+    upload_sources = [
+        s for s in config["sheets"] if s.get("source_type") == "upload"
+    ]
+    if upload_sources and not IS_CLOUD:
+        st.divider()
+        st.subheader("Refresh Folder")
+        st.caption(
+            "Point to a folder on your computer where you save your CSV/Excel exports. "
+            "Whenever you replace a file in that folder, the app will automatically "
+            "pick up the newer version by matching filenames to existing sources."
+        )
+
+        current_folder = config.get("refresh_folder", "")
+        new_folder = st.text_input(
+            "Refresh folder path",
+            value=current_folder,
+            placeholder="~/Downloads/calendar-exports",
+            help="The app scans this folder on every page load and copies any file "
+                 "that is newer than the stored version.",
+            key="refresh_folder_input",
+        )
+
+        folder_col1, folder_col2 = st.columns([1, 1])
+        with folder_col1:
+            if new_folder.strip() != current_folder:
+                if st.button("Save refresh folder", key="save_refresh_folder"):
+                    resolved = resolve_path(new_folder.strip())
+                    if new_folder.strip() and not resolved.is_dir():
+                        st.error(f"Not a valid directory: `{resolved}`")
+                    else:
+                        config["refresh_folder"] = new_folder.strip()
+                        save_config(config)
+                        st.success("Refresh folder saved!")
+                        st.rerun()
+        with folder_col2:
+            if current_folder:
+                if st.button("Remove refresh folder", key="remove_refresh_folder"):
+                    config["refresh_folder"] = ""
+                    save_config(config)
+                    st.success("Refresh folder removed.")
+                    st.rerun()
+
+        # Show current sync status
+        if current_folder:
+            resolved_folder = resolve_path(current_folder)
+            if resolved_folder.is_dir():
+                folder_files = [
+                    fp for fp in resolved_folder.iterdir()
+                    if fp.is_file() and fp.suffix.lower() in SUPPORTED_EXTENSIONS
+                ]
+                matched_names = []
+                unmatched_names = []
+                for fp in folder_files:
+                    idx = _match_file_to_source(fp.name, config)
+                    if idx is not None:
+                        src_name = config["sheets"][idx].get("name", "Unnamed")
+                        stored_path = Path(config["sheets"][idx]["file_path"])
+                        is_newer = (
+                            not stored_path.exists()
+                            or fp.stat().st_mtime > stored_path.stat().st_mtime
+                        )
+                        status = "**newer** — will sync" if is_newer else "up to date"
+                        matched_names.append(f"- `{fp.name}` → **{src_name}** ({status})")
+                    else:
+                        unmatched_names.append(fp.name)
+
+                with st.expander(
+                    f"Folder status — {len(folder_files)} file(s), {len(matched_names)} matched",
+                    expanded=False,
+                ):
+                    if matched_names:
+                        st.markdown("\n".join(matched_names))
+                    if unmatched_names:
+                        st.markdown(
+                            "**Unmatched files** (no matching source): "
+                            + ", ".join(f"`{n}`" for n in unmatched_names)
+                        )
+                    if not folder_files:
+                        st.info("No CSV/Excel/TSV files found in this folder.")
+            else:
+                st.warning(f"Folder not found: `{resolved_folder}`")
+
+    # ==================================================================
+    # Existing individual sources
+    # ==================================================================
+    if config["sheets"]:
+        st.divider()
+        st.subheader("Configured sources")
+
+        for idx, sheet_cfg in enumerate(config["sheets"]):
+            fpath = sheet_cfg.get("file_path", "")
+            p = Path(fpath) if Path(fpath).is_absolute() else APP_DIR / fpath
+            file_exists = p.exists()
+            source_type = sheet_cfg.get("source_type", "upload")
+            type_label = "linked" if source_type == "linked" else "uploaded"
+            status_icon = "🟢" if (sheet_cfg.get("mapping") and file_exists) else "🔴"
+
+            with st.expander(f"{status_icon} {sheet_cfg.get('name', 'Unnamed')}"):
+                src_url = sheet_cfg.get("source_url", "")
+                st.markdown(
+                    f"**File:** `{p.name}` ({type_label})  \n"
+                    f"**Path:** `{fpath}`  \n"
+                    f"**Last modified:** {file_mod_time(fpath)}  \n"
+                    f"**Status:** {'found' if file_exists else 'MISSING'}  \n"
+                    f"**Default colour:** {sheet_cfg.get('default_color', '#3788d8')}"
+                    + (f"  \n**Source link:** [Open original sheet]({src_url})" if src_url else "")
+                )
+                if sheet_cfg.get("mapping"):
+                    st.markdown("**Column mapping:**")
+                    for field, col in sheet_cfg["mapping"].items():
+                        if field == "custom_fields":
+                            continue
+                        st.markdown(f"- {field} → `{col}`")
+                    custom_fields = sheet_cfg["mapping"].get("custom_fields", [])
+                    if custom_fields:
+                        st.markdown("**Custom fields:**")
+                        for cf in custom_fields:
+                            if cf.get("static"):
+                                st.markdown(f"- {cf['label']} = `{cf['static_value']}`")
+                            else:
+                                st.markdown(f"- {cf['label']} → `{cf.get('column', '')}`")
+
+                # Rename, source URL & header row
+                edit_col1, edit_col2, edit_col3 = st.columns([2, 2, 1])
+                with edit_col1:
+                    new_name = st.text_input(
+                        "Name",
+                        value=sheet_cfg.get("name", "Unnamed"),
+                        key=f"rename_{idx}",
+                    )
+                with edit_col2:
+                    new_src_url = st.text_input(
+                        "Source link",
+                        value=sheet_cfg.get("source_url", ""),
+                        key=f"srcurl_{idx}",
+                        placeholder="https://docs.google.com/spreadsheets/d/...",
+                    )
+                with edit_col3:
+                    new_hdr_row = st.number_input(
+                        "Header row",
+                        min_value=1,
+                        value=sheet_cfg.get("header_row", 1),
+                        step=1,
+                        key=f"hdr_row_{idx}",
+                        help="Which row contains the column headers? (1 = first row)",
+                    )
+                name_changed = new_name != sheet_cfg.get("name", "Unnamed")
+                url_changed = new_src_url.strip() != sheet_cfg.get("source_url", "")
+                hdr_changed = int(new_hdr_row) != sheet_cfg.get("header_row", 1)
+                if name_changed or url_changed or hdr_changed:
+                    if st.button("Save changes", key=f"save_edit_{idx}"):
+                        config["sheets"][idx]["name"] = new_name
+                        config["sheets"][idx]["source_url"] = new_src_url.strip()
+                        config["sheets"][idx]["header_row"] = int(new_hdr_row)
+                        save_config(config)
+                        st.rerun()
+
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    if source_type == "upload":
+                        replacement = st.file_uploader(
+                            "Replace file",
+                            type=["csv", "xlsx", "xls", "tsv"],
+                            key=f"replace_{idx}",
+                            label_visibility="collapsed",
+                        )
+                        if replacement is not None:
+                            try:
+                                old_fp = Path(sheet_cfg["file_path"])
+                                old = old_fp if old_fp.is_absolute() else APP_DIR / old_fp
+                                if old.exists():
+                                    old.unlink()
+                                new_path = save_uploaded_file(replacement)
+                                config["sheets"][idx]["file_path"] = str(new_path.relative_to(APP_DIR))
+                                save_config(config)
+                                st.success("File replaced!")
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Failed: {e}")
+                    else:
+                        st.caption("Linked file — re-export to the same path to update.")
+
+                with col2:
+                    if st.button("Re-map columns", key=f"remap_{idx}"):
+                        try:
+                            hdr_row = sheet_cfg.get("header_row", 1)
+                            headers = get_file_headers(fpath, hdr_row)
+                            st.session_state["_remap_idx"] = idx
+                            st.session_state["_remap_headers"] = headers
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Failed: {e}")
+
+                with col3:
+                    if st.button("Remove", key=f"remove_{idx}", type="primary"):
+                        if source_type == "upload":
+                            old_fp = Path(sheet_cfg.get("file_path", ""))
+                            old = old_fp if old_fp.is_absolute() else APP_DIR / old_fp
+                            if old.exists():
+                                old.unlink()
+                        config["sheets"].pop(idx)
+                        save_config(config)
+                        st.rerun()
+
+        # Re-mapping flow for individual sources
+        if "_remap_idx" in st.session_state:
+            remap_idx = st.session_state["_remap_idx"]
+            headers = st.session_state["_remap_headers"]
+            sheet_cfg = config["sheets"][remap_idx]
+            st.divider()
+            st.subheader(f"Re-map columns for: {sheet_cfg.get('name', 'Unnamed')}")
+            st.markdown(f"**Columns:** `{'`, `'.join(headers)}`")
+
+            mapping = render_column_mapping_form(
+                headers, "remap_source", existing_mapping=sheet_cfg.get("mapping")
+            )
+            if mapping is not None:
+                config["sheets"][remap_idx]["mapping"] = mapping
+                save_config(config)
+                del st.session_state["_remap_idx"]
+                del st.session_state["_remap_headers"]
+                st.success("Mapping updated!")
+                st.rerun()
+
+    # ==================================================================
+    # Existing watch folders (local mode only)
+    # ==================================================================
+    if config.get("watch_folders") and not IS_CLOUD:
+        st.divider()
+        st.subheader("Watched folders")
+
+        for idx, wf in enumerate(config["watch_folders"]):
+            folder_path = wf.get("folder_path", "")
+            resolved = resolve_path(folder_path)
+            folder_exists = resolved.is_dir()
+            files = discover_files_in_folder(folder_path) if folder_exists else []
+            status_icon = "🟢" if (wf.get("mapping") and folder_exists) else "🔴"
+
+            with st.expander(f"{status_icon} {wf.get('name', 'Unnamed folder')}"):
+                wf_src_url = wf.get("source_url", "")
+                st.markdown(
+                    f"**Folder:** `{folder_path}`  \n"
+                    f"**Status:** {'found' if folder_exists else 'MISSING'}  \n"
+                    f"**Files found:** {len(files)}  \n"
+                    f"**Default colour:** {wf.get('default_color', '#3788d8')}"
+                    + (f"  \n**Source link:** [Open original sheet]({wf_src_url})" if wf_src_url else "")
+                )
+                if files:
+                    for fp in files:
+                        st.markdown(f"- `{fp.name}` (modified {file_mod_time(fp)})")
+                if wf.get("mapping"):
+                    st.markdown("**Column mapping:**")
+                    for field, col in wf["mapping"].items():
+                        if field == "custom_fields":
+                            continue
+                        st.markdown(f"- {field} → `{col}`")
+                    wf_custom_fields = wf["mapping"].get("custom_fields", [])
+                    if wf_custom_fields:
+                        st.markdown("**Custom fields:**")
+                        for cf in wf_custom_fields:
+                            if cf.get("static"):
+                                st.markdown(f"- {cf['label']} = `{cf['static_value']}`")
+                            else:
+                                st.markdown(f"- {cf['label']} → `{cf.get('column', '')}`")
+
+                # Rename, source URL & header row
+                wf_edit_col1, wf_edit_col2, wf_edit_col3 = st.columns([2, 2, 1])
+                with wf_edit_col1:
+                    new_wf_name = st.text_input(
+                        "Name",
+                        value=wf.get("name", "Unnamed folder"),
+                        key=f"rename_wf_{idx}",
+                    )
+                with wf_edit_col2:
+                    new_wf_src_url = st.text_input(
+                        "Source link",
+                        value=wf.get("source_url", ""),
+                        key=f"srcurl_wf_{idx}",
+                        placeholder="https://docs.google.com/spreadsheets/d/...",
+                    )
+                with wf_edit_col3:
+                    new_wf_hdr_row = st.number_input(
+                        "Header row",
+                        min_value=1,
+                        value=wf.get("header_row", 1),
+                        step=1,
+                        key=f"hdr_row_wf_{idx}",
+                        help="Which row contains the column headers? (1 = first row)",
+                    )
+                wf_name_changed = new_wf_name != wf.get("name", "Unnamed folder")
+                wf_url_changed = new_wf_src_url.strip() != wf.get("source_url", "")
+                wf_hdr_changed = int(new_wf_hdr_row) != wf.get("header_row", 1)
+                if wf_name_changed or wf_url_changed or wf_hdr_changed:
+                    if st.button("Save changes", key=f"save_edit_wf_{idx}"):
+                        config["watch_folders"][idx]["name"] = new_wf_name
+                        config["watch_folders"][idx]["source_url"] = new_wf_src_url.strip()
+                        config["watch_folders"][idx]["header_row"] = int(new_wf_hdr_row)
+                        save_config(config)
+                        st.rerun()
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("Re-map columns", key=f"remap_wf_{idx}"):
+                        if files:
+                            try:
+                                wf_hdr_row = wf.get("header_row", 1)
+                                headers = get_file_headers(files[0], wf_hdr_row)
+                                st.session_state["_remap_wf_idx"] = idx
+                                st.session_state["_remap_wf_headers"] = headers
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Failed: {e}")
+                        else:
+                            st.warning("No files in folder to read headers from.")
+                with col2:
+                    if st.button("Remove", key=f"remove_wf_{idx}", type="primary"):
+                        config["watch_folders"].pop(idx)
+                        save_config(config)
+                        st.rerun()
+
+        # Re-mapping flow for watch folders
+        if "_remap_wf_idx" in st.session_state:
+            remap_idx = st.session_state["_remap_wf_idx"]
+            headers = st.session_state["_remap_wf_headers"]
+            wf = config["watch_folders"][remap_idx]
+            st.divider()
+            st.subheader(f"Re-map columns for: {wf.get('name', 'Unnamed folder')}")
+            st.markdown(f"**Columns:** `{'`, `'.join(headers)}`")
+
+            mapping = render_column_mapping_form(
+                headers, "remap_wf_source", existing_mapping=wf.get("mapping")
+            )
+            if mapping is not None:
+                config["watch_folders"][remap_idx]["mapping"] = mapping
+                save_config(config)
+                del st.session_state["_remap_wf_idx"]
+                del st.session_state["_remap_wf_headers"]
+                st.success("Mapping updated!")
+                st.rerun()
+
+
+# ---------------------------------------------------------------------------
+# UI – Apps Script Helper page
+# ---------------------------------------------------------------------------
+
+def render_apps_script():
+    """Show the Google Apps Script snippet for automated CSV emails."""
+    st.header("Automate with Google Apps Script")
+
+    st.markdown(
+        "You can set up each Google Sheet to **automatically email you a CSV export** "
+        "on a schedule (e.g. weekly). Then just save the attachment to your "
+        "linked file path or watched folder — the calendar picks up the changes "
+        "next time it loads.\n\n"
+        "**This uses Google Apps Script, which is part of Google Workspace — "
+        "not Google Cloud.** No API keys or special permissions needed."
+    )
+
+    st.subheader("Step 1: Add the script to your sheet")
+    st.markdown(
+        "1. Open your Google Sheet.\n"
+        "2. Go to **Extensions → Apps Script**.\n"
+        "3. Delete any existing code and paste the script below.\n"
+        "4. Update the `RECIPIENT_EMAIL` at the top.\n"
+        "5. Click **Save**."
+    )
+
+    script = '''\
+// === CONFIGURATION ===
+var RECIPIENT_EMAIL = "you@yourcompany.com";  // ← change this
+var SUBJECT_PREFIX  = "Calendar Export";        // email subject prefix
+// === END CONFIGURATION ===
+
+function emailSheetAsCsv() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+  var name = ss.getName() + " - " + sheet.getName();
+
+  // Build CSV content
+  var data = sheet.getDataRange().getValues();
+  var csv = data.map(function(row) {
+    return row.map(function(cell) {
+      var val = (cell instanceof Date)
+        ? Utilities.formatDate(cell, ss.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss")
+        : String(cell);
+      // Escape quotes and wrap in quotes if needed
+      if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1 || val.indexOf('"') > -1) {
+        val = '"' + val.replace(/"/g, '""') + '"';
+      }
+      return val;
+    }).join(",");
+  }).join("\\n");
+
+  var blob = Utilities.newBlob(csv, "text/csv", name + ".csv");
+  var today = Utilities.formatDate(new Date(), ss.getSpreadsheetTimeZone(), "yyyy-MM-dd");
+
+  MailApp.sendEmail({
+    to: RECIPIENT_EMAIL,
+    subject: SUBJECT_PREFIX + ": " + name + " (" + today + ")",
+    body: "Attached is the latest CSV export of:\\n\\n"
+        + "  Spreadsheet: " + ss.getName() + "\\n"
+        + "  Sheet: " + sheet.getName() + "\\n"
+        + "  Date: " + today + "\\n\\n"
+        + "Save this attachment to your calendar app\\'s watched folder.",
+    attachments: [blob],
+  });
+}'''
+
+    st.code(script, language="javascript")
+
+    st.subheader("Step 2: Set up a weekly trigger")
+    st.markdown(
+        "1. In the Apps Script editor, click the **clock icon** (Triggers) in the left sidebar.\n"
+        "2. Click **+ Add Trigger** (bottom right).\n"
+        "3. Configure:\n"
+        "   - **Function:** `emailSheetAsCsv`\n"
+        "   - **Event source:** Time-driven\n"
+        "   - **Type:** Week timer\n"
+        "   - **Day / time:** Pick what works for you (e.g. Monday 6-7 AM)\n"
+        "4. Click **Save** and authorize when prompted.\n\n"
+        "You'll now get a weekly email with the CSV attached. "
+        "Save the attachment to your linked file path or watched folder."
+    )
+
+    st.subheader("Step 3: (Optional) Auto-save with a mail rule")
+    st.markdown(
+        "If you want to skip the manual save step, you can set up a mail rule "
+        "or use a tool like [Gmail to Google Drive](https://workspace.google.com/marketplace) "
+        "to automatically save attachments matching the subject line to a specific folder. "
+        "Point a **Watch Folder** at that location and the pipeline is fully automated."
+    )
+
+
+# ---------------------------------------------------------------------------
+# UI – Filter events
+# ---------------------------------------------------------------------------
+
+def _event_searchable_text(e: dict) -> str:
+    """Build a single lowercase string from all text fields of an event."""
+    parts = [e.get("title", "")]
+    ext = e.get("extendedProps", {})
+    parts.append(ext.get("description", ""))
+    parts.append(ext.get("location", ""))
+    for val in ext.get("custom", {}).values():
+        parts.append(str(val))
+    return " ".join(parts).lower()
+
+
+def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
+    """Show filter controls and return only the events that match."""
+
+    # Build the source list from config so every configured source appears,
+    # even if it currently has zero events (e.g. file missing / no valid rows).
+    config_sources: set[str] = set()
+    if config:
+        for idx, s in enumerate(config.get("sheets", [])):
+            config_sources.add(s.get("name", f"Source {idx + 1}"))
+        for wf in config.get("watch_folders", []):
+            wf_name = wf.get("name", wf.get("folder_path", ""))
+            # Watch folders generate one source per file: "folder / file.csv"
+            folder_path = wf.get("folder_path", "")
+            files = discover_files_in_folder(folder_path) if folder_path else []
+            if files:
+                for fp in files:
+                    config_sources.add(f"{wf_name} / {fp.name}")
+            else:
+                config_sources.add(wf_name)
+    # Also include any source names that appear in events (safety net)
+    event_sources = {e.get("extendedProps", {}).get("source", "") for e in events} - {""}
+    all_sources: list[str] = sorted(config_sources | event_sources)
+    all_locations: list[str] = sorted(
+        {e.get("extendedProps", {}).get("location", "").strip() for e in events} - {""}
+    )
+
+    with st.expander("Filters", expanded=True):
+        filter_cols = st.columns([2, 2, 2, 1])
+
+        # --- Source filter ---
+        with filter_cols[0]:
+            # Clean up stale selections (e.g. a source was removed from config)
+            if "source_filter" in st.session_state:
+                valid = [s for s in st.session_state["source_filter"] if s in all_sources]
+                if valid != st.session_state["source_filter"]:
+                    st.session_state["source_filter"] = valid
+
+            def _on_select_all():
+                if st.session_state["select_all_sources"]:
+                    st.session_state["source_filter"] = list(all_sources)
+                else:
+                    st.session_state["source_filter"] = []
+
+            def _on_source_change():
+                if set(st.session_state["source_filter"]) == set(all_sources):
+                    st.session_state["select_all_sources"] = True
+                else:
+                    st.session_state["select_all_sources"] = False
+
+            st.checkbox("Select all", key="select_all_sources", on_change=_on_select_all)
+            selected_sources = st.multiselect(
+                "Sources",
+                options=all_sources,
+                key="source_filter",
+                placeholder="Select sources to display...",
+                help="Choose which sources to show on the calendar. Starts blank — add the ones you want.",
+                on_change=_on_source_change,
+            )
+
+        # --- Keyword search (searches all text) ---
+        with filter_cols[1]:
+            keyword = st.text_input(
+                "Search",
+                placeholder="Search titles, descriptions, custom fields...",
+                help="Case-insensitive search across all event text.",
+            ).strip().lower()
+
+        # --- Location filter ---
+        with filter_cols[2]:
+            if all_locations:
+                location_options = ["All locations"] + all_locations
+                selected_locations = st.multiselect(
+                    "Locations",
+                    options=location_options,
+                    default=["All locations"],
+                    help="Filter by event location.",
+                )
+                filter_by_location = "All locations" not in selected_locations
+            else:
+                selected_locations = []
+                filter_by_location = False
+                st.text_input("Locations", value="No location data", disabled=True)
+
+        # --- All-day vs timed toggle ---
+        with filter_cols[3]:
+            time_filter = st.selectbox(
+                "Type",
+                options=["All", "All-day", "Timed"],
+                help="Show all events, only all-day, or only timed events.",
+            )
+
+    # Apply filters
+    filtered: list[dict] = []
+    for e in events:
+        ext = e.get("extendedProps", {})
+
+        # Source filter
+        source = ext.get("source", "")
+        if source and source not in selected_sources:
+            continue
+
+        # Global keyword search (across all event text)
+        if keyword:
+            searchable = _event_searchable_text(e)
+            if keyword not in searchable:
+                continue
+
+        # Location filter
+        if filter_by_location:
+            loc = ext.get("location", "").strip()
+            if loc not in selected_locations:
+                continue
+
+        # All-day / timed filter
+        if time_filter == "All-day" and not e.get("allDay", False):
+            continue
+        if time_filter == "Timed" and e.get("allDay", False):
+            continue
+
+        filtered.append(e)
+
+    return filtered
+
+
+# ---------------------------------------------------------------------------
+# UI – Calendar page
+# ---------------------------------------------------------------------------
+
+def render_calendar():
+    """Main calendar view."""
+    st.header("Event Calendar")
+
+    config = load_config()
+
+    n_sources = len(config.get("sheets", [])) + len(config.get("watch_folders", []))
+    if n_sources == 0:
+        st.info(
+            "No data sources configured yet.  \n"
+            "Go to **Manage Sources** to add your first file."
+        )
+        return
+
+    # Calendar view selector
+    col1, col2 = st.columns([3, 1])
+    with col2:
+        view = st.selectbox(
+            "View",
+            options=[
+                "dayGridMonth",
+                "dayGridWeek",
+                "dayGridDay",
+                "listMonth",
+                "listWeek",
+            ],
+            format_func=lambda v: {
+                "dayGridMonth": "Month",
+                "dayGridWeek": "Week",
+                "dayGridDay": "Day",
+                "listMonth": "List (Month)",
+                "listWeek": "List (Week)",
+            }.get(v, v),
+        )
+
+    # Load all events
+    with st.spinner("Loading events..."):
+        all_events = build_events(config)
+
+    # Apply filters
+    events = filter_events(all_events, config)
+
+    st.caption(
+        f"Showing {len(events)} of {len(all_events)} events "
+        f"from {n_sources} source(s)"
+    )
+
+    # Legend
+    legend_items: list[tuple[str, str]] = []
+    for idx, s in enumerate(config.get("sheets", [])):
+        legend_items.append((
+            s.get("name", f"Source {idx+1}"),
+            s.get("default_color", DEFAULT_COLORS[idx % len(DEFAULT_COLORS)]),
+        ))
+    for wf in config.get("watch_folders", []):
+        legend_items.append((wf.get("name", "Folder"), wf.get("default_color", "#3788d8")))
+
+    with st.expander("Legend", expanded=False):
+        for name, color in legend_items:
+            st.markdown(
+                f'<span style="display:inline-block;width:14px;height:14px;'
+                f'background:{color};border-radius:3px;margin-right:6px;vertical-align:middle;">'
+                f"</span> {name}",
+                unsafe_allow_html=True,
+            )
+
+    # Render calendar
+    calendar_options = {
+        "initialView": view,
+        "headerToolbar": {
+            "left": "prev,next today",
+            "center": "title",
+            "right": "",
+        },
+        "editable": False,
+        "selectable": False,
+        "navLinks": True,
+        "height": 650,
+        "displayEventTime": False,
+    }
+
+    custom_css = """
+        .fc-event-past { opacity: 0.7; }
+        .fc-event { cursor: pointer; padding: 2px 4px; border-radius: 3px; }
+        .fc-toolbar-title { font-size: 1.3em !important; }
+    """
+
+    state = calendar(events=events, options=calendar_options, custom_css=custom_css, key=f"main_cal_{view}")
+
+    # Show event details on click
+    if state and state.get("eventClick"):
+        evt = state["eventClick"]["event"]
+        ext = evt.get("extendedProps", {})
+        st.divider()
+        st.subheader(evt.get("title", "Event Details"))
+        detail_cols = st.columns(2)
+        with detail_cols[0]:
+            start_str = evt.get("start", "")
+            st.markdown(f"**Start:** {start_str}")
+            if evt.get("end"):
+                st.markdown(f"**End:** {evt['end']}")
+        with detail_cols[1]:
+            if ext.get("location"):
+                st.markdown(f"**Location:** {ext['location']}")
+            if ext.get("source"):
+                source_text = ext["source"]
+                if ext.get("source_url"):
+                    source_text = f"[{ext['source']}]({ext['source_url']})"
+                st.markdown(f"**Source:** {source_text}")
+            elif ext.get("source_url"):
+                st.markdown(f"**Source:** [Open original sheet]({ext['source_url']})")
+        if ext.get("description"):
+            st.markdown(f"**Description:** {ext['description']}")
+
+        # Custom fields
+        if ext.get("custom"):
+            for cf_label, cf_value in ext["custom"].items():
+                st.markdown(f"**{cf_label}:** {cf_value}")
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    st.set_page_config(
+        page_title="Sheets Calendar",
+        page_icon="📅",
+        layout="wide",
+    )
+
+    # Navigation
+    if IS_CLOUD:
+        nav_options = ["Calendar", "Manage Sources"]
+    else:
+        nav_options = ["Calendar", "Manage Sources", "Automation"]
+
+    page = st.sidebar.radio(
+        "Navigation",
+        options=nav_options,
+        index=0,
+    )
+
+    st.sidebar.divider()
+
+    # Quick stats
+    config = load_config()
+    n_files = len(config.get("sheets", []))
+    st.sidebar.metric("File sources", n_files)
+    if not IS_CLOUD:
+        n_folders = len(config.get("watch_folders", []))
+        st.sidebar.metric("Watched folders", n_folders)
+
+    # Sync from refresh folder on every page load (local mode only)
+    if not IS_CLOUD and config.get("refresh_folder", "").strip():
+        n_synced = sync_refresh_folder(config)
+        if n_synced:
+            st.sidebar.success(f"Synced {n_synced} source(s) from refresh folder")
+
+    # Auto-refresh (local mode only — cloud redeploys on git push)
+    if not IS_CLOUD:
+        st.sidebar.divider()
+        auto_refresh = st.sidebar.toggle("Auto-refresh", value=False)
+        if auto_refresh:
+            interval = st.sidebar.slider(
+                "Refresh interval (minutes)", min_value=1, max_value=60, value=5
+            )
+            st.sidebar.caption(f"Page will reload every {interval} min to pick up file changes.")
+            if "_last_refresh" not in st.session_state:
+                st.session_state["_last_refresh"] = time.time()
+            elapsed = time.time() - st.session_state["_last_refresh"]
+            if elapsed >= interval * 60:
+                st.session_state["_last_refresh"] = time.time()
+                st.rerun()
+            else:
+                remaining = int(interval * 60 - elapsed)
+                st.sidebar.caption(f"Next refresh in ~{remaining}s")
+                time.sleep(0)
+                st.empty()
+
+    if page == "Calendar":
+        render_calendar()
+    elif page == "Manage Sources":
+        render_manage_sheets()
+    else:
+        render_apps_script()
+
+
+if __name__ == "__main__":
+    main()
