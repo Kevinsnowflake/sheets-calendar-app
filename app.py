@@ -1452,23 +1452,42 @@ def main():
         layout="wide",
     )
 
-    # Navigation — restrict admin pages on Streamlit Cloud to allowed email
-    ADMIN_EMAIL = "kevin.nguyen@snowflake.com"
-    if IS_CLOUD:
-        user_email = getattr(st, "user", {}).get("email", "")
-        is_admin = user_email == ADMIN_EMAIL
-        if is_admin:
+    # Admin unlock via secret password (stored in Streamlit secrets, not in code)
+    if "admin_unlocked" not in st.session_state:
+        st.session_state["admin_unlocked"] = False
+
+    # Navigation — admin pages only visible when unlocked
+    if st.session_state["admin_unlocked"]:
+        if IS_CLOUD:
             nav_options = ["Calendar", "Manage Sources"]
         else:
-            nav_options = ["Calendar"]
+            nav_options = ["Calendar", "Manage Sources", "Automation"]
     else:
-        nav_options = ["Calendar", "Manage Sources", "Automation"]
+        nav_options = ["Calendar"]
 
     page = st.sidebar.radio(
         "Navigation",
         options=nav_options,
         index=0,
     )
+
+    # Admin login / logout in sidebar
+    st.sidebar.divider()
+    if st.session_state["admin_unlocked"]:
+        if st.sidebar.button("Lock admin", key="admin_lock"):
+            st.session_state["admin_unlocked"] = False
+            st.rerun()
+    else:
+        admin_password = st.secrets.get("ADMIN_PASSWORD", None)
+        if admin_password:
+            with st.sidebar.expander("Admin login"):
+                pwd = st.text_input("Password", type="password", key="admin_pwd_input")
+                if st.button("Unlock", key="admin_unlock_btn"):
+                    if pwd == admin_password:
+                        st.session_state["admin_unlocked"] = True
+                        st.rerun()
+                    else:
+                        st.error("Incorrect password.")
 
     st.sidebar.divider()
 
