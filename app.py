@@ -1452,9 +1452,15 @@ def main():
         layout="wide",
     )
 
-    # Navigation
+    # Navigation — restrict admin pages on Streamlit Cloud to allowed email
+    ADMIN_EMAIL = "kevin.nguyen@snowflake.com"
     if IS_CLOUD:
-        nav_options = ["Calendar", "Manage Sources"]
+        user_email = getattr(st, "user", {}).get("email", "")
+        is_admin = user_email == ADMIN_EMAIL
+        if is_admin:
+            nav_options = ["Calendar", "Manage Sources"]
+        else:
+            nav_options = ["Calendar"]
     else:
         nav_options = ["Calendar", "Manage Sources", "Automation"]
 
