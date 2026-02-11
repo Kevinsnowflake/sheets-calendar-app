@@ -61,13 +61,13 @@ ADMIN_EMAILS = {
 
 def is_admin() -> bool:
     """Return True if the current viewer is an admin (or running locally)."""
-    if not IS_CLOUD:
-        return True  # local dev — always admin
     try:
-        email = st.experimental_user.email or ""
+        email = (st.experimental_user.email or "").strip().lower()
     except AttributeError:
-        return True  # fallback if API unavailable
-    return email.strip().lower() in ADMIN_EMAILS
+        return True  # local dev or old Streamlit — always admin
+    if not email:
+        return True  # no email available (local dev) — always admin
+    return email in ADMIN_EMAILS
 
 # ---------------------------------------------------------------------------
 # Config helpers
