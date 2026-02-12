@@ -1808,8 +1808,10 @@ def _check_password() -> bool:
 
     st.title("Sheets Calendar")
     st.markdown("---")
-    pwd = st.text_input("Enter password to access this app", type="password", key="_app_pwd")
-    if st.button("Submit", key="_app_pwd_submit"):
+    with st.form("app_password_form"):
+        pwd = st.text_input("Enter password to access this app", type="password", key="_app_pwd")
+        submitted = st.form_submit_button("Submit")
+    if submitted:
         if pwd == st.secrets.get("app_password", ""):
             st.session_state["authenticated"] = True
             st.rerun()
@@ -1857,8 +1859,10 @@ def main():
         admin_password = st.secrets.get("ADMIN_PASSWORD", None)
         if admin_password:
             with st.sidebar.expander("Admin login"):
-                pwd = st.text_input("Password", type="password", key="admin_pwd_input")
-                if st.button("Unlock", key="admin_unlock_btn"):
+                with st.form("admin_login_form"):
+                    pwd = st.text_input("Password", type="password", key="admin_pwd_input")
+                    submitted = st.form_submit_button("Unlock")
+                if submitted:
                     if pwd == admin_password:
                         st.session_state["admin_unlocked"] = True
                         st.rerun()
