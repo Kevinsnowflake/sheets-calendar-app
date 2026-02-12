@@ -438,9 +438,17 @@ def rows_to_events(
     events: list[dict] = []
     row_filter = mapping.get("row_filter")
     # Pre-compute allowed values (comma-separated, case-insensitive)
+    # Strips surrounding quotes so users can enter: 'ValueA', 'ValueB'
     filter_values: set[str] | None = None
     if row_filter and row_filter.get("column") and row_filter.get("value"):
-        filter_values = {v.strip().lower() for v in row_filter["value"].split(",") if v.strip()}
+        filter_values = set()
+        for v in row_filter["value"].split(","):
+            v = v.strip()
+            # Strip matched surrounding quotes: 'val' or "val"
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in ("'", '"'):
+                v = v[1:-1]
+            if v:
+                filter_values.add(v.lower())
     for _, row in df.iterrows():
         # Per-source row filter: skip rows that don't match any allowed value
         if filter_values is not None:
