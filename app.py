@@ -1176,90 +1176,172 @@ def render_manage_sheets():
 # ---------------------------------------------------------------------------
 
 def render_apps_script():
-    """Show the Google Apps Script snippet for automated CSV emails."""
+    """Show the Google Apps Script snippet for automated GitHub push."""
     st.header("Automate with Google Apps Script")
 
     st.markdown(
-        "You can set up each Google Sheet to **automatically email you a CSV export** "
-        "on a schedule (e.g. weekly). Then just save the attachment to your "
-        "linked file path or watched folder — the calendar picks up the changes "
-        "next time it loads.\n\n"
+        "Set up each Google Sheet to **automatically push its CSV data to GitHub** "
+        "on a schedule (e.g. daily). When the data lands in the repo, Streamlit "
+        "Cloud redeploys and the calendar updates automatically.\n\n"
         "**This uses Google Apps Script, which is part of Google Workspace — "
-        "not Google Cloud.** No API keys or special permissions needed."
+        "not Google Cloud.** Works with private sheets because the script runs "
+        "as the sheet owner."
     )
 
-    st.subheader("Step 1: Add the script to your sheet")
+    # --- Show configured sources with their file paths ---
+    config = load_config()
+    sources = config.get("sheets", [])
+    if sources:
+        st.subheader("Your configured sources")
+        st.markdown(
+            "Use the **File path** below as the `FILE_PATH` in the script "
+            "for each sheet you want to automate."
+        )
+        for s in sources:
+            src_url = s.get("source_url", "")
+            link = f" — [Open sheet]({src_url})" if src_url else ""
+            st.markdown(
+                f"- **{s.get('name', 'Unnamed')}**{link}  \n"
+                f"  `FILE_PATH = \"{s.get('file_path', '')}\"`"
+            )
+        st.divider()
+
+    st.subheader("Step 1: Store your GitHub token")
     st.markdown(
-        "1. Open your Google Sheet.\n"
-        "2. Go to **Extensions → Apps Script**.\n"
-        "3. Delete any existing code and paste the script below.\n"
-        "4. Update the `RECIPIENT_EMAIL` at the top.\n"
-        "5. Click **Save**."
+        "1. Create a **GitHub Personal Access Token** (fine-grained) at "
+        "[github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta).\n"
+        "   - Scope it to your `sheets-calendar-app` repo.\n"
+        "   - Grant **Contents** read & write permission.\n"
+        "2. Open any Google Sheet you want to automate.\n"
+        "3. Go to **Extensions → Apps Script**.\n"
+        "4. In the left sidebar, click the **gear icon** (Project Settings).\n"
+        "5. Scroll to **Script Properties** and add:\n"
+        "   - Property: `GITHUB_TOKEN`  Value: *your token*\n"
+        "   - Property: `GITHUB_REPO`   Value: *owner/repo* "
+        "(e.g. `Kevinsnowflake/sheets-calendar-app`)\n\n"
+        "This keeps your token out of the script code. You only need to "
+        "do this once per Google Sheet."
+    )
+
+    st.subheader("Step 2: Add the script")
+    st.markdown(
+        "1. In the Apps Script editor, go to **Editor** (the `< >` icon).\n"
+        "2. Delete any existing code and paste the script below.\n"
+        "3. Update the `FILE_PATH` at the top to match the source "
+        "(see the list above).\n"
+        "4. Click **Save**.\n"
+        "5. Click **Run** to test — check the Execution Log for success."
     )
 
     script = '''\
 // === CONFIGURATION ===
-var RECIPIENT_EMAIL = "you@yourcompany.com";  // ← change this
-var SUBJECT_PREFIX  = "Calendar Export";        // email subject prefix
+// Set FILE_PATH to match the source's file path in the calendar app.
+// Example: "data/My Sheet - Sheet1.csv"
+var FILE_PATH = "data/CHANGE_ME.csv";
 // === END CONFIGURATION ===
 
-function emailSheetAsCsv() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getActiveSheet();
-  var name = ss.getName() + " - " + sheet.getName();
+// GitHub credentials are read from Script Properties (Project Settings).
+// Required properties:  GITHUB_TOKEN, GITHUB_REPO
 
-  // Build CSV content
+function pushToGitHub() {
+  var props = PropertiesService.getScriptProperties();
+  var token = props.getProperty("GITHUB_TOKEN");
+  var repo  = props.getProperty("GITHUB_REPO");
+  if (!token || !repo) {
+    throw new Error(
+      "Missing Script Properties. Go to Project Settings and add "
+      + "GITHUB_TOKEN and GITHUB_REPO."
+    );
+  }
+
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+
+  // --- Build CSV content ---
   var data = sheet.getDataRange().getValues();
   var csv = data.map(function(row) {
     return row.map(function(cell) {
       var val = (cell instanceof Date)
-        ? Utilities.formatDate(cell, ss.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss")
+        ? Utilities.formatDate(cell, ss.getSpreadsheetTimeZone(),
+                               "yyyy-MM-dd HH:mm:ss")
         : String(cell);
-      // Escape quotes and wrap in quotes if needed
-      if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1 || val.indexOf('"') > -1) {
-        val = '"' + val.replace(/"/g, '""') + '"';
+      if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
+          || val.indexOf(\'"\') > -1) {
+        val = \'"\' + val.replace(/"/g, \'""\') + \'"\';
       }
       return val;
     }).join(",");
   }).join("\\n");
 
-  var blob = Utilities.newBlob(csv, "text/csv", name + ".csv");
-  var today = Utilities.formatDate(new Date(), ss.getSpreadsheetTimeZone(), "yyyy-MM-dd");
+  var encoded = Utilities.base64Encode(csv, Utilities.Charset.UTF_8);
 
-  MailApp.sendEmail({
-    to: RECIPIENT_EMAIL,
-    subject: SUBJECT_PREFIX + ": " + name + " (" + today + ")",
-    body: "Attached is the latest CSV export of:\\n\\n"
-        + "  Spreadsheet: " + ss.getName() + "\\n"
-        + "  Sheet: " + sheet.getName() + "\\n"
-        + "  Date: " + today + "\\n\\n"
-        + "Save this attachment to your calendar app\\'s watched folder.",
-    attachments: [blob],
+  // --- Get current file SHA (required for updates) ---
+  var apiBase = "https://api.github.com/repos/" + repo + "/contents/";
+  var headers = {
+    "Authorization": "Bearer " + token,
+    "Accept": "application/vnd.github+json"
+  };
+
+  var sha = null;
+  var getResp = UrlFetchApp.fetch(apiBase + FILE_PATH, {
+    method: "get",
+    headers: headers,
+    muteHttpExceptions: true
   });
+  if (getResp.getResponseCode() === 200) {
+    sha = JSON.parse(getResp.getContentText()).sha;
+  }
+
+  // --- Push file to GitHub ---
+  var body = {
+    message: "Auto-sync: update " + FILE_PATH,
+    content: encoded
+  };
+  if (sha) body.sha = sha;
+
+  var putResp = UrlFetchApp.fetch(apiBase + FILE_PATH, {
+    method: "put",
+    headers: headers,
+    contentType: "application/json",
+    payload: JSON.stringify(body),
+    muteHttpExceptions: true
+  });
+
+  var code = putResp.getResponseCode();
+  if (code === 200 || code === 201) {
+    Logger.log("Pushed " + FILE_PATH + " to GitHub (" + code + ")");
+  } else {
+    throw new Error(
+      "GitHub push failed (" + code + "): "
+      + putResp.getContentText().substring(0, 300)
+    );
+  }
 }'''
 
     st.code(script, language="javascript")
 
-    st.subheader("Step 2: Set up a weekly trigger")
+    st.subheader("Step 3: Set up a scheduled trigger")
     st.markdown(
-        "1. In the Apps Script editor, click the **clock icon** (Triggers) in the left sidebar.\n"
+        "1. In the Apps Script editor, click the **clock icon** (Triggers) "
+        "in the left sidebar.\n"
         "2. Click **+ Add Trigger** (bottom right).\n"
         "3. Configure:\n"
-        "   - **Function:** `emailSheetAsCsv`\n"
+        "   - **Function:** `pushToGitHub`\n"
         "   - **Event source:** Time-driven\n"
-        "   - **Type:** Week timer\n"
-        "   - **Day / time:** Pick what works for you (e.g. Monday 6-7 AM)\n"
+        "   - **Type:** Day timer (or Hour / Week — your choice)\n"
+        "   - **Time:** Pick what works for you (e.g. 6-7 AM)\n"
         "4. Click **Save** and authorize when prompted.\n\n"
-        "You'll now get a weekly email with the CSV attached. "
-        "Save the attachment to your linked file path or watched folder."
+        "The sheet will now automatically push its data to GitHub on "
+        "your chosen schedule. Streamlit Cloud redeploys on each push, "
+        "so the calendar stays up to date."
     )
 
-    st.subheader("Step 3: (Optional) Auto-save with a mail rule")
+    st.subheader("Repeat for each sheet")
     st.markdown(
-        "If you want to skip the manual save step, you can set up a mail rule "
-        "or use a tool like [Gmail to Google Drive](https://workspace.google.com/marketplace) "
-        "to automatically save attachments matching the subject line to a specific folder. "
-        "Point a **Watch Folder** at that location and the pipeline is fully automated."
+        "Add the same script to each Google Sheet you want to automate. "
+        "Just change the `FILE_PATH` to match the correct source (see "
+        "the list at the top of this page). The `GITHUB_TOKEN` and "
+        "`GITHUB_REPO` Script Properties are the same for all sheets."
     )
 
 
