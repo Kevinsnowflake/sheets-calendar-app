@@ -96,6 +96,26 @@
         "description": "LinkedIn / Youtube Description \n(no character limit)",
         "custom_fields": []
       }
+    },
+    {
+      "name": "AI/Coco (Krista)",
+      "file_path": "data/Content Calendar_1.csv",
+      "default_color": "#f4a261",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/1pKEno9aB4VTvb-mNxrm_ooMaFoljWWv_m946zN90Sxg/edit?gid=412607934#gid=412607934",
+      "header_row": 6,
+      "mapping": {
+        "title": "Topic",
+        "start": "Date",
+        "description": "Type",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "static": true,
+            "static_value": "AI"
+          }
+        ]
+      }
     }
   ],
   "watch_folders": [],
