@@ -3,206 +3,206 @@
 (YouTube - 70 characters or less)","LinkedIn / Youtube Description 
 (no character limit)",Related Product,Product Sensitivity,Overall Status,Host,Guest / Panelist(s),Guest Type,Talking Points Status,Guest Training Complete? ,Headshots,Legal Approval Required? ,"Legal Approval Complete? 
 (if applicable) ",YouTube Setup,A/V Setup ,YouTube Thumbnail ,Content Reference Material (if any),PMM / Lead,,
-1,2023-05-31 23:00:00,,10:00 - 10:30 AM PST,Spark Attack - Episode 1 ,Link,Replacing PySpark with Snowpark [Demo] ,Replacing PySpark with Snowpark: Sentiment Analysis,"Join Snowflake's Nick Akincilar, Phani Raj, and host Felipe Hoffa for a live conversation and demo showcasing the use of Snowpark in place of PySpark for data engineering and machine learning.",Snowpark,GA,In Progress,Felipe Hoffa,"Nick Akncilar, 
+1,2023-06-01 00:00:00,,10:00 - 10:30 AM PST,Spark Attack - Episode 1 ,Link,Replacing PySpark with Snowpark [Demo] ,Replacing PySpark with Snowpark: Sentiment Analysis,"Join Snowflake's Nick Akincilar, Phani Raj, and host Felipe Hoffa for a live conversation and demo showcasing the use of Snowpark in place of PySpark for data engineering and machine learning.",Snowpark,GA,In Progress,Felipe Hoffa,"Nick Akncilar, 
 Phani Raj",Internal,Completed,true,Received,No,N/A,true,true,true,"https://github.com/NickAkincilar/Sample_Snowpark_Demos
 
 https://medium.com/snowflake/migrating-from-pyspark-to-snowpark-python-series-part-1-a75058c1e579
 https://medium.com/snowflake/migrating-from-pyspark-to-snowpark-python-series-part-2-9c87120097f3
 https://medium.com/snowflake/migrating-from-pyspark-to-snowpark-python-series-part-3-9d44b70d415f",,,
-2,2023-06-19 23:00:00,,10:00 - 10:30 AM PST,Community Product Update #1: Streaming & Snowpark ,Link,Streaming & Snowpark ,Community Product Update: Streaming and Snowpark ,"Join Jeff Hollan, James Malone, and host Felipe Hoffa for a community update from the Product Engineering Team! They’ll discuss streaming and Snowpark, while answering some of your questions LIVE.",Snowpark,PrPr,Not Started,Felipe Hoffa,"James Malone, 
+2,2023-06-20 00:00:00,,10:00 - 10:30 AM PST,Community Product Update #1: Streaming & Snowpark ,Link,Streaming & Snowpark ,Community Product Update: Streaming and Snowpark ,"Join Jeff Hollan, James Malone, and host Felipe Hoffa for a community update from the Product Engineering Team! They’ll discuss streaming and Snowpark, while answering some of your questions LIVE.",Snowpark,PrPr,Not Started,Felipe Hoffa,"James Malone, 
 Jeff Hollan",Internal,Completed,true,Received,No,N/A,true,true,true,"James' Blogpost on Streaming: https://medium.com/snowflake/streaming-options-options-which-to-choose-f64b0f2e6585
 
 Komodo Health Community Highlight - Cost Savings: https://www.snowflake.com/blog/komodo-health-achieves-cost-savings/
 
 Hugging Face Community Highlight - Deploying Pre-Trained LLMs: 
 https://medium.com/snowflake/deploying-pre-trained-llms-in-snowflake-75a0d07ef03d",,,
-,2023-07-03 23:00:00,,SKIPPING FOR FOURTH OF JULY HOLIDAY,,,,,,,,,,,,,,,,,,,,,,,
-3,2023-07-17 23:00:00,,10:00 - 10:30 AM PST,Introduced at Snowflake Summit,Link,Introduced at Snowflake Summit,Live: Introduced at Snowflake Summit,"Join host Felipe Hoffa as he recaps Gen AI/LLM announcements made at Snowflake Summit with Data Superhero and Co-Founder & CEO of SELECT, Ian Whitestone, and Snowflake Developer Advocate, Dash Desai. The event will also feature a demo on how to get started with building Native Apps. ",Native Apps,PuPr,Completed,Felipe Hoffa,"Ian Whitestone (DSH), Carlos Carrero",External,Completed,true,Received,No,N/A,true,true,true,,,,
-4,2023-07-31 23:00:00,,10:00 - 10:30 AM PST,Cost Optimization on Snowflake,Link,Cost Optimization on Snowflake,Live: Cost Optimization on Snowflake,"Join host Felipe Hoffa joined by Snowflake Product Manager, Samartha Chandrashekar, and Developer Advocate, Gilberto Hernandez, (Developer Advocate) as they discuss best practices and recommendations on cost optimization including getting visibility into cost, warehouse optimization, warehouse utilization, and more. ",Cost,PuPr,Completed,Felipe Hoffa,Samartha Chandrashekar,Internal,Completed,true,Received,No,N/A,,,,,,,
-5,2023-08-14 23:00:00,,10:00 - 10:30 AM PST,Llama 2 ,Link,Powering LLMs with Llama 2 in Snowflake,Live: Powering LLMs with Llama 2 in Snowflake,"Join host Felipe Hoffa with guest Snowflake's Justin Langseth as they discuss Llama 2, Snowpark Container Services (Private Preview), and more. Justin will demo and showcase how to run the LLM end-to-end all within Snowflake.",LLM,PrPr,Completed,Felipe Hoffa,Justin Langseth,Internal,Completed,true,Received,Yes,true,,,,,,,
-6,2023-08-28 23:00:00,,10:00 - 10:30 AM PST,Streaming,Link,Snowpipe Streaming and Dynamic Tables,Live: Snowpipe Streaming and Dynamic Tables,"Join host Felipe Hoffa with guest Tyler Akidau, Principal Software Engineer, as they showcase how Snowpipe Streaming enables low-latency batch ingestion directly into Snowflake tables.",Streaming,PuPr,Completed,Felipe Hoffa,Tyler Akidau,Internal,Completed,true,Received,No,N/A,,,,"https://blog.streamlit.io/instant-insight-generate-data-driven-presentations-in-a-snap/
+,2023-07-04 00:00:00,,SKIPPING FOR FOURTH OF JULY HOLIDAY,,,,,,,,,,,,,,,,,,,,,,,
+3,2023-07-18 00:00:00,,10:00 - 10:30 AM PST,Introduced at Snowflake Summit,Link,Introduced at Snowflake Summit,Live: Introduced at Snowflake Summit,"Join host Felipe Hoffa as he recaps Gen AI/LLM announcements made at Snowflake Summit with Data Superhero and Co-Founder & CEO of SELECT, Ian Whitestone, and Snowflake Developer Advocate, Dash Desai. The event will also feature a demo on how to get started with building Native Apps. ",Native Apps,PuPr,Completed,Felipe Hoffa,"Ian Whitestone (DSH), Carlos Carrero",External,Completed,true,Received,No,N/A,true,true,true,,,,
+4,2023-08-01 00:00:00,,10:00 - 10:30 AM PST,Cost Optimization on Snowflake,Link,Cost Optimization on Snowflake,Live: Cost Optimization on Snowflake,"Join host Felipe Hoffa joined by Snowflake Product Manager, Samartha Chandrashekar, and Developer Advocate, Gilberto Hernandez, (Developer Advocate) as they discuss best practices and recommendations on cost optimization including getting visibility into cost, warehouse optimization, warehouse utilization, and more. ",Cost,PuPr,Completed,Felipe Hoffa,Samartha Chandrashekar,Internal,Completed,true,Received,No,N/A,,,,,,,
+5,2023-08-15 00:00:00,,10:00 - 10:30 AM PST,Llama 2 ,Link,Powering LLMs with Llama 2 in Snowflake,Live: Powering LLMs with Llama 2 in Snowflake,"Join host Felipe Hoffa with guest Snowflake's Justin Langseth as they discuss Llama 2, Snowpark Container Services (Private Preview), and more. Justin will demo and showcase how to run the LLM end-to-end all within Snowflake.",LLM,PrPr,Completed,Felipe Hoffa,Justin Langseth,Internal,Completed,true,Received,Yes,true,,,,,,,
+6,2023-08-29 00:00:00,,10:00 - 10:30 AM PST,Streaming,Link,Snowpipe Streaming and Dynamic Tables,Live: Snowpipe Streaming and Dynamic Tables,"Join host Felipe Hoffa with guest Tyler Akidau, Principal Software Engineer, as they showcase how Snowpipe Streaming enables low-latency batch ingestion directly into Snowflake tables.",Streaming,PuPr,Completed,Felipe Hoffa,Tyler Akidau,Internal,Completed,true,Received,No,N/A,,,,"https://blog.streamlit.io/instant-insight-generate-data-driven-presentations-in-a-snap/
 https://blog.streamlit.io/snowchat-leveraging-openais-gpt-for-sql-queries/
 https://blog.streamlit.io/decoding-warren-buffett-with-llms-and-snowflake-sql/",,,
-7,2023-09-04 23:00:00,,10:00 - 10:30 AM PST,Cost Optimization - optimizing pipelines,Link,Optimizing Snowflake Costs with Observability & Accountability,Live: Optimizing Snowflake Costs with Observability & Accountability,"Join Felipe Hoffa and Scott Redding, Sr Solutions Architect, as they discuss query tags, query fingerprinting, and warehouse size for queries to optimize cost. ",Cost ,GA,Completed,Felipe Hoffa,Scott Redding,Internal,Completed,true,Received,No,N/A,,,,,,,
-8,2023-09-12 23:00:00,,10:00 - 10:30 AM PST,Snowpark external access,Link,External Network Access on Snowpark ,Live: External Network Access on Snowpark ,"Join Felipe Hoffa and Nick Akincilar, Senior Sales Engineer, discuss the new Public Preview of External Network Access for Snowpark. See demos on how to perform web scraping and parse data and insights from the web.",Snowpark,PuPr,Completed,Felipe Hoffa,Nick Akincilar,Internal,Completed,false,Received,No,false,,,,,,,
-9,2023-09-18 23:00:00,,10:00 - 10:30 AM PST,Native Apps,Link,Getting Started Building with Snowflake Native Apps ,Live: Start Building with Snowflake Native Apps,"Join Felipe Hoffa, Gilberto Hernandez (Developer Advocate), and Sohail Zafar (Product Manager) as they demo building a Snowflake Native App, the provider and consumer side of the application, monetization, and more! ",Native Apps,PuPr,Completed,Felipe Hoffa,Gilberto Hernandez ,Internal,Completed,false,Received,No,false,,,,,,,
-10,2023-09-25 23:00:00,,10:00 - 10:30 AM PST,Summit Hackathon Winners,Link,"Streamlit Hackathon Winners Showcase
+7,2023-09-05 00:00:00,,10:00 - 10:30 AM PST,Cost Optimization - optimizing pipelines,Link,Optimizing Snowflake Costs with Observability & Accountability,Live: Optimizing Snowflake Costs with Observability & Accountability,"Join Felipe Hoffa and Scott Redding, Sr Solutions Architect, as they discuss query tags, query fingerprinting, and warehouse size for queries to optimize cost. ",Cost ,GA,Completed,Felipe Hoffa,Scott Redding,Internal,Completed,true,Received,No,N/A,,,,,,,
+8,2023-09-13 00:00:00,,10:00 - 10:30 AM PST,Snowpark external access,Link,External Network Access on Snowpark ,Live: External Network Access on Snowpark ,"Join Felipe Hoffa and Nick Akincilar, Senior Sales Engineer, discuss the new Public Preview of External Network Access for Snowpark. See demos on how to perform web scraping and parse data and insights from the web.",Snowpark,PuPr,Completed,Felipe Hoffa,Nick Akincilar,Internal,Completed,false,Received,No,false,,,,,,,
+9,2023-09-19 00:00:00,,10:00 - 10:30 AM PST,Native Apps,Link,Getting Started Building with Snowflake Native Apps ,Live: Start Building with Snowflake Native Apps,"Join Felipe Hoffa, Gilberto Hernandez (Developer Advocate), and Sohail Zafar (Product Manager) as they demo building a Snowflake Native App, the provider and consumer side of the application, monetization, and more! ",Native Apps,PuPr,Completed,Felipe Hoffa,Gilberto Hernandez ,Internal,Completed,false,Received,No,false,,,,,,,
+10,2023-09-26 00:00:00,,10:00 - 10:30 AM PST,Summit Hackathon Winners,Link,"Streamlit Hackathon Winners Showcase
 ",Live: Streamlit Hackathon Winners Showcase,"Join host Felipe Hoffa with special guests Kaarthik Andavar, Randy Pettus, and Oleksandr Arsentiev who were this year’s Summit Hackathon winners. Each guest will demo the Streamlit app they built and will showcase how you can use their projects to inspire your own applications! ",Streamlit,GA,Completed,Felipe Hoffa,"Kaarthik Andavar, Randy Pettus, and Oleksandr Arsentiev",External,Completed,false,Received,No,false,,,,,,,
-11,2023-10-02 23:00:00,,10:00 - 10:30 AM PST,"Cost Optimization Series 1: Quick Actions to Take to Optimize Snowflake Spend - Resource Montitors, Setting auto-suspend and auto-resume duration",Link,Quick Actions to Take to Optimize Snowflake Spend,Live: Quick Actions to Take to Optimize Snowflake Spend,"Join host Felipe Hoffa, Data Superhero Tomas Sobotik, and Snowflake Product Manager Samartha Chandrashekar as they discuss cost controls through resource monitors with auto suspend and resume scaled to zero. ",Cost ,GA,Completed,Felipe Hoffa,Samartha Chandrashekar tomas.sobotik@gmail.com,External,Completed,false,Received,No,false,,,,Eileen Lu did talk at Summit on this,,,
-12,2023-10-09 23:00:00,,10:00 - 10:30 AM PST,SiS PuPr,Link,Under the Hood: Streamlit in Snowflake,,,Streamlit,PuPr,Completed,Felipe Hoffa,Abhi Saini,,,false,Outstanding,No,false,,,,,,,
-13,2023-10-16 23:00:00,,10:00 - 10:30 AM PST,Cost Optimization Series 2: Controls - Budgets,Link,Introducing Budgets in Public Preview,Live: Introducing budgets in Public Preview,Join host Felipe Hoffa and Product Manager Samartha Chandrashekhar as they discuss Snowflake's budgets feature now in public preview,Cost ,PuPr,Completed,Felipe Hoffa,Samartha Chandrashekar,,,false,,,false,,,,,,,
-14,2023-10-24 23:00:00,,11:00 - 10:30 AM PST,Best practices on using storage optimization features like Automatic Clustering and search optimization        ,Link,"Best Practices for Storage Optimization
+11,2023-10-03 00:00:00,,10:00 - 10:30 AM PST,"Cost Optimization Series 1: Quick Actions to Take to Optimize Snowflake Spend - Resource Montitors, Setting auto-suspend and auto-resume duration",Link,Quick Actions to Take to Optimize Snowflake Spend,Live: Quick Actions to Take to Optimize Snowflake Spend,"Join host Felipe Hoffa, Data Superhero Tomas Sobotik, and Snowflake Product Manager Samartha Chandrashekar as they discuss cost controls through resource monitors with auto suspend and resume scaled to zero. ",Cost ,GA,Completed,Felipe Hoffa,Samartha Chandrashekar tomas.sobotik@gmail.com,External,Completed,false,Received,No,false,,,,Eileen Lu did talk at Summit on this,,,
+12,2023-10-10 00:00:00,,10:00 - 10:30 AM PST,SiS PuPr,Link,Under the Hood: Streamlit in Snowflake,,,Streamlit,PuPr,Completed,Felipe Hoffa,Abhi Saini,,,false,Outstanding,No,false,,,,,,,
+13,2023-10-17 00:00:00,,10:00 - 10:30 AM PST,Cost Optimization Series 2: Controls - Budgets,Link,Introducing Budgets in Public Preview,Live: Introducing budgets in Public Preview,Join host Felipe Hoffa and Product Manager Samartha Chandrashekhar as they discuss Snowflake's budgets feature now in public preview,Cost ,PuPr,Completed,Felipe Hoffa,Samartha Chandrashekar,,,false,,,false,,,,,,,
+14,2023-10-25 00:00:00,,11:00 - 10:30 AM PST,Best practices on using storage optimization features like Automatic Clustering and search optimization        ,Link,"Best Practices for Storage Optimization
 ",Live: Best Practices for Storage Optimization,Join host Felipe Hoffa and Product Managers Yogitha Chilukuri and Tim Sander as they discuss best practices for using storage optimization features like automatic clustering and search optimization,Other,GA,Completed,Felipe Hoffa,"Tim Sander
 Yogitha Chilukuri",,,false,,,false,,,,,,,
-15,2023-10-30 23:00:00,,10:00 - 10:30 AM PST,Apps ,Link,What's New: Snowflake's Developer Platform,Live: What's New Snowflake's Developer Platform,"Join host Felipe Hoffa, Product Manager Anurag Gupta, and Developer Advocate Gilberto Hernandez as they discuss how to supercharge building with Snowflake leveraging the Developer Platform and APIs.",Apps,PuPr,Completed,Felipe Hoffa,Gilberto Hernandez Anurag Gupta,,,false,,,false,,,,,,,
-16,2023-11-08 22:00:00,,10:00 - 10:30 AM PST,Cost Optimization Series 3: definitive guide to managing spend in snowflake,Link,Overview: Snowflake’s Guide to Managing Spend,Overview: Snowflake’s Guide to Managing Spend,"Join host Felipe Hoffa with guests Samartha Chandrashekar (Product Manager) and Scott Redding (Sr Solutions Architect) as they discuss Snowflake’s newly released Definitive Guide to Managing Spend. We’ll chat about best practices, most useful scripts for optimization, and key frameworks for managing spend. ",Cost ,PrPr,Completed,Felipe Hoffa,Samartha Chandrashekar Scott Redding,,,false,,,false,,,,,,,
-17,2923-11-13 22:00:00,,10:00 - 10:30 AM PST,Community Product Update #2,Link,Community Product Update: Iceberg & Snowflake Cortex,Community Product Update: Iceberg & Snowflake Cortex,"Join host Felipe Hoffa and Product Managers Jeff Hollan and James Malone as they share Snowday announcements around the Public Preview of Iceberg (coming soon!), Snowflake Cortex, and more. We want to hear from you, so bring your questions and what products / features you want Snowflake to bring you next.",Other,PuPr,Completed,Felipe Hoffa,Jeff Hollan James Malone,,,false,,,false,,,,,,,
-,2023-11-20 22:00:00,,SKIPPING FOR W/O THANKSGIVING,,,,,,,,,,,,,,,,,,,,,,,
-18,2023-11-27 22:00:00,,10:00 - 10:30 AM PST,"Cost Optimization Series 4: Visibility - Use the Cost Management Interface for account-level spend and usage metrics
+15,2023-10-31 00:00:00,,10:00 - 10:30 AM PST,Apps ,Link,What's New: Snowflake's Developer Platform,Live: What's New Snowflake's Developer Platform,"Join host Felipe Hoffa, Product Manager Anurag Gupta, and Developer Advocate Gilberto Hernandez as they discuss how to supercharge building with Snowflake leveraging the Developer Platform and APIs.",Apps,PuPr,Completed,Felipe Hoffa,Gilberto Hernandez Anurag Gupta,,,false,,,false,,,,,,,
+16,2023-11-09 00:00:00,,10:00 - 10:30 AM PST,Cost Optimization Series 3: definitive guide to managing spend in snowflake,Link,Overview: Snowflake’s Guide to Managing Spend,Overview: Snowflake’s Guide to Managing Spend,"Join host Felipe Hoffa with guests Samartha Chandrashekar (Product Manager) and Scott Redding (Sr Solutions Architect) as they discuss Snowflake’s newly released Definitive Guide to Managing Spend. We’ll chat about best practices, most useful scripts for optimization, and key frameworks for managing spend. ",Cost ,PrPr,Completed,Felipe Hoffa,Samartha Chandrashekar Scott Redding,,,false,,,false,,,,,,,
+17,2923-11-14 00:00:00,,10:00 - 10:30 AM PST,Community Product Update #2,Link,Community Product Update: Iceberg & Snowflake Cortex,Community Product Update: Iceberg & Snowflake Cortex,"Join host Felipe Hoffa and Product Managers Jeff Hollan and James Malone as they share Snowday announcements around the Public Preview of Iceberg (coming soon!), Snowflake Cortex, and more. We want to hear from you, so bring your questions and what products / features you want Snowflake to bring you next.",Other,PuPr,Completed,Felipe Hoffa,Jeff Hollan James Malone,,,false,,,false,,,,,,,
+,2023-11-21 00:00:00,,SKIPPING FOR W/O THANKSGIVING,,,,,,,,,,,,,,,,,,,,,,,
+18,2023-11-28 00:00:00,,10:00 - 10:30 AM PST,"Cost Optimization Series 4: Visibility - Use the Cost Management Interface for account-level spend and usage metrics
 Run common scripts to gain additional visibility over spend",Link,Visibility Over Snowflake Spend,"Live: Understand, Monitor, & Attribute Snowflake Spend",,,,Not Started,Felipe Hoffa,"Samartha Chandrashekar
 Shruti Anand",,,false,,,false,,,,,,,
-,2023-12-04 22:00:00,,10:00 - 10:30 AM PST,COP28 global climate conference,,,,,,,Not Started,,,,,false,,,false,,,,,,,
-19,2023-12-11 22:00:00,,4:30 - 5:00 PM PST,ML-Based Snowflake Cortex functions w/ Ellery Berk,,,,,,,,Felipe Hoffa,Ellery Berk,,,,,,,,,,,,,
-,2023-12-18 22:00:00,,SKIPPING FOR W/O CHRISTMAS,,,,,,,,,,,,,,,,,,,,,,,
-,2023-12-25 22:00:00,,SKIPPING FOR W/O CHRISTMAS,,,,,,,,,,,,,,,,,,,,,,,
-,2024-01-01 22:00:00,,SKIPPING FOR W/O NEW YEARS,,,,,,,,,,,,,,,,,,,,,,,
-20,2024-01-08 22:00:00,,10:00 - 10:30 AM PST,Query Acceleration Services,,,,,,,,Felipe Hoffa,Tim Sander,,,,,,,,,,,,,
-21,2024-01-15 22:00:00,,10:00 - 10:30 AM PST,Supercharge Python development with new Snowflake Python APIs ,,,,"cover the new Python APIs PuPr  covering Task/DAGs ,  Snowpark Container APIs and DB/Schema/WH in detail",,,,Felipe Hoffa,Anurag Gupta Gilberto Hernandez,,,,,,,,,,,,,
-,2024-01-22 22:00:00,,SKIPPING FOR W/O TEAM OFFSITE + FELIPE BUSY W/ RECORDINGS IN STUDIO,,,,,,,,,,,,,,,,,,,,,,,
-22,2024-01-29 22:00:00,,10:00 - 10:30 AM PST,Data Engineering with Snowpark Python,,,,,,,,Felipe Hoffa,Jeremiah Hansen,,,,,,,,,,,,,
-23,2024-02-05 22:00:00,,10:00 - 10:30 AM PST,End-to-End ML Ops in Snowflake,,,,,,,,Felipe Hoffa,Tyler White Chase Romano,,,,,,,,,,,,,
-,2024-02-12 22:00:00,,SKIPPING - WEEK OF SKO,,,,,,,,,,,,,,,,,,,,,,,
-,2024-02-19 22:00:00,,SKIPPING - RIDA OOO,,,,,,,,,,,,,,,,,,,,,,,
-24,2024-02-26 22:00:00,,10:00 - 10:30 AM PST,Google Analytics Data in Snowflake,,,Webinar: https://www.snowflake.com/webinar/product-demo/securely-and-seamlessly-unify-your-raw-google-analytics-data-in-snowflake-2024-02-20/1200x630_livedemo_securely_and_seamlessly_unify_your_raw_google_analytics_data_in_snowflake_live/,,,,,,Jakub Puchalski Pritul Kothari,,,,,,,,,,,,,
-25,2024-03-04 22:00:00,,10:00 - 10:30 AM PST,Object Tagging ,,,,,,,,,,,,,,,,,,,,,,
-,2024-03-11 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,false,,,false,,,,,,,
-26,2024-03-18 23:00:00,,10:00 - 10:30 AM PST,Snowpark ML ,,,,,,,,,Sikha Das Simran Khara,,,,,,,,,,,,,
-27,2024-03-25 23:00:00,,10:00 - 10:30 AM PST,Getting Started with Snowflake and Amazon Data Firehose,,,,,,,,,James Sun,,,,,,,,,,,,,
-,2024-04-01 23:00:00,,LIVESTREAM CANCELED DUE TO GUEST CONFLICT,,,,,,,,,,,,,,,,,,,,,,,
-28,2024-04-08 23:00:00,,10:00 - 10:30 AM PST,Data Trends with Tableau + Snowflake,,,,,,,,,,,,,,,,,,,,,,
-29,2024-04-15 23:00:00,,10:00 - 10:30 AM PST,Cost Optimization with Snowpipe Streaming,,,,,,,,,Xin Huang,,,,,,,,,,,,,
-30,2024-04-22 23:00:00,,10:00 - 10:30 AM PST,Snowpark Container Services with Docker,,"Demo WIP: https://docs.google.com/document/d/1npPA-wO7Gi1OGY_sg1Oe52GGahn0OoDoO--oMw6MjSM/edit 
+,2023-12-05 00:00:00,,10:00 - 10:30 AM PST,COP28 global climate conference,,,,,,,Not Started,,,,,false,,,false,,,,,,,
+19,2023-12-12 00:00:00,,4:30 - 5:00 PM PST,ML-Based Snowflake Cortex functions w/ Ellery Berk,,,,,,,,Felipe Hoffa,Ellery Berk,,,,,,,,,,,,,
+,2023-12-19 00:00:00,,SKIPPING FOR W/O CHRISTMAS,,,,,,,,,,,,,,,,,,,,,,,
+,2023-12-26 00:00:00,,SKIPPING FOR W/O CHRISTMAS,,,,,,,,,,,,,,,,,,,,,,,
+,2024-01-02 00:00:00,,SKIPPING FOR W/O NEW YEARS,,,,,,,,,,,,,,,,,,,,,,,
+20,2024-01-09 00:00:00,,10:00 - 10:30 AM PST,Query Acceleration Services,,,,,,,,Felipe Hoffa,Tim Sander,,,,,,,,,,,,,
+21,2024-01-16 00:00:00,,10:00 - 10:30 AM PST,Supercharge Python development with new Snowflake Python APIs ,,,,"cover the new Python APIs PuPr  covering Task/DAGs ,  Snowpark Container APIs and DB/Schema/WH in detail",,,,Felipe Hoffa,Anurag Gupta Gilberto Hernandez,,,,,,,,,,,,,
+,2024-01-23 00:00:00,,SKIPPING FOR W/O TEAM OFFSITE + FELIPE BUSY W/ RECORDINGS IN STUDIO,,,,,,,,,,,,,,,,,,,,,,,
+22,2024-01-30 00:00:00,,10:00 - 10:30 AM PST,Data Engineering with Snowpark Python,,,,,,,,Felipe Hoffa,Jeremiah Hansen,,,,,,,,,,,,,
+23,2024-02-06 00:00:00,,10:00 - 10:30 AM PST,End-to-End ML Ops in Snowflake,,,,,,,,Felipe Hoffa,Tyler White Chase Romano,,,,,,,,,,,,,
+,2024-02-13 00:00:00,,SKIPPING - WEEK OF SKO,,,,,,,,,,,,,,,,,,,,,,,
+,2024-02-20 00:00:00,,SKIPPING - RIDA OOO,,,,,,,,,,,,,,,,,,,,,,,
+24,2024-02-27 00:00:00,,10:00 - 10:30 AM PST,Google Analytics Data in Snowflake,,,Webinar: https://www.snowflake.com/webinar/product-demo/securely-and-seamlessly-unify-your-raw-google-analytics-data-in-snowflake-2024-02-20/1200x630_livedemo_securely_and_seamlessly_unify_your_raw_google_analytics_data_in_snowflake_live/,,,,,,Jakub Puchalski Pritul Kothari,,,,,,,,,,,,,
+25,2024-03-05 00:00:00,,10:00 - 10:30 AM PST,Object Tagging ,,,,,,,,,,,,,,,,,,,,,,
+,2024-03-12 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,false,,,false,,,,,,,
+26,2024-03-19 00:00:00,,10:00 - 10:30 AM PST,Snowpark ML ,,,,,,,,,Sikha Das Simran Khara,,,,,,,,,,,,,
+27,2024-03-26 00:00:00,,10:00 - 10:30 AM PST,Getting Started with Snowflake and Amazon Data Firehose,,,,,,,,,James Sun,,,,,,,,,,,,,
+,2024-04-02 00:00:00,,LIVESTREAM CANCELED DUE TO GUEST CONFLICT,,,,,,,,,,,,,,,,,,,,,,,
+28,2024-04-09 00:00:00,,10:00 - 10:30 AM PST,Data Trends with Tableau + Snowflake,,,,,,,,,,,,,,,,,,,,,,
+29,2024-04-16 00:00:00,,10:00 - 10:30 AM PST,Cost Optimization with Snowpipe Streaming,,,,,,,,,Xin Huang,,,,,,,,,,,,,
+30,2024-04-23 00:00:00,,10:00 - 10:30 AM PST,Snowpark Container Services with Docker,,"Demo WIP: https://docs.google.com/document/d/1npPA-wO7Gi1OGY_sg1Oe52GGahn0OoDoO--oMw6MjSM/edit 
 
 Messaging : https://docs.google.com/document/d/1tU8xtBtqTN8eYpNKsieGjWvUxP0AtlsTwWp15Q-zNrs/edit ",,,,,,,A Snowflake Datasuperhero and a Docker Captain (Docker's equivalent of DSH),,,,,,,,,,,,,
-31,2024-04-29 23:00:00,,9:30 - 10:00 AM PST,Cost Management Interface,,,,,,,,,PD Dutta Shruti Anand,,,,,,,,,,,,,
-,2024-05-06 23:00:00,,LIVESTREAM CANCELED DUE TO BUILDER WORKSHOPS CONFLICTING,,,,,,,,,,,,,,,,,,,,,,,
-,2024-05-13 23:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
-,2024-05-20 23:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
-,2024-05-27 23:00:00,,SUMMIT,,,,,,,,,,,,,,,,,,,,,,,
-,2024-06-03 23:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
-32,2024-06-10 23:00:00,Snowflake,10:00 - 10:30 AM PST,Summit Recap: Data Platform ,06-18-2024 - Livestream #34: Episode Details,Summit Recap: Data Platform,Summit Recap: Data Platform,"Join host Felipe Hoffa with Snowflake Director of Product Management Josh Klahr as they do a recap of their favorite moments from Snowflake Summit. Josh will also showcase the newest product and feature announcements from the Data Platform Team. 
+31,2024-04-30 00:00:00,,9:30 - 10:00 AM PST,Cost Management Interface,,,,,,,,,PD Dutta Shruti Anand,,,,,,,,,,,,,
+,2024-05-07 00:00:00,,LIVESTREAM CANCELED DUE TO BUILDER WORKSHOPS CONFLICTING,,,,,,,,,,,,,,,,,,,,,,,
+,2024-05-14 00:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
+,2024-05-21 00:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
+,2024-05-28 00:00:00,,SUMMIT,,,,,,,,,,,,,,,,,,,,,,,
+,2024-06-04 00:00:00,,LIVESTREAM CANCELED ,,,,,,,,,,,,,,,,,,,,,,,
+32,2024-06-11 00:00:00,Snowflake,10:00 - 10:30 AM PST,Summit Recap: Data Platform ,06-18-2024 - Livestream #34: Episode Details,Summit Recap: Data Platform,Summit Recap: Data Platform,"Join host Felipe Hoffa with Snowflake Director of Product Management Josh Klahr as they do a recap of their favorite moments from Snowflake Summit. Josh will also showcase the newest product and feature announcements from the Data Platform Team. 
 
 Check out the Summit Recap Report and bring your live questions! https://www.snowflake.com/resource/5-key-takeaways-from-snowflake-summit/?utm_source=linkedin&utm_medium=social&utm_campaign=--en-linkedin&utm_content=-eb-linkedin ",,,,Felipe Hoffa,Yogitha Chilukuri,,,,,,,,,,,,,
-33,2024-06-25 23:00:00,Snowflake,10:00 - 10:30 AM PST,Hex <> OM1 <> Snowflake,6-26-2024 - Livestream #35: Episode Details,"Create Business Metrics with OM1, Hex, and Snowflake ","Create Business Metrics with OM1, Hex, and Snowflake ","Join host Felipe Hoffa with Armin Efendic (Partner Engineer, Hex) and Zachary Bryant (Associate Director Data & Analytics, OM1) as they discuss how OM1 incorporates Hex, Snowflake, and dbt into their data stack. We will dive deep into the architecture and creation of the Hex app that OM1 uses to enable business users to create their own business metrics. ",,,,Felipe Hoffa,Tim Sander,,,,,,,,,,,,,
-,2024-06-24 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-34,2024-07-08 23:00:00,Snowflake,10:00 - 10:30 AM PST,SnowConvert - Using SnowConvert For Code Conversion When Migrating To Snowflake,07-09-2024 - Livestream #36: Episode Details,Accelerate migrations to Snowflake with SnowConvert,Accelerate migrations to Snowflake with SnowConvert,"Join host Felipe Hoffa with Snowflake’s Federico Zoufaly (Director of Migrations and Modernization) and Kuo Lun Lo (Senior Manager of Software Apps) as they discuss how the SnowConvert tool can help accelerate your transition to Snowflake by reducing the manual work by 50-70% with availability for Free Assessment and Table conversion for Oracle, SQL Server and Teradata. We’ll discuss how SnowConvert can help you tackle advanced code conversions.",,,,Felipe Hoffa,"Kuo Lun Lo
+33,2024-06-26 00:00:00,Snowflake,10:00 - 10:30 AM PST,Hex <> OM1 <> Snowflake,6-26-2024 - Livestream #35: Episode Details,"Create Business Metrics with OM1, Hex, and Snowflake ","Create Business Metrics with OM1, Hex, and Snowflake ","Join host Felipe Hoffa with Armin Efendic (Partner Engineer, Hex) and Zachary Bryant (Associate Director Data & Analytics, OM1) as they discuss how OM1 incorporates Hex, Snowflake, and dbt into their data stack. We will dive deep into the architecture and creation of the Hex app that OM1 uses to enable business users to create their own business metrics. ",,,,Felipe Hoffa,Tim Sander,,,,,,,,,,,,,
+,2024-06-25 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+34,2024-07-09 00:00:00,Snowflake,10:00 - 10:30 AM PST,SnowConvert - Using SnowConvert For Code Conversion When Migrating To Snowflake,07-09-2024 - Livestream #36: Episode Details,Accelerate migrations to Snowflake with SnowConvert,Accelerate migrations to Snowflake with SnowConvert,"Join host Felipe Hoffa with Snowflake’s Federico Zoufaly (Director of Migrations and Modernization) and Kuo Lun Lo (Senior Manager of Software Apps) as they discuss how the SnowConvert tool can help accelerate your transition to Snowflake by reducing the manual work by 50-70% with availability for Free Assessment and Table conversion for Oracle, SQL Server and Teradata. We’ll discuss how SnowConvert can help you tackle advanced code conversions.",,,,Felipe Hoffa,"Kuo Lun Lo
 Federico Zoufaly",,,,,,,,,,,,,
-35,2024-07-15 23:00:00,Snowflake,10:00 - 10:30 AM PST,HOLD - Snowpark Summer Takeover Episode #1,Live Video | Python Data Pipelines What's New,"What’s New in Python Data Pipelines
+35,2024-07-16 00:00:00,Snowflake,10:00 - 10:30 AM PST,HOLD - Snowpark Summer Takeover Episode #1,Live Video | Python Data Pipelines What's New,"What’s New in Python Data Pipelines
 ","What’s New in Python Data Pipelines
 ","Do you like working in Python? Want to know how to use it more in your Snowflake experience? Jeff Hollan, director of product management at Snowflake, and Felipe Hoffa, developer advocate, discuss some of the latest announcements to arm you with capabilities to build data pipelines in Python. You’ll learn about transforming data in Python with Snowpark, now with some of the most popular Python libraries, a Python API, native Notebook experience, and the latest capabilities to operationalize your pipelines.",,,,Felipe Hoffa,Jeff Hollan,,,,,,,,,,,,,
-36,2024-07-24 23:00:00,Snowflake,10:00 - 10:30 AM PST,Kafka Connector for Snowflake ,07-25-2024 - Livestream #36: Episode Details,"Snowflake Connector for Kafka
+36,2024-07-25 00:00:00,Snowflake,10:00 - 10:30 AM PST,Kafka Connector for Snowflake ,07-25-2024 - Livestream #36: Episode Details,"Snowflake Connector for Kafka
 ","Snowflake Connector for Kafka
 ","Join host Daniel Myers with Brad Culberson (Snowflake Technical Director) as they discuss the capabilities and uses of the Snowflake Connector for Kafka. Built on top of the Kafka Connect Framework, the connector takes Kafka topics and uploads them to Snowflake for immediate availability. Explore the docs today to learn more! https://docs.snowflake.com/en/user-guide/kafka-connector ",,,,Daniel Myers,Brad Culberson,,,,,,,,,,,,,
-37,2024-07-29 23:00:00,Snowflake,10:00 - 10:30 AM PST,Polaris Catalog ,07-30-2024 - Livestream #38: Episode Details,POLARIS CATALOG NOW OPEN SOURCE,POLARIS CATALOG NOW OPEN SOURCE,"Join host Vino Duraisamy with Snowflake Senior Software Engineer, Michael Collado, as they discuss Polaris Catalog: now open source! 
+37,2024-07-30 00:00:00,Snowflake,10:00 - 10:30 AM PST,Polaris Catalog ,07-30-2024 - Livestream #38: Episode Details,POLARIS CATALOG NOW OPEN SOURCE,POLARIS CATALOG NOW OPEN SOURCE,"Join host Vino Duraisamy with Snowflake Senior Software Engineer, Michael Collado, as they discuss Polaris Catalog: now open source! 
 
 Polaris Catalog implements the Apache Iceberg™ open REST API for multi-engine interoperability with Apache Doris™, Apache Flink™, Apache Spark™, PyIceberg, StarRocks, Trino, and more. 
 
 Learn how to make contributions to the project and bring your live questions! ",,,,Vino Duraisamy,Michael Collado,,,,,,,,,,,,,
-38,2024-07-31 23:00:00,Snowflake,10:00 - 10:30 AM PST,Public Preview has started! PostgreSQL and MySQL connectors,8-01-2024 - Livestream #39: Episode Details,Snowflake Native Connectors for PostgreSQL and MySQL,Snowflake Native Connectors for PostgreSQL and MySQL,"Join host Kamesh Sampath with Jakub Puchalski (Snowflake Senior Product Manager) as they discuss the public preview of the new PostgreSQL and MySQL database connectors built on top of Snowpipe Streaming.
+38,2024-08-01 00:00:00,Snowflake,10:00 - 10:30 AM PST,Public Preview has started! PostgreSQL and MySQL connectors,8-01-2024 - Livestream #39: Episode Details,Snowflake Native Connectors for PostgreSQL and MySQL,Snowflake Native Connectors for PostgreSQL and MySQL,"Join host Kamesh Sampath with Jakub Puchalski (Snowflake Senior Product Manager) as they discuss the public preview of the new PostgreSQL and MySQL database connectors built on top of Snowpipe Streaming.
 
 Learn how to get started with the Connector app in the Snowflake Marketplace and how to set up MySQL and PostgreSQL connectors to get instant access to your data. ",,,,Kamesh Sampath,Jakub Puchalski,,,,,,,,,,,,,
-,2024-08-05 23:00:00,,10:00 - 10:30 AM PST,Doc AI -- PMM OOO (Canceled) ,,,,,,,,Kamesh Sampath,Nikolai Scholz,,,,,,,,,,,,,
-39,2024-08-13 23:00:00,Snowflake,10:00 - 10:30 AM PST,HOLD - Snowpark Summer Takeover Episode #3,8-14-2024 - Livestream #39: Episode Details,"New Python Developer Experiences
+,2024-08-06 00:00:00,,10:00 - 10:30 AM PST,Doc AI -- PMM OOO (Canceled) ,,,,,,,,Kamesh Sampath,Nikolai Scholz,,,,,,,,,,,,,
+39,2024-08-14 00:00:00,Snowflake,10:00 - 10:30 AM PST,HOLD - Snowpark Summer Takeover Episode #3,8-14-2024 - Livestream #39: Episode Details,"New Python Developer Experiences
 ",What’s New: Improved productivity with new developer experiences for python,Join host Daniel Myers with Jason Freeberg (Snowflake Product Manager) to discuss new developer experiences for python that improve productivity and provide cost savings for prototyping with local testing (GA) and python user-defined aggregate functions (public preview). The conversation will go into each feature and include demos and tips to help you get started. ,,,,Daniel Myers,Jason Freeberg,,,,,,,,,,,,,
-40,2024-08-19 23:00:00,Snowflake,10:00 - 10:30 AM PST,Clustering + Cost Insights ,8-20-2024 - Livestream #41: Clustering,"Automatic Clustering Updates
+40,2024-08-20 00:00:00,Snowflake,10:00 - 10:30 AM PST,Clustering + Cost Insights ,8-20-2024 - Livestream #41: Clustering,"Automatic Clustering Updates
 ","[LIVE] Automatic Clustering Updates
 ","Host Vino Duraisamy is joined by Snowflake Product Manager Tim Sander to discuss how you can utilize automatic clustering to improve query efficiency. We’ll discuss how to use automatic clustering, the new features around cost estimation, micro-partitioning, and performance improvements, followed by a demo to see it all in action. ",,,,Vino Duraisamy,Tim Sander,,,,,,,,,,,,,
-41,2024-08-26 23:00:00,Snowflake,10:00 - 10:30 AM PST,Python Data Engineering with Notebooks,8-27-2024 - Livestream #XX: Episode Details,[Demo] Data Engineering in Python,[Demo] Python Data Engineering with Snowflake Notebooks,"Join host Daniel Myers with Jeremiah Hansen(Principal Architect, Data Engineering, Global Field CTO Office) to discuss data processing in Python. Jeremiah will demonstrate how to build python pipelines in Snowflake Notebooks and will provide all the details needed to manage and deploy those Notebooks through an automated CI/CD pipeline from development to production. ",,,,Daniel Myers,Jeremiah Hansen,,,,,,,,,,,,,
-42,2024-09-02 23:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM - TOPIC CANCELED,,,,,,,,Vino Duraisamy,,,,,,,,,,,,,,
-43,2024-09-11 23:00:00,,10:00 - 10:30 AM PST,"Streamlit in Snowflake - product errors, canceled",https://docs.google.com/document/d/1BIso4q_SX5qtt-rrjhFRfv-tejgth2TEr5eA2hM97gM/edit,,,,,,,Dash Desai,Abhi Saini,,,,,,,,,,,,,
-44,2024-09-16 23:00:00,Snowflake,10:00 - 10:30 AM PST,Snowpark Pandas,Episode #43: Pandas,,,,,,,Daniel Myers,Doris Lee,,,,,,,,,,,,,
-45,2024-09-23 23:00:00,Snowflake,10:00 - 10:30 AM PST,ML Functions ,Episode #44: ML Functions,,,,,,,Dash Desai,Boxin Jiang ,,,,,,,,,,,Suha Saya,,
-46,2024-09-30 23:00:00,,10:00 - 10:30 AM PST,Doc AI - GA date moved,,,,,,,,Kamesh Sampath,Nikolai Scholz,,,,,,,,,,,,,
-47,2024-10-07 23:00:00,Snowflake,10:00 - 10:30 AM PST,Feature Store GA,Episode #45: Feature Store GA,,,,,,,Vino Duraisamy,Sandeep Gupta,,,,,,,,,,,Lucy Zhu,,
-48,2024-10-14 23:00:00,Snowflake,10:00 - 10:30 AM PST,SQL Search ,Episode #49: SQL Search,,,,,,,Dash Desai,Shreya Agrawal,,,,,,,,,,,Kelly,,
-49,2024-10-16 23:00:00,Snowflake,10:00 - 10:30 AM PST,Container Run Time ,Episode #49: Container Run Time,,,,,,,Kamesh Sampath,Vinay Sridhar,,,,,,,,,,,Lucy Zhu,,
-50,2024-10-21 23:00:00,Snowflake,10:00 - 10:30 AM PST,Time Series,Episode #50: Time Series,,,,,,,Kamesh Sampath,Yogitha Chilukuri,,,,,,,,,,,Kelly,,
-51,2024-10-28 23:00:00,Snowflake,10:00 - 10:30 AM PST,Doc AI GA ,Episode #51 -- Doc AI GA,,,,,,,Vino Duraisamy,Nikolai Scholz,,,,,,,,,,,Shiyi Gu,,
-,2024-11-04 22:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-,2024-11-11 22:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM -- BUILD 2024,,,,,,,,,,,,,,,,,,,,,,
-52,2024-11-18 22:00:00,Snowflake,10:00 - 10:30 AM PST,Geospatial QGIS (Open Source Geo in Cloud),11-5-2024 - Livestream #49: Geospatial,,,,,,,Daniel Myers,"Fawad Qureshi
+41,2024-08-27 00:00:00,Snowflake,10:00 - 10:30 AM PST,Python Data Engineering with Notebooks,8-27-2024 - Livestream #XX: Episode Details,[Demo] Data Engineering in Python,[Demo] Python Data Engineering with Snowflake Notebooks,"Join host Daniel Myers with Jeremiah Hansen(Principal Architect, Data Engineering, Global Field CTO Office) to discuss data processing in Python. Jeremiah will demonstrate how to build python pipelines in Snowflake Notebooks and will provide all the details needed to manage and deploy those Notebooks through an automated CI/CD pipeline from development to production. ",,,,Daniel Myers,Jeremiah Hansen,,,,,,,,,,,,,
+42,2024-09-03 00:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM - TOPIC CANCELED,,,,,,,,Vino Duraisamy,,,,,,,,,,,,,,
+43,2024-09-12 00:00:00,,10:00 - 10:30 AM PST,"Streamlit in Snowflake - product errors, canceled",https://docs.google.com/document/d/1BIso4q_SX5qtt-rrjhFRfv-tejgth2TEr5eA2hM97gM/edit,,,,,,,Dash Desai,Abhi Saini,,,,,,,,,,,,,
+44,2024-09-17 00:00:00,Snowflake,10:00 - 10:30 AM PST,Snowpark Pandas,Episode #43: Pandas,,,,,,,Daniel Myers,Doris Lee,,,,,,,,,,,,,
+45,2024-09-24 00:00:00,Snowflake,10:00 - 10:30 AM PST,ML Functions ,Episode #44: ML Functions,,,,,,,Dash Desai,Boxin Jiang ,,,,,,,,,,,Suha Saya,,
+46,2024-10-01 00:00:00,,10:00 - 10:30 AM PST,Doc AI - GA date moved,,,,,,,,Kamesh Sampath,Nikolai Scholz,,,,,,,,,,,,,
+47,2024-10-08 00:00:00,Snowflake,10:00 - 10:30 AM PST,Feature Store GA,Episode #45: Feature Store GA,,,,,,,Vino Duraisamy,Sandeep Gupta,,,,,,,,,,,Lucy Zhu,,
+48,2024-10-15 00:00:00,Snowflake,10:00 - 10:30 AM PST,SQL Search ,Episode #49: SQL Search,,,,,,,Dash Desai,Shreya Agrawal,,,,,,,,,,,Kelly,,
+49,2024-10-17 00:00:00,Snowflake,10:00 - 10:30 AM PST,Container Run Time ,Episode #49: Container Run Time,,,,,,,Kamesh Sampath,Vinay Sridhar,,,,,,,,,,,Lucy Zhu,,
+50,2024-10-22 00:00:00,Snowflake,10:00 - 10:30 AM PST,Time Series,Episode #50: Time Series,,,,,,,Kamesh Sampath,Yogitha Chilukuri,,,,,,,,,,,Kelly,,
+51,2024-10-29 00:00:00,Snowflake,10:00 - 10:30 AM PST,Doc AI GA ,Episode #51 -- Doc AI GA,,,,,,,Vino Duraisamy,Nikolai Scholz,,,,,,,,,,,Shiyi Gu,,
+,2024-11-05 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+,2024-11-12 00:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM -- BUILD 2024,,,,,,,,,,,,,,,,,,,,,,
+52,2024-11-19 00:00:00,Snowflake,10:00 - 10:30 AM PST,Geospatial QGIS (Open Source Geo in Cloud),11-5-2024 - Livestream #49: Geospatial,,,,,,,Daniel Myers,"Fawad Qureshi
 Oleksii Bielov",,,,,,,,,,,Kelly Huang,,
-,2024-11-25 22:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM -- THANKSGIVING HOLIDAY,,,,,,,,,,,,,,,,,,,,,,
-53,2024-12-02 22:00:00,Snowflake,10:00 - 10:30 AM PST,Notebooks for admins,https://docs.google.com/document/d/1bEbCfP3J0aUF3WUXG5f3hQHBYdLREIit-YAF070fdsQ/edit?tab=t.0,,,,,,,Vino Duraisamy,Aileen Lu,,,,,,,,,,,Jena Donlin,,
-,2024-12-09 22:00:00,,10:00 - 10:30 AM PST,Notebook showcase - canceled,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Jena Donlin,,
-54,2024-12-16 22:00:00,Snowflake,10:00 - 10:30 AM PST,Snowpipe for Apache Kafka,11-19-2024 - Livestream #52: Apache Kafka,,,,,,,Daniel Myers,Ankit Gupta,,,,,,,,,,,Shiyi Gu,,
-,2024-12-23 22:00:00,,10:00 - 10:30 AM PST,Snowbreak,,,,,,,,,,,,,,,,,,,,,,
-,2024-12-30 22:00:00,,10:00 - 10:30 AM PST,Snowbreak,,,,,,,,,,,,,,,,,,,,,,
-,2025-01-06 22:00:00,,10:00 - 10:30 AM PST,Notebooks with Data Superheroes - canceled,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Jena Donlin,,
-55,2025-01-13 22:00:00,Snowflake,10:00 - 10:30 AM PST,Anthropic,1-14-2024 - Livestream #55: Anthropic,,,,,,,Daniel Myers,Harshal Pimpalkhut,,,,,,,,,,,Julian Forero,,
-56,2025-01-20 22:00:00,Snowflake,10:00 - 10:30 AM PST,ArcticTrain & SwitftKV,1-23-2025 - Livestream #56: SwiftKV,,,,,,,,Josh Reini,,,,,,,,,,,Julian Forero,,
-57,2025-01-27 22:00:00,Snowflake,10:00 - 10:30 AM PST,SnowConvert: Free for All launch,1-28-2025 - Livestream #57: SnowConvert,,,,,,,Federico Zoufaly,,,,,,,,,,,,Suha Saya,,
-58,2025-02-03 22:00:00,Snowflake,10:00 - 10:30 AM PST,Graph Data Science,2-4-2024- Livestream #58: Graph Data Science,,,,,,,Gilberto Hernandez,Chase Romano,,,,,,,,,,,Lucy Zhu,,
-,2025-02-10 22:00:00,,,,,,,,,,,,,,,,,,,,,,,Lucy Zhu,,
-,2025-02-17 22:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-59,2025-02-24 22:00:00,Snowflake,10:00 - 10:30 AM PST,Cortex Agents,2-25-2025 - Livestream #59: Cortex Agents,,,,,,,James Cha-Earley,Arun Agarwal Harshal Pimpalkhute,,,,,,,,,,,Arun Agarwal,,
-60,2025-03-03 22:00:00,Snowflake,9:30 - 10:00 AM PST,ML Observability,3-4-2025 - Livestream #60: ML Observability,,,,,,,Josh Reini,Avinash Joshi,,,,,,,,,,,Lucy Zhu,,
-61,2025-03-10 23:00:00,Snowflake,10:00 - 10:30 AM PST,"Why I Built This with Kamesh -- Iceberg, Polaris, local stack, docker",3-11-2025 - Livestream #61: Polaris starter kit,,,,,,,Chanin Nantasenamat,Kamesh Sampath,,,,,,,,,,,,,
-,2025-03-17 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-03-24 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-03-31 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-62,2025-04-09 23:00:00,Snowflake,10:00 - 10:30 AM PST,Snowflake ML,4-08-2025 - Livestream #62: Snowflake ML,,,,,,,Josh Reini,Sandeep Gupta,,,,,,,,,,,Lucy Zhu,,
-,2025-04-14 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-04-21 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-04-28 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-05-05 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-,2025-05-12 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-,2025-05-19 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-,2025-05-26 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-,2025-06-02 23:00:00,,10:00 - 10:30 AM PST,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
-63,2025-06-08 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Workspaces,6-9-2025 - Livestream #63: Workspaces,,,,,,,Matt Nunn,Alan Jin,,,,,,,,,,,Matt Nunn ,Confirmed,
-64,2025-06-09 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Openflow
+,2024-11-26 00:00:00,,10:00 - 10:30 AM PST,NO LIVESTREAM -- THANKSGIVING HOLIDAY,,,,,,,,,,,,,,,,,,,,,,
+53,2024-12-03 00:00:00,Snowflake,10:00 - 10:30 AM PST,Notebooks for admins,https://docs.google.com/document/d/1bEbCfP3J0aUF3WUXG5f3hQHBYdLREIit-YAF070fdsQ/edit?tab=t.0,,,,,,,Vino Duraisamy,Aileen Lu,,,,,,,,,,,Jena Donlin,,
+,2024-12-10 00:00:00,,10:00 - 10:30 AM PST,Notebook showcase - canceled,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Jena Donlin,,
+54,2024-12-17 00:00:00,Snowflake,10:00 - 10:30 AM PST,Snowpipe for Apache Kafka,11-19-2024 - Livestream #52: Apache Kafka,,,,,,,Daniel Myers,Ankit Gupta,,,,,,,,,,,Shiyi Gu,,
+,2024-12-24 00:00:00,,10:00 - 10:30 AM PST,Snowbreak,,,,,,,,,,,,,,,,,,,,,,
+,2024-12-31 00:00:00,,10:00 - 10:30 AM PST,Snowbreak,,,,,,,,,,,,,,,,,,,,,,
+,2025-01-07 00:00:00,,10:00 - 10:30 AM PST,Notebooks with Data Superheroes - canceled,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Jena Donlin,,
+55,2025-01-14 00:00:00,Snowflake,10:00 - 10:30 AM PST,Anthropic,1-14-2024 - Livestream #55: Anthropic,,,,,,,Daniel Myers,Harshal Pimpalkhut,,,,,,,,,,,Julian Forero,,
+56,2025-01-21 00:00:00,Snowflake,10:00 - 10:30 AM PST,ArcticTrain & SwitftKV,1-23-2025 - Livestream #56: SwiftKV,,,,,,,,Josh Reini,,,,,,,,,,,Julian Forero,,
+57,2025-01-28 00:00:00,Snowflake,10:00 - 10:30 AM PST,SnowConvert: Free for All launch,1-28-2025 - Livestream #57: SnowConvert,,,,,,,Federico Zoufaly,,,,,,,,,,,,Suha Saya,,
+58,2025-02-04 00:00:00,Snowflake,10:00 - 10:30 AM PST,Graph Data Science,2-4-2024- Livestream #58: Graph Data Science,,,,,,,Gilberto Hernandez,Chase Romano,,,,,,,,,,,Lucy Zhu,,
+,2025-02-11 00:00:00,,,,,,,,,,,,,,,,,,,,,,,Lucy Zhu,,
+,2025-02-18 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+59,2025-02-25 00:00:00,Snowflake,10:00 - 10:30 AM PST,Cortex Agents,2-25-2025 - Livestream #59: Cortex Agents,,,,,,,James Cha-Earley,Arun Agarwal Harshal Pimpalkhute,,,,,,,,,,,Arun Agarwal,,
+60,2025-03-04 00:00:00,Snowflake,9:30 - 10:00 AM PST,ML Observability,3-4-2025 - Livestream #60: ML Observability,,,,,,,Josh Reini,Avinash Joshi,,,,,,,,,,,Lucy Zhu,,
+61,2025-03-11 00:00:00,Snowflake,10:00 - 10:30 AM PST,"Why I Built This with Kamesh -- Iceberg, Polaris, local stack, docker",3-11-2025 - Livestream #61: Polaris starter kit,,,,,,,Chanin Nantasenamat,Kamesh Sampath,,,,,,,,,,,,,
+,2025-03-18 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-03-25 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-04-01 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+62,2025-04-10 00:00:00,Snowflake,10:00 - 10:30 AM PST,Snowflake ML,4-08-2025 - Livestream #62: Snowflake ML,,,,,,,Josh Reini,Sandeep Gupta,,,,,,,,,,,Lucy Zhu,,
+,2025-04-15 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-04-22 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-04-29 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-05-06 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+,2025-05-13 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+,2025-05-20 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+,2025-05-27 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+,2025-06-03 00:00:00,,10:00 - 10:30 AM PST,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
+63,2025-06-09 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Workspaces,6-9-2025 - Livestream #63: Workspaces,,,,,,,Matt Nunn,Alan Jin,,,,,,,,,,,Matt Nunn ,Confirmed,
+64,2025-06-10 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Openflow
 
 Scale your data integration with confidence, ready for AI",6-10-2025 - Livestream #64: Openflow ,,,,,,,Shiyi Gu,Sam Lachterman,,,,,,,,,,,Shiyi Gu,Confirmed,
-65,2025-06-10 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"AI/SQL
+65,2025-06-11 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"AI/SQL
 
 Reimagining SQL:  Analyze multi-modal data at scale",6-11-2025 - Livestream #65 AI_SQL: ,,,,,,,Dash Desai,Renee Huang,,,,,,,,,,,Arun Agarwal,As of 6/16 - 719 views,
-66,2025-06-11 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Snowflake Intelligence
+66,2025-06-12 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Snowflake Intelligence
 
 Unlock business insights with conversational data agents",6-12-2025 - Livestream #66: Snowflake Intelligence ,,,,,,,Dash Desai,Jeff Hollan,,,,,,,,,,,Arun Agarwal,As of 6/16 - 829 views,
-67,2025-06-16 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Are LLM Evaluations hard, flawed or Still useful?",6-17-2025 - Livestream #67: Eval Discussion ,,,,,,,Josh Reini,"Anupam Datta, Simon Podhajsky",,,,,,,,,,,Anna Fillipova,Confirmed,Anna OOO
-68,2025-06-17 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Snowflake Postgres: Powering Enterprise AI,6-x-2025 - Livestream #68: Acquisition Announcement capabilities ,,,,,,,Matt Carter,"Craig Kersteins, Unmesh Jagtap",,,,,,,,,,,Claire Peracchio,Confirmed,
-69,2025-06-23 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,DBT projects on Snowflake,6-24-2025 - Livestream #69: ,,,,,,,Vino Duraisamy,Manuela Wei,,,,,,,,,,,Jena Donlin,Confirmed,
-70,2025-07-01 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,pandas on Snowflake Explained!,2025-07-02 - Livestream #70: pandas on Snowflake Hybrid Execution,,,,,,,Vino Duraisamy,Doris Lee,,,,,,,,,,,Jena Donlin,Confirmed,
-71,2025-07-08 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Snowpark Data Integration:DB-API, XML and Snowpark Dev Experience updates",07-09-2025 - Livestream #71:  Snowpark Data Integration,,,,,,,Vino Duraisamy,Qinyi Ding,,,,,,,,,,,Jena Donlin,Confirmed,
-72,2025-07-14 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Snowpark Migration Accelerator (SMA),07-15-2025 - Livestream #72:  SMA,,,,,,,Vino Duraisamy,Brandon Carver,,,,,,,,,,,Jena Donlin,Confirmed,
-73,2025-07-21 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,AI Observability,7-22-2025 - Livestream #73 AI Observability: ,,,,,,,Josh Reini,Anubhav Mishra,,,,,,,,,,,Siddharth Dwivedi,Confirmed,
-74,2025-07-29 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Spark Connect for Snowpark,7-30-2025 - Livestream #74:  Spark Connect for Snowpark ,,,,,,,Vino Duraisamy,"Nimesh Bhagat, Shruti Anand",,,,,,,,,,,Jena Donlin,Confirmed,
-,2025-08-04 23:00:00,,,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
-,2025-08-18 23:00:00,,,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
-75,2025-08-25 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Build and Share AI ready data products,08-26-2025 - Livestream # 75: Internal Marketplace,,,,,,,Gilberto Hernandez,Henrik Nielsen ,,,,,,,,,,,Jenna Roering,Confirmed,
-76,2025-09-08 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Data Clean Rooms + ML,9-9-2025 - Livestream #76: Data Clean Rooms + ML - CANCELLED,,,,,,,James Cha-Earley,Florian Delval,,,,,,,,,,,Lucy Zhu,Cancelled due to changes in Product Schedules,
-,2025-09-08 23:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
-77,2025-09-15 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Operationalizing DBT projects,9-16-2025 - Livestream #77: DBT Projects / CICD,,,,,,,Vino Duraisamy,"Jeremiah Hansen, Uche Nkadi",,,,,,,,,,,Jena Donlin,Confirmed,
-78,2025-09-22 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Build Expressive Data Pipelines in Dynamic Tables,09-23-2025 - Livestream #78:  Dynamic Tables Updates,,,,,,,Vino Duraisamy,Daniel Mills (engineer),,,,,,,,,,,Jena Donlin,Confirmed,
-79,2025-09-29 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex API,9-30-2025 - Livestream #79: Cortex API,,,,,,,?,?,,,,,,,,,,,Siddharth Dwivedi,Cancelled - Siddharth on Paternity Leave,
-,2025-10-06 23:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
-80,2025-10-13 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,A new era of SQL development in Snowflake with Workspaces,10-14-2025 - Livestream #80:  Workspaces GA,,,,,,,Vino Duraisamy,"Annissa, Alan, Youssef",,,,,,,,,,,Jena Donlin,Confirmed,
-81,2025-10-20 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] Build a Connected and Governed Lakehouse,10-21-2025 - Livestream #81:  Iceberg GA,,,,,,,Gilberto Hernandez,Jeemin Sim,,,,,,,,,,,"Jenna Roering, Carlos Nai",Confirmed,
-,2025-10-21 23:00:00,,,,,,,,,,,,Offsite,,,,,,,,,,,,,
-83,2025-10-27 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"
+67,2025-06-17 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Are LLM Evaluations hard, flawed or Still useful?",6-17-2025 - Livestream #67: Eval Discussion ,,,,,,,Josh Reini,"Anupam Datta, Simon Podhajsky",,,,,,,,,,,Anna Fillipova,Confirmed,Anna OOO
+68,2025-06-18 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Snowflake Postgres: Powering Enterprise AI,6-x-2025 - Livestream #68: Acquisition Announcement capabilities ,,,,,,,Matt Carter,"Craig Kersteins, Unmesh Jagtap",,,,,,,,,,,Claire Peracchio,Confirmed,
+69,2025-06-24 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,DBT projects on Snowflake,6-24-2025 - Livestream #69: ,,,,,,,Vino Duraisamy,Manuela Wei,,,,,,,,,,,Jena Donlin,Confirmed,
+70,2025-07-02 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,pandas on Snowflake Explained!,2025-07-02 - Livestream #70: pandas on Snowflake Hybrid Execution,,,,,,,Vino Duraisamy,Doris Lee,,,,,,,,,,,Jena Donlin,Confirmed,
+71,2025-07-09 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"Snowpark Data Integration:DB-API, XML and Snowpark Dev Experience updates",07-09-2025 - Livestream #71:  Snowpark Data Integration,,,,,,,Vino Duraisamy,Qinyi Ding,,,,,,,,,,,Jena Donlin,Confirmed,
+72,2025-07-15 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Snowpark Migration Accelerator (SMA),07-15-2025 - Livestream #72:  SMA,,,,,,,Vino Duraisamy,Brandon Carver,,,,,,,,,,,Jena Donlin,Confirmed,
+73,2025-07-22 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,AI Observability,7-22-2025 - Livestream #73 AI Observability: ,,,,,,,Josh Reini,Anubhav Mishra,,,,,,,,,,,Siddharth Dwivedi,Confirmed,
+74,2025-07-30 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Spark Connect for Snowpark,7-30-2025 - Livestream #74:  Spark Connect for Snowpark ,,,,,,,Vino Duraisamy,"Nimesh Bhagat, Shruti Anand",,,,,,,,,,,Jena Donlin,Confirmed,
+,2025-08-05 00:00:00,,,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
+,2025-08-19 00:00:00,,,No Livestream Topics,,,,,,,,,,,,,,,,,,,,,,
+75,2025-08-26 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Build and Share AI ready data products,08-26-2025 - Livestream # 75: Internal Marketplace,,,,,,,Gilberto Hernandez,Henrik Nielsen ,,,,,,,,,,,Jenna Roering,Confirmed,
+76,2025-09-09 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Data Clean Rooms + ML,9-9-2025 - Livestream #76: Data Clean Rooms + ML - CANCELLED,,,,,,,James Cha-Earley,Florian Delval,,,,,,,,,,,Lucy Zhu,Cancelled due to changes in Product Schedules,
+,2025-09-09 00:00:00,,10:00 - 10:30 AM PST,,,,,,,,,,,,,,,,,,,,,,,
+77,2025-09-16 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Operationalizing DBT projects,9-16-2025 - Livestream #77: DBT Projects / CICD,,,,,,,Vino Duraisamy,"Jeremiah Hansen, Uche Nkadi",,,,,,,,,,,Jena Donlin,Confirmed,
+78,2025-09-23 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Build Expressive Data Pipelines in Dynamic Tables,09-23-2025 - Livestream #78:  Dynamic Tables Updates,,,,,,,Vino Duraisamy,Daniel Mills (engineer),,,,,,,,,,,Jena Donlin,Confirmed,
+79,2025-09-30 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex API,9-30-2025 - Livestream #79: Cortex API,,,,,,,?,?,,,,,,,,,,,Siddharth Dwivedi,Cancelled - Siddharth on Paternity Leave,
+,2025-10-07 00:00:00,,,,,,,,,,,,,,,,,,,,,,,,,
+80,2025-10-14 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,A new era of SQL development in Snowflake with Workspaces,10-14-2025 - Livestream #80:  Workspaces GA,,,,,,,Vino Duraisamy,"Annissa, Alan, Youssef",,,,,,,,,,,Jena Donlin,Confirmed,
+81,2025-10-21 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] Build a Connected and Governed Lakehouse,10-21-2025 - Livestream #81:  Iceberg GA,,,,,,,Gilberto Hernandez,Jeemin Sim,,,,,,,,,,,"Jenna Roering, Carlos Nai",Confirmed,
+,2025-10-22 00:00:00,,,,,,,,,,,,Offsite,,,,,,,,,,,,,
+83,2025-10-28 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"
 [LIVE] Sensitive data is Secure in Snowflake",10-28-2025 - Livestream #83: Identifying Sensitive Data in Snowflake ,,,,,,,Vino Duraisamy,"Himanshu Kandpal, ",,,,,,,,,,,Greg Goomishian,Community,
-84,2025-10-28 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] OceanX Voyage: Snowflake in the middle of the Ocean,Copy of 10-29-2025 - Livestream #84: Snowflake in the middle of the Ocean,,,,,,,James Cha-Earley,Anastasiia Stefanksa,,,,,,,,,,,Amilee Alesna,Community,"Streamlit application to classify data
+84,2025-10-29 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] OceanX Voyage: Snowflake in the middle of the Ocean,Copy of 10-29-2025 - Livestream #84: Snowflake in the middle of the Ocean,,,,,,,James Cha-Earley,Anastasiia Stefanksa,,,,,,,,,,,Amilee Alesna,Community,"Streamlit application to classify data
 AI SQL - rich media processing (classification of Videos, biodiversity of fishes)
 Snowflake Intelligence powered by Cortex Analyst Agent+ Data model built for OceanX
 Demo (with fake data)
 James
 AI SQL and Snowflake intelligence focus more"
-82,2025-10-29 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] Replicate CDC from Oracle to Snowflake via Openflow,10-30-2025 - Livestream #82: Openflow Connector for Oracle,,,,,,,Vino Duraisamy,Jakub Puchalski,,,,,,,,,,,Maria Ho,confirmed,
-85,2025-11-12 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Streaming at Snowflake: Introducing Our Next-Gen Snowpipe Streaming Architecture,11-13-2025 - Livestream #85: Streaming at Snowflake: Next-Gen Snowpipe Streaming Architecture,,,,,,,,,,,,,,,,,,,Maria Ho,confirmed,
-,2025-11-17 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Using new pruning history views to optimize Automatic Clustering and Search Optimization,,,,,,,,Vino Duraisamy,Tim Sander,,,,,,,,,,,"Jennifer Wu
+82,2025-10-30 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,[LIVE] Replicate CDC from Oracle to Snowflake via Openflow,10-30-2025 - Livestream #82: Openflow Connector for Oracle,,,,,,,Vino Duraisamy,Jakub Puchalski,,,,,,,,,,,Maria Ho,confirmed,
+85,2025-11-13 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Streaming at Snowflake: Introducing Our Next-Gen Snowpipe Streaming Architecture,11-13-2025 - Livestream #85: Streaming at Snowflake: Next-Gen Snowpipe Streaming Architecture,,,,,,,,,,,,,,,,,,,Maria Ho,confirmed,
+,2025-11-18 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Using new pruning history views to optimize Automatic Clustering and Search Optimization,,,,,,,,Vino Duraisamy,Tim Sander,,,,,,,,,,,"Jennifer Wu
 ",cancelled,https://medium.com/snowflake/supercharging-snowflake-pruning-using-new-account-usage-views-52530b24bf2e
-86,2025-12-16 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Interactive Analytics,12-17-2025 - Livestream #86: Interactive Analytics,,,,,,,Vino Duraisamy,Will Xu,,,,,,,,,,,"Jennifer Wu
+86,2025-12-17 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Interactive Analytics,12-17-2025 - Livestream #86: Interactive Analytics,,,,,,,Vino Duraisamy,Will Xu,,,,,,,,,,,"Jennifer Wu
 ",confirmed,
-87,2026-01-19 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Use Snowflake SQL to find a needle in a haystack,1-20-2025 - Livestream #87: Use Snowflake SQL to find a needle in a haystack ,,,,,,,Vino Duraisamy,Himanshu Kandpal,,,,,,,,,,,Greg G.,Squad Member,scheduled
-P1,2026-01-20 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Vibe Code Data Apps,01-21-2025 - Livestream #P1: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,700+ attendees with alot of questions - follow on session promised - to be scheduled on 2/4
+87,2026-01-20 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Use Snowflake SQL to find a needle in a haystack,1-20-2025 - Livestream #87: Use Snowflake SQL to find a needle in a haystack ,,,,,,,Vino Duraisamy,Himanshu Kandpal,,,,,,,,,,,Greg G.,Squad Member,scheduled
+P1,2026-01-21 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Vibe Code Data Apps,01-21-2025 - Livestream #P1: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,700+ attendees with alot of questions - follow on session promised - to be scheduled on 2/4
 ,,,,,,,,,,,,,,,,,,,,,,,,,,
-88,2026-01-27 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Dynamic Iceberg Tables,1-28-2025 - Livestream #88: Dynamic Iceberg Tables ,,,,,,,Gilberto Hernandez,Parag Jain,,,,,,,,,,,Jena Donlin,,
-P2,2026-02-03 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Back by Popular Demand - Snowflake and Replit,02-04-2026 - Livestream #P2: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,
-,2026-02-09 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Cortex Code in Action: Live Demos + AMA,2/10 LinkedIn Live: Cortex Code In Action,,,,,,,James Cha-Earley,Umesh Unnikrishnan,,,,,,,,,,,Krista R. ,,
-89,2026-02-10 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"SAP Snowflake Launch -- canceled, will reschedule closer to the GA",2-11-2026 - Livestream #89: SAP Snowflake Launch ,,,,,,,,,,,,,,,,,,,Maria Ho,,
-91,2026-02-17 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-90,2026-02-18 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"ML Updates at BUILD Londong - online ML, Notebooks and Cortex Code",02-12-2026 - Livestream #90: ML Updates at Build London,,,,,,,Josh Reini,??,,,,,,,,,,,Lucy Zhu,,
-92,2026-02-23 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Why Interoperability Matters,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Carlos Nai,Season of Iceberg,
-,2026-02-24 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Monitoring & Evals for AI,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+88,2026-01-28 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Dynamic Iceberg Tables,1-28-2025 - Livestream #88: Dynamic Iceberg Tables ,,,,,,,Gilberto Hernandez,Parag Jain,,,,,,,,,,,Jena Donlin,,
+P2,2026-02-04 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Back by Popular Demand - Snowflake and Replit,02-04-2026 - Livestream #P2: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,
+,2026-02-10 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Cortex Code in Action: Live Demos + AMA,2/10 LinkedIn Live: Cortex Code In Action,,,,,,,James Cha-Earley,Umesh Unnikrishnan,,,,,,,,,,,Krista R. ,,
+89,2026-02-11 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"SAP Snowflake Launch -- canceled, will reschedule closer to the GA",2-11-2026 - Livestream #89: SAP Snowflake Launch ,,,,,,,,,,,,,,,,,,,Maria Ho,,
+91,2026-02-18 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+90,2026-02-19 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,"ML Updates at BUILD Londong - online ML, Notebooks and Cortex Code",02-12-2026 - Livestream #90: ML Updates at Build London,,,,,,,Josh Reini,??,,,,,,,,,,,Lucy Zhu,,
+92,2026-02-24 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Why Interoperability Matters,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Carlos Nai,Season of Iceberg,
+,2026-02-25 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Monitoring & Evals for AI,,,,,,,,,,,,,,,,,,,,Krista R. ,,
 ,3/3 or 3/5,Snowflake Developer,10:00 - 10:30 AM PST,Iceberg with AWS,https://docs.google.com/document/d/156tlyRwlVe_PRQ-IgKc_GOTO-xL_VZ3GDXBmhEYkkqk/edit?tab=t.h3s7ppvq7hn0,,,,,,,Vino Duraisamy,,,,,,,,,,,,,,
-93,2026-03-03 22:00:00,Snowflake Developer,10:00 - 10:30 AM PST,General Availability: Replicate CDC from Oracle to Snowflake via Openflow,X-X-2025 - Livestream #87: GA-Replicate CDC from Oracle to Snowflake via Openflow ,,,,,,,,,,,,,,,,,,,Maria Ho,Moved from 11/18,
-94,2026-03-10 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex Code for dbt Projects,3-11-2025 - Livestream #94: Cortex Code for dbt Projects,,,,,,,Vino Duraisamy,"Uche Nkadi
+93,2026-03-04 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,General Availability: Replicate CDC from Oracle to Snowflake via Openflow,X-X-2025 - Livestream #87: GA-Replicate CDC from Oracle to Snowflake via Openflow ,,,,,,,,,,,,,,,,,,,Maria Ho,Moved from 11/18,
+94,2026-03-11 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex Code for dbt Projects,3-11-2025 - Livestream #94: Cortex Code for dbt Projects,,,,,,,Vino Duraisamy,"Uche Nkadi
 Bryan Gislason",,,,,,,,,,,Jena Donlin,,
-,2026-03-17 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: How Cortex Code Powers Data Science at Snowflake,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-03-24 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Multi-Agent Architectures,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-03-31 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-04-07 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-04-14 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-04-21 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
-,2026-04-28 23:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-03-18 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: How Cortex Code Powers Data Science at Snowflake,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-03-25 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Multi-Agent Architectures,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-04-01 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-04-08 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-04-15 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-04-22 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
+,2026-04-29 00:00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: ,,,,,,,,,,,,,,,,,,,,Krista R. ,,
