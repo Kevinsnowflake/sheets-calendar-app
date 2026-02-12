@@ -1175,148 +1175,194 @@ def render_manage_sheets():
 # UI – Apps Script Helper page
 # ---------------------------------------------------------------------------
 
+def _parse_sheet_url(url: str) -> tuple[str, int] | None:
+    """Extract (spreadsheet_id, gid) from a Google Sheets URL."""
+    if not url or "spreadsheets/d/" not in url:
+        return None
+    try:
+        spreadsheet_id = url.split("spreadsheets/d/")[1].split("/")[0]
+        gid = 0
+        if "gid=" in url:
+            gid_str = url.split("gid=")[-1].split("&")[0].split("#")[0]
+            gid = int(gid_str)
+        return spreadsheet_id, gid
+    except (IndexError, ValueError):
+        return None
+
+
 def render_apps_script():
     """Show the Google Apps Script snippet for automated GitHub push."""
     st.header("Automate with Google Apps Script")
 
     st.markdown(
-        "Set up each Google Sheet to **automatically push its CSV data to GitHub** "
-        "on a schedule (e.g. daily). When the data lands in the repo, Streamlit "
-        "Cloud redeploys and the calendar updates automatically.\n\n"
+        "Sync **all** your Google Sheets to the calendar automatically with "
+        "a single script. It runs on a schedule, exports each sheet as CSV, "
+        "and pushes to GitHub — Streamlit Cloud redeploys and the calendar "
+        "updates.\n\n"
         "**This uses Google Apps Script, which is part of Google Workspace — "
-        "not Google Cloud.** Works with private sheets because the script runs "
-        "as the sheet owner."
+        "not Google Cloud.** Works with private sheets because the script "
+        "runs as your account."
     )
 
-    # --- Show configured sources with their file paths ---
+    # --- Build SOURCES array from config ---
     config = load_config()
     sources = config.get("sheets", [])
-    if sources:
-        st.subheader("Your configured sources")
-        st.markdown(
-            "Use the **File path** below as the `FILE_PATH` in the script "
-            "for each sheet you want to automate."
-        )
-        for s in sources:
-            src_url = s.get("source_url", "")
-            link = f" — [Open sheet]({src_url})" if src_url else ""
-            st.markdown(
-                f"- **{s.get('name', 'Unnamed')}**{link}  \n"
-                f"  `FILE_PATH = \"{s.get('file_path', '')}\"`"
+    sources_js_entries: list[str] = []
+    sources_missing_url: list[str] = []
+    for s in sources:
+        parsed = _parse_sheet_url(s.get("source_url", ""))
+        if parsed:
+            sid, gid = parsed
+            entry = (
+                f'  {{\n'
+                f'    name: "{s.get("name", "Unnamed")}",\n'
+                f'    spreadsheetId: "{sid}",\n'
+                f'    gid: {gid},\n'
+                f'    filePath: "{s.get("file_path", "")}"\n'
+                f'  }}'
             )
-        st.divider()
+            sources_js_entries.append(entry)
+        else:
+            sources_missing_url.append(s.get("name", "Unnamed"))
 
-    st.subheader("Step 1: Store your GitHub token")
+    sources_js = "var SOURCES = [\n" + ",\n".join(sources_js_entries) + "\n];"
+
+    if sources_missing_url:
+        st.warning(
+            f"These sources are missing a Google Sheet link and won't be "
+            f"included: **{', '.join(sources_missing_url)}**. "
+            f"Add a source link on the Manage Sources page to include them."
+        )
+
+    st.subheader("Step 1: Create a standalone Apps Script project")
     st.markdown(
-        "1. Create a **GitHub Personal Access Token** (fine-grained) at "
-        "[github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta).\n"
-        "   - Scope it to your `sheets-calendar-app` repo.\n"
-        "   - Grant **Contents** read & write permission.\n"
-        "2. Open any Google Sheet you want to automate.\n"
-        "3. Go to **Extensions → Apps Script**.\n"
-        "4. In the left sidebar, click the **gear icon** (Project Settings).\n"
-        "5. Scroll to **Script Properties** and add:\n"
-        "   - Property: `GITHUB_TOKEN`  Value: *your token*\n"
-        "   - Property: `GITHUB_REPO`   Value: *owner/repo* "
-        "(e.g. `Kevinsnowflake/sheets-calendar-app`)\n\n"
-        "This keeps your token out of the script code. You only need to "
-        "do this once per Google Sheet."
+        "1. Go to [script.google.com](https://script.google.com) and click "
+        "**New project**.\n"
+        "2. Name it something like *Calendar Sync*.\n"
+        "3. In the left sidebar, click the **gear icon** (Project Settings).\n"
+        "4. Scroll to **Script Properties** and add two properties:\n"
+        "   - `GITHUB_TOKEN` — your GitHub PAT "
+        "([create one here](https://github.com/settings/tokens?type=beta) "
+        "scoped to your repo with **Contents** read & write)\n"
+        "   - `GITHUB_REPO` — e.g. `Kevinsnowflake/sheets-calendar-app`"
     )
 
-    st.subheader("Step 2: Add the script")
+    st.subheader("Step 2: Paste the script")
     st.markdown(
-        "1. In the Apps Script editor, go to **Editor** (the `< >` icon).\n"
+        "1. Go back to **Editor** (the `< >` icon).\n"
         "2. Delete any existing code and paste the script below.\n"
-        "3. Update the `FILE_PATH` at the top to match the source "
-        "(see the list above).\n"
-        "4. Click **Save**.\n"
-        "5. Click **Run** to test — check the Execution Log for success."
+        "3. Click **Save**, then **Run** to test.\n"
+        "4. On first run, authorize access when prompted — the script "
+        "needs permission to read your Google Sheets and call the "
+        "GitHub API."
     )
 
-    script = '''\
-// === CONFIGURATION ===
-// Set FILE_PATH to match the source's file path in the calendar app.
-// Example: "data/My Sheet - Sheet1.csv"
-var FILE_PATH = "data/CHANGE_ME.csv";
-// === END CONFIGURATION ===
+    script = f'''\
+// === SOURCES (auto-generated from your calendar config) ===
+{sources_js}
+// === END SOURCES ===
 
 // GitHub credentials are read from Script Properties (Project Settings).
 // Required properties:  GITHUB_TOKEN, GITHUB_REPO
 
-function pushToGitHub() {
+/**
+ * Sync all sources to GitHub. Set your trigger on this function.
+ */
+function syncAll() {{
   var props = PropertiesService.getScriptProperties();
   var token = props.getProperty("GITHUB_TOKEN");
   var repo  = props.getProperty("GITHUB_REPO");
-  if (!token || !repo) {
+  if (!token || !repo) {{
     throw new Error(
       "Missing Script Properties. Go to Project Settings and add "
       + "GITHUB_TOKEN and GITHUB_REPO."
     );
-  }
+  }}
 
-  var ss    = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getActiveSheet();
+  var results = [];
+  for (var i = 0; i < SOURCES.length; i++) {{
+    var src = SOURCES[i];
+    try {{
+      var ss = SpreadsheetApp.openById(src.spreadsheetId);
+      var sheet = getSheetByGid_(ss, src.gid);
+      var csv = sheetToCsv_(ss, sheet);
+      pushFile_(token, repo, src.filePath, csv);
+      results.push("OK  " + src.name);
+    }} catch (e) {{
+      results.push("ERR " + src.name + ": " + e.message);
+    }}
+  }}
 
-  // --- Build CSV content ---
+  Logger.log("Sync results:\\n" + results.join("\\n"));
+}}
+
+// --- Helper: find a sheet tab by its gid ---
+function getSheetByGid_(ss, gid) {{
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {{
+    if (sheets[i].getSheetId() === gid) return sheets[i];
+  }}
+  return sheets[0]; // fallback to first tab
+}}
+
+// --- Helper: export a sheet to CSV string ---
+function sheetToCsv_(ss, sheet) {{
+  var tz = ss.getSpreadsheetTimeZone();
   var data = sheet.getDataRange().getValues();
-  var csv = data.map(function(row) {
-    return row.map(function(cell) {
+  return data.map(function(row) {{
+    return row.map(function(cell) {{
       var val = (cell instanceof Date)
-        ? Utilities.formatDate(cell, ss.getSpreadsheetTimeZone(),
-                               "yyyy-MM-dd HH:mm:ss")
+        ? Utilities.formatDate(cell, tz, "yyyy-MM-dd HH:mm:ss")
         : String(cell);
       if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
-          || val.indexOf(\'"\') > -1) {
-        val = \'"\' + val.replace(/"/g, \'""\') + \'"\';
-      }
+          || val.indexOf('"') > -1) {{
+        val = '"' + val.replace(/"/g, '""') + '"';
+      }}
       return val;
-    }).join(",");
-  }).join("\\n");
+    }}).join(",");
+  }}).join("\\n");
+}}
 
-  var encoded = Utilities.base64Encode(csv, Utilities.Charset.UTF_8);
-
-  // --- Get current file SHA (required for updates) ---
+// --- Helper: push a file to GitHub via the Contents API ---
+function pushFile_(token, repo, filePath, content) {{
+  var encoded = Utilities.base64Encode(content, Utilities.Charset.UTF_8);
   var apiBase = "https://api.github.com/repos/" + repo + "/contents/";
-  var headers = {
+  var headers = {{
     "Authorization": "Bearer " + token,
     "Accept": "application/vnd.github+json"
-  };
+  }};
 
+  // Get current SHA (required for updates)
   var sha = null;
-  var getResp = UrlFetchApp.fetch(apiBase + FILE_PATH, {
+  var getResp = UrlFetchApp.fetch(apiBase + filePath, {{
     method: "get",
     headers: headers,
     muteHttpExceptions: true
-  });
-  if (getResp.getResponseCode() === 200) {
+  }});
+  if (getResp.getResponseCode() === 200) {{
     sha = JSON.parse(getResp.getContentText()).sha;
-  }
+  }}
 
-  // --- Push file to GitHub ---
-  var body = {
-    message: "Auto-sync: update " + FILE_PATH,
+  var body = {{
+    message: "Auto-sync: update " + filePath,
     content: encoded
-  };
+  }};
   if (sha) body.sha = sha;
 
-  var putResp = UrlFetchApp.fetch(apiBase + FILE_PATH, {
+  var putResp = UrlFetchApp.fetch(apiBase + filePath, {{
     method: "put",
     headers: headers,
     contentType: "application/json",
     payload: JSON.stringify(body),
     muteHttpExceptions: true
-  });
+  }});
 
   var code = putResp.getResponseCode();
-  if (code === 200 || code === 201) {
-    Logger.log("Pushed " + FILE_PATH + " to GitHub (" + code + ")");
-  } else {
-    throw new Error(
-      "GitHub push failed (" + code + "): "
-      + putResp.getContentText().substring(0, 300)
-    );
-  }
-}'''
+  if (code !== 200 && code !== 201) {{
+    throw new Error("HTTP " + code + ": "
+      + putResp.getContentText().substring(0, 200));
+  }}
+}}'''
 
     st.code(script, language="javascript")
 
@@ -1326,22 +1372,21 @@ function pushToGitHub() {
         "in the left sidebar.\n"
         "2. Click **+ Add Trigger** (bottom right).\n"
         "3. Configure:\n"
-        "   - **Function:** `pushToGitHub`\n"
+        "   - **Function:** `syncAll`\n"
         "   - **Event source:** Time-driven\n"
         "   - **Type:** Day timer (or Hour / Week — your choice)\n"
         "   - **Time:** Pick what works for you (e.g. 6-7 AM)\n"
         "4. Click **Save** and authorize when prompted.\n\n"
-        "The sheet will now automatically push its data to GitHub on "
-        "your chosen schedule. Streamlit Cloud redeploys on each push, "
-        "so the calendar stays up to date."
+        "All your sources will now sync to GitHub on schedule. Check the "
+        "**Execution Log** after a run to see which sources succeeded."
     )
 
-    st.subheader("Repeat for each sheet")
+    st.subheader("Adding new sources")
     st.markdown(
-        "Add the same script to each Google Sheet you want to automate. "
-        "Just change the `FILE_PATH` to match the correct source (see "
-        "the list at the top of this page). The `GITHUB_TOKEN` and "
-        "`GITHUB_REPO` Script Properties are the same for all sheets."
+        "When you add a new source on the **Manage Sources** page, come back "
+        "here to get an updated script with the new source included in the "
+        "`SOURCES` array. Copy-paste it into your Apps Script project to "
+        "replace the old version."
     )
 
 
