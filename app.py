@@ -256,6 +256,31 @@ def _has_time(fmt: str) -> bool:
     return any(code in fmt for code in ("%H", "%I", "%M", "%S", "%p"))
 
 
+def _is_midnight_or_tz_artifact(dt: datetime) -> bool:
+    """Return True if the time is midnight or a common timezone-offset artifact.
+
+    Google Sheets (and similar tools) often export date-only cells with a
+    timezone offset baked in, producing times like 23:00:00 (UTC-1) or
+    22:00:00 (UTC-2).  These should be treated as all-day / date-only.
+    """
+    if dt.minute != 0 or dt.second != 0:
+        return False
+    return dt.hour in (0, 1, 22, 23)
+
+
+def _to_date_or_datetime(parsed: datetime, fmt_has_time: bool) -> str:
+    """Return date-only ISO string or full datetime ISO string.
+
+    Returns date-only when there is no meaningful time component, so
+    FullCalendar treats the event as all-day.
+    """
+    if not fmt_has_time:
+        return parsed.date().isoformat()
+    if _is_midnight_or_tz_artifact(parsed):
+        return parsed.date().isoformat()
+    return parsed.isoformat()
+
+
 def parse_date(value) -> str | None:
     """Best-effort parse of a date/datetime string into ISO format.
 
@@ -266,8 +291,9 @@ def parse_date(value) -> str | None:
     if pd.isna(value) or value == "":
         return None
     if isinstance(value, (datetime, date)):
-        if isinstance(value, datetime) and (value.hour or value.minute or value.second):
-            return value.isoformat()
+        if isinstance(value, datetime) and not _is_midnight_or_tz_artifact(value):
+            if value.hour or value.minute or value.second:
+                return value.isoformat()
         return value.date().isoformat() if isinstance(value, datetime) else value.isoformat()
     value = str(value).strip()
 
@@ -290,9 +316,7 @@ def parse_date(value) -> str | None:
     ):
         try:
             parsed = datetime.strptime(value, fmt)
-            if _has_time(fmt):
-                return parsed.isoformat()
-            return parsed.date().isoformat()
+            return _to_date_or_datetime(parsed, _has_time(fmt))
         except ValueError:
             continue
 
@@ -321,9 +345,7 @@ def parse_date(value) -> str | None:
     # --- Fallback: pandas parser (handles many other formats) ---
     try:
         parsed = pd.to_datetime(value)
-        if parsed.hour or parsed.minute or parsed.second:
-            return parsed.isoformat()
-        return parsed.date().isoformat()
+        return _to_date_or_datetime(parsed.to_pydatetime(), True)
     except Exception:
         return None
 
