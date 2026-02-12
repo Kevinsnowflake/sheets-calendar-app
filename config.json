@@ -120,5 +120,18 @@
   ],
   "watch_folders": [],
   "refresh_folder": "",
-  "saved_views": []
+  "saved_views": [
+    {
+      "name": "Events",
+      "sources": [
+        "Conferences/Events (Aba)",
+        "SVAI Events (Chad)"
+      ],
+      "locations": [
+        "All locations"
+      ],
+      "time_filter": "All",
+      "calendar_view": "dayGridMonth"
+    }
+  ]
 }
