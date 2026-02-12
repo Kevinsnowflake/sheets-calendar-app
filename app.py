@@ -204,14 +204,35 @@ def discover_files_in_folder(folder: str | Path) -> list[Path]:
 
 
 def file_mod_time(path: str | Path) -> str:
-    """Return human-readable modification time for a file."""
+    """Return the last-modified time for a file.
+
+    Prefers the git commit timestamp (accurate on Streamlit Cloud where
+    filesystem mtime is just the clone time).  Falls back to filesystem mtime.
+    """
     p = Path(path)
     if not p.is_absolute():
         p = APP_DIR / p
-    if p.exists():
-        ts = p.stat().st_mtime
-        return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-    return "file missing"
+    if not p.exists():
+        return "file missing"
+
+    # Try git log for the most recent commit that touched this file
+    try:
+        rel = p.relative_to(APP_DIR)
+        out = subprocess.check_output(
+            ["git", "log", "-1", "--format=%ai", "--", str(rel)],
+            cwd=APP_DIR,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        if out:
+            # out looks like "2026-02-12 08:31:00 -0800"
+            return out.rsplit(" ", 1)[0]  # drop timezone offset
+    except Exception:
+        pass
+
+    # Fallback: filesystem mtime
+    ts = p.stat().st_mtime
+    return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _match_file_to_source(filename: str, config: dict) -> int | None:
