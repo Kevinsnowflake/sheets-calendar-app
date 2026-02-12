@@ -82,6 +82,20 @@
           }
         ]
       }
+    },
+    {
+      "name": "Livestreams (Rida)",
+      "file_path": "data/Master Event Schedule - Q2 FY24_2.csv",
+      "default_color": "#219ebc",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/1r85chvHJZwNz88GMi2ijUj8OSsVYTkEAH64-_F6i0DI/edit?gid=0#gid=0",
+      "header_row": 1,
+      "mapping": {
+        "title": "Topic (Internal)",
+        "start": "Event Date",
+        "description": "LinkedIn / Youtube Description \n(no character limit)",
+        "custom_fields": []
+      }
     }
   ],
   "watch_folders": [],
