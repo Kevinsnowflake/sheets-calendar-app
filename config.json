@@ -43,7 +43,14 @@
       "mapping": {
         "title": "Event Name",
         "start": "Date",
-        "location": "Location"
+        "end": "End time",
+        "location": "Location",
+        "custom_fields": [
+          {
+            "label": "Confirmation",
+            "column": "Event confirmed"
+          }
+        ]
       },
       "source_url": "https://docs.google.com/spreadsheets/d/1pt5qSF5wgDk6y_dltEAAtBVDj441M-YaXTN0nsFqyQU/edit?gid=1233501903#gid=1233501903"
     },
