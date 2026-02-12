@@ -69,6 +69,30 @@ def save_config(config: dict):
         json.dump(config, f, indent=2)
 
 
+def get_saved_views() -> list[dict]:
+    """Return the list of saved views from config."""
+    return load_config().get("saved_views", [])
+
+
+def save_view(name: str, view_data: dict):
+    """Add or update a saved view in config.json."""
+    config = load_config()
+    views = config.get("saved_views", [])
+    # Replace existing view with the same name, or append
+    views = [v for v in views if v["name"] != name]
+    views.append({"name": name, **view_data})
+    config["saved_views"] = views
+    save_config(config)
+
+
+def delete_view(name: str):
+    """Remove a saved view by name from config.json."""
+    config = load_config()
+    views = config.get("saved_views", [])
+    config["saved_views"] = [v for v in views if v["name"] != name]
+    save_config(config)
+
+
 # ---------------------------------------------------------------------------
 # File helpers
 # ---------------------------------------------------------------------------
@@ -1264,10 +1288,17 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
         with filter_cols[2]:
             if all_locations:
                 location_options = ["All locations"] + all_locations
+                # Initialize default if key not yet in session state
+                if "location_filter" not in st.session_state:
+                    st.session_state["location_filter"] = ["All locations"]
+                # Clean up stale location selections
+                valid_locs = [l for l in st.session_state["location_filter"] if l in location_options]
+                if valid_locs != st.session_state["location_filter"]:
+                    st.session_state["location_filter"] = valid_locs if valid_locs else ["All locations"]
                 selected_locations = st.multiselect(
                     "Locations",
                     options=location_options,
-                    default=["All locations"],
+                    key="location_filter",
                     help="Filter by event location.",
                 )
                 filter_by_location = "All locations" not in selected_locations
@@ -1281,6 +1312,7 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
             time_filter = st.selectbox(
                 "Type",
                 options=["All", "All-day", "Timed"],
+                key="time_filter_select",
                 help="Show all events, only all-day, or only timed events.",
             )
 
@@ -1321,6 +1353,21 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
 # UI – Calendar page
 # ---------------------------------------------------------------------------
 
+def _apply_saved_view(view_data: dict):
+    """Populate session state from a saved view and rerun."""
+    if "sources" in view_data:
+        st.session_state["source_filter"] = view_data["sources"]
+        # Update select-all checkbox to match
+        st.session_state["select_all_sources"] = False
+    if "locations" in view_data:
+        st.session_state["location_filter"] = view_data["locations"]
+    if "time_filter" in view_data:
+        st.session_state["time_filter_select"] = view_data["time_filter"]
+    if "calendar_view" in view_data:
+        st.session_state["calendar_view_select"] = view_data["calendar_view"]
+    st.rerun()
+
+
 def render_calendar():
     """Main calendar view."""
     st.header("Event Calendar")
@@ -1335,9 +1382,39 @@ def render_calendar():
         )
         return
 
-    # Calendar view selector
-    col1, col2 = st.columns([3, 1])
-    with col2:
+    # --- Saved views & calendar view selector row ---
+    saved_views = config.get("saved_views", [])
+    view_names = [v["name"] for v in saved_views]
+
+    sv_col, view_col = st.columns([3, 1])
+
+    with sv_col:
+        if view_names:
+            sv_options = ["(none)"] + view_names
+            sv_left, sv_right = st.columns([3, 1])
+            with sv_left:
+                selected_view_name = st.selectbox(
+                    "Saved Views",
+                    options=sv_options,
+                    key="saved_view_picker",
+                    help="Load a previously saved combination of filters.",
+                )
+            with sv_right:
+                st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+                if selected_view_name != "(none)":
+                    col_load, col_del = st.columns(2)
+                    with col_load:
+                        if st.button("Load", key="load_saved_view", use_container_width=True):
+                            match = next((v for v in saved_views if v["name"] == selected_view_name), None)
+                            if match:
+                                _apply_saved_view(match)
+                    with col_del:
+                        if st.button("Delete", key="delete_saved_view", type="secondary", use_container_width=True):
+                            delete_view(selected_view_name)
+                            st.session_state["saved_view_picker"] = "(none)"
+                            st.rerun()
+
+    with view_col:
         view = st.selectbox(
             "View",
             options=[
@@ -1347,6 +1424,7 @@ def render_calendar():
                 "listMonth",
                 "listWeek",
             ],
+            key="calendar_view_select",
             format_func=lambda v: {
                 "dayGridMonth": "Month",
                 "dayGridWeek": "Week",
@@ -1362,6 +1440,31 @@ def render_calendar():
 
     # Apply filters
     events = filter_events(all_events, config)
+
+    # --- Save current view ---
+    with st.expander("Save current view", expanded=False):
+        save_col1, save_col2 = st.columns([3, 1])
+        with save_col1:
+            new_view_name = st.text_input(
+                "View name",
+                placeholder="e.g. Conferences Only",
+                key="new_view_name_input",
+            )
+        with save_col2:
+            st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+            if st.button("Save", key="save_view_btn", use_container_width=True):
+                if new_view_name.strip():
+                    view_data = {
+                        "sources": st.session_state.get("source_filter", []),
+                        "locations": st.session_state.get("location_filter", ["All locations"]),
+                        "time_filter": st.session_state.get("time_filter_select", "All"),
+                        "calendar_view": st.session_state.get("calendar_view_select", "dayGridMonth"),
+                    }
+                    save_view(new_view_name.strip(), view_data)
+                    st.success(f"Saved view \"{new_view_name.strip()}\"")
+                    st.rerun()
+                else:
+                    st.warning("Please enter a name for the view.")
 
     st.caption(
         f"Showing {len(events)} of {len(all_events)} events "
