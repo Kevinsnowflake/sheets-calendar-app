@@ -69,28 +69,46 @@ def save_config(config: dict):
         json.dump(config, f, indent=2)
 
 
+def _init_saved_views_state():
+    """Ensure session-state mirror of saved views exists (seed from config)."""
+    if "_saved_views" not in st.session_state:
+        st.session_state["_saved_views"] = load_config().get("saved_views", [])
+
+
 def get_saved_views() -> list[dict]:
-    """Return the list of saved views from config."""
-    return load_config().get("saved_views", [])
+    """Return the list of saved views (from session state, seeded from config)."""
+    _init_saved_views_state()
+    return list(st.session_state["_saved_views"])
+
+
+def _persist_saved_views(views: list[dict]):
+    """Write saved views to session state and try to persist to config.json."""
+    st.session_state["_saved_views"] = views
+    try:
+        config = load_config()
+        config["saved_views"] = views
+        save_config(config)
+    except OSError:
+        # On Streamlit Cloud the repo filesystem may be read-only;
+        # views will still work for the current session via session state.
+        pass
 
 
 def save_view(name: str, view_data: dict):
-    """Add or update a saved view in config.json."""
-    config = load_config()
-    views = config.get("saved_views", [])
-    # Replace existing view with the same name, or append
+    """Add or update a saved view."""
+    _init_saved_views_state()
+    views = st.session_state["_saved_views"]
     views = [v for v in views if v["name"] != name]
     views.append({"name": name, **view_data})
-    config["saved_views"] = views
-    save_config(config)
+    _persist_saved_views(views)
 
 
 def delete_view(name: str):
-    """Remove a saved view by name from config.json."""
-    config = load_config()
-    views = config.get("saved_views", [])
-    config["saved_views"] = [v for v in views if v["name"] != name]
-    save_config(config)
+    """Remove a saved view by name."""
+    _init_saved_views_state()
+    views = st.session_state["_saved_views"]
+    views = [v for v in views if v["name"] != name]
+    _persist_saved_views(views)
 
 
 # ---------------------------------------------------------------------------
@@ -1383,7 +1401,7 @@ def render_calendar():
         return
 
     # --- Saved views & calendar view selector row ---
-    saved_views = config.get("saved_views", [])
+    saved_views = get_saved_views()
     view_names = [v["name"] for v in saved_views]
 
     sv_col, view_col = st.columns([3, 1])
