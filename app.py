@@ -47,8 +47,12 @@ SUPPORTED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".tsv"}
 # Set to True when deploying to Streamlit Community Cloud (or any remote host).
 # Hides local-only features: "Link to file on disk", "Watch a folder",
 # refresh folder sync, and auto-refresh.
-IS_CLOUD = os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes") \
+IS_CLOUD = (
+    os.environ.get("STREAMLIT_CLOUD", "").lower() in ("1", "true", "yes")
     or os.environ.get("STREAMLIT_SHARING_MODE") is not None
+    or str(Path.home()) == "/home/appuser"
+    or Path("/mount/src").is_dir()
+)
 
 
 # ---------------------------------------------------------------------------
