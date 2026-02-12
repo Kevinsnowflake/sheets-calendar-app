@@ -1,28 +1,28 @@
 "Activity
 FY27 Developer & Community Events",Sponsorship Owner,Date,Location,Quarter,Lead,Priority,Product Category,Region,Contract Status,MQL Score,Cost,T&E,Sponsorship Level,Speaking Slot,Est. Attendance,Est Leads,Cost per Attendee,CFP Deadline,CFP Acceptance,Prospectus,Zip,Added to Schedule Tab,Notes
-DataEngBytes 2025: Brisbane,Field,3/20/2026, Brisbane,Q1,Shirley Gao,P1 - Must Have,Data Engineering,APJ,,,"$13,000.00","$2,000.00",Gold,TRUE,"1,000",50,$13.00,,,,,FALSE,
-DataEngBytes 2025: Auckland,Field,3/24/2026,Auckland,Q1,Shirley Gao,P1 - Must Have,Data Engineering,APJ,,,"$13,000.00","$2,000.00",Gold,TRUE,"1,000",50,$13.00,,,,,FALSE,
-Iceberg Summit,DevRel/Community,4/8/2026,San Francisco,Q1,Aba Micah,P1 - Must Have,"OSS, Data Engineering",NAMER,,No,"$180,000.00",$0.00,Headliner,TRUE,"5,200",3000,$34.62,,,,,FALSE,Iceberg Summit 2025 Deliverables Tracker
-PyCon DE,DevRel/Community,4/14/2026,Darmstadt,Q1,Rafael Massei,P1 - Must Have,"OSS, Data Engineering, AI & ML",EMEA,,No,"$15,000.00","$9,000.00",Platinum,TRUE,"2,000",200,$7.50,,,https://2025.pycon.de/sponsoring/,22099,FALSE,
-AI Dev SF,DevRel/Community,4/28/2026,San Francisco,Q1,Aba Micah,P1 - Must Have,AI & ML,NAMER,,No,"$10,000.00","$1,000.00",Gold,TRUE,350,300,$28.57,,,https://2025.pyconfhyd.org/docs/sponsorship-prospectus.pdf,21383; 21858,FALSE,Snowflake_Platinum_PyConfHyd2025.docx
-ODSC East,DevRel/Community,4/28/2026,Boston,Q1,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,,,,,FALSE,,,#DIV/0!,,,,,FALSE,
-AI Council,DevRel/Community,5/12/2026,San Francisco,Q2,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,,"$7,000.00",,,FALSE,,0,#DIV/0!,,,,,FALSE,
-PyCon US,DevRel/Community,5/13/2026,Long Beach,Q2,Aba Micah,P1 - Must Have,"OSS, Data Engineering, AI & ML",NAMER,,No,"$7,000.00","$9,000.00",Maintaining,TRUE,"3,000",150,$2.33,,,Snowflake @ PyCon 2025 Working Document,,FALSE,"$66K paid for through PSF sponsorship. Build our own booth, couple of sessions, mostly awareness driving. Unusual onsite rules."
-PGConf.Dev,DevRel/Community,5/19/2026,Vancouver,Q2,Aba Micah,P1 - Must Have,OSS,NAMER,,,"$6,507.00","$1,000.00",Silver,FALSE,"2,000",200,$3.25,,,,,FALSE,
-Super AI,DevRel/Community,6/10/2026,Singapore,Q2,Phillip Lim,P1 - Must Have,AI & ML,APJ,,,,,,FALSE,,0,#DIV/0!,,,,,FALSE,
-DataEngBytes 2025: Melbourne,DevRel/Community,7/23/2026,Melbourne,Q2,Phillip Lim,P1 - Must Have,Data Engineering,APJ,,,"$13,000.00","$2,000.00",,TRUE,500,25,$26.00,,,DEB Sponsorship Prospectus 2025-compressed.pdf,,FALSE,FY26 Q2 - ANZ - Data Eng Bytes Conference - Request
-DataEngBytes 2025: Sydney,Field,7/28/2026,Sydney,Q2,Phillip Lim,P1 - Must Have,Data Engineering,APJ,,,"$13,000.00","$2,000.00",,TRUE,500,25,$26.00,,,DEB Sponsorship Prospectus 2025-compressed.pdf,,FALSE,FY26 Q2 - ANZ - Data Eng Bytes Conference - Request
-MCP Dev Summit - Amsterdam,DevRel/Community,9/18/2026,Amsterdam,Q3,Rafael Massei,P1 - Must Have,AI & ML,EMEA,,,,,,FALSE,,0,#DIV/0!,,,,,FALSE,
-PyTorch 2026,DevRel/Community,10/10/2026,San Jose,Q3,Aba Micah,P1 - Must Have,OSS,NAMER,,,"$5,000.00","$1,000.00",,FALSE,"4,000",,,,,,,FALSE,
-Community Over Code NA,DevRel/Community,10/11/2026,Glasgow,Q3,Aba Micah,P1 - Must Have,"OSS, Data Engineering",EMEA,,No,"$20,000.00","$5,000.00",,TRUE,238,11.9,$84.03,,,,,FALSE,
-Lakehouse Day ,DevRel/Community,10/11/2026,Glasgow,Q3,Aba Micah,P1 - Must Have,"OSS, Data Engineering",EMEA,,,,,,FALSE,,0,#DIV/0!,,,,,FALSE,
-AI and Big Data Expo Amsterdam ,DevRel/Community,10/20/2026,Amsterdam,Q3,Rafael Massei,P1 - Must Have,"AI & ML, Data Engineering",EMEA,,,"$10,000.00","$3,000.00",,,"8,000",400,,,,,21075,,
-ODSC West,DevRel/Community,10/27/2026,Burlingame,Q3,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,No,,,,TRUE,,0,#DIV/0!,,,,,FALSE,
-NeurIPS,DevRel/Community,12/6/2026,Sydney,Q4,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,No,"$20,000.00","$5,000.00",,FALSE,"17,000",850,,,,,,FALSE,"Mktg pay for booth and swag costs, eng pays for sponsorship"
-"AI Dev 25, NYC ",DevRel/Community,TBD,New York,Q4,,,AI & ML,NAMER,In Progress,,"$35,000.00",,,FALSE,"1,200",120,$29.17,,,,,FALSE,
-PyData Seattle (SciPy),DevRel/Community,TBD,,,,,OSS,,,,,,,FALSE,,,,,,,,FALSE,
-PyData Amsterdam ,DevRel/Community,TBD,,,,,OSS,,,,,,,FALSE,,,,,,,,FALSE,
-PyData Paris (Jupyter),DevRel/Community,TBD,,,,,OSS,,,,,,,FALSE,,0,#DIV/0!,,,,,FALSE,
+DataEngBytes 2025: Brisbane,Field,2026-03-20 00:00:00, Brisbane,Q1,Shirley Gao,P1 - Must Have,Data Engineering,APJ,,,13000,2000,Gold,true,1000,50,13,,,,,false,
+DataEngBytes 2025: Auckland,Field,2026-03-24 00:00:00,Auckland,Q1,Shirley Gao,P1 - Must Have,Data Engineering,APJ,,,13000,2000,Gold,true,1000,50,13,,,,,false,
+Iceberg Summit,DevRel/Community,2026-04-08 00:00:00,San Francisco,Q1,Aba Micah,P1 - Must Have,"OSS, Data Engineering",NAMER,,No,180000,0,Headliner,true,5200,3000,34.61538461538461,,,,,false,Iceberg Summit 2025 Deliverables Tracker
+PyCon DE,DevRel/Community,2026-04-14 00:00:00,Darmstadt,Q1,Rafael Massei,P1 - Must Have,"OSS, Data Engineering, AI & ML",EMEA,,No,15000,9000,Platinum,true,2000,200,7.5,,,https://2025.pycon.de/sponsoring/,22099,false,
+AI Dev SF,DevRel/Community,2026-04-28 00:00:00,San Francisco,Q1,Aba Micah,P1 - Must Have,AI & ML,NAMER,,No,10000,1000,Gold,true,350,300,28.571428571428573,,,https://2025.pyconfhyd.org/docs/sponsorship-prospectus.pdf,21383; 21858,false,Snowflake_Platinum_PyConfHyd2025.docx
+ODSC East,DevRel/Community,2026-04-28 00:00:00,Boston,Q1,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,,,,,false,,,#DIV/0!,,,,,false,
+AI Council,DevRel/Community,2026-05-12 00:00:00,San Francisco,Q2,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,,7000,,,false,,0,#DIV/0!,,,,,false,
+PyCon US,DevRel/Community,2026-05-13 00:00:00,Long Beach,Q2,Aba Micah,P1 - Must Have,"OSS, Data Engineering, AI & ML",NAMER,,No,7000,9000,Maintaining,true,3000,150,2.3333333333333335,,,Snowflake @ PyCon 2025 Working Document,,false,"$66K paid for through PSF sponsorship. Build our own booth, couple of sessions, mostly awareness driving. Unusual onsite rules."
+PGConf.Dev,DevRel/Community,2026-05-19 00:00:00,Vancouver,Q2,Aba Micah,P1 - Must Have,OSS,NAMER,,,6507,1000,Silver,false,2000,200,3.2535,,,,,false,
+Super AI,DevRel/Community,2026-06-10 00:00:00,Singapore,Q2,Phillip Lim,P1 - Must Have,AI & ML,APJ,,,,,,false,,0,#DIV/0!,,,,,false,
+DataEngBytes 2025: Melbourne,DevRel/Community,2026-07-23 00:00:00,Melbourne,Q2,Phillip Lim,P1 - Must Have,Data Engineering,APJ,,,13000,2000,,true,500,25,26,,,DEB Sponsorship Prospectus 2025-compressed.pdf,,false,FY26 Q2 - ANZ - Data Eng Bytes Conference - Request
+DataEngBytes 2025: Sydney,Field,2026-07-28 00:00:00,Sydney,Q2,Phillip Lim,P1 - Must Have,Data Engineering,APJ,,,13000,2000,,true,500,25,26,,,DEB Sponsorship Prospectus 2025-compressed.pdf,,false,FY26 Q2 - ANZ - Data Eng Bytes Conference - Request
+MCP Dev Summit - Amsterdam,DevRel/Community,2026-09-18 00:00:00,Amsterdam,Q3,Rafael Massei,P1 - Must Have,AI & ML,EMEA,,,,,,false,,0,#DIV/0!,,,,,false,
+PyTorch 2026,DevRel/Community,2026-10-10 00:00:00,San Jose,Q3,Aba Micah,P1 - Must Have,OSS,NAMER,,,5000,1000,,false,4000,,,,,,,false,
+Community Over Code NA,DevRel/Community,2026-10-11 00:00:00,Glasgow,Q3,Aba Micah,P1 - Must Have,"OSS, Data Engineering",EMEA,,No,20000,5000,,true,238,11.9,84.03361344537815,,,,,false,
+Lakehouse Day ,DevRel/Community,2026-10-11 00:00:00,Glasgow,Q3,Aba Micah,P1 - Must Have,"OSS, Data Engineering",EMEA,,,,,,false,,0,#DIV/0!,,,,,false,
+AI and Big Data Expo Amsterdam ,DevRel/Community,2026-10-20 00:00:00,Amsterdam,Q3,Rafael Massei,P1 - Must Have,"AI & ML, Data Engineering",EMEA,,,10000,3000,,,8000,400,,,,,21075,,
+ODSC West,DevRel/Community,2026-10-27 00:00:00,Burlingame,Q3,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,No,,,,true,,0,#DIV/0!,,,,,false,
+NeurIPS,DevRel/Community,2026-12-06 00:00:00,Sydney,Q4,Aba Micah,P1 - Must Have,"AI & ML, Data Engineering",NAMER,,No,20000,5000,,false,17000,850,,,,,,false,"Mktg pay for booth and swag costs, eng pays for sponsorship"
+"AI Dev 25, NYC ",DevRel/Community,TBD,New York,Q4,,,AI & ML,NAMER,In Progress,,35000,,,false,1200,120,29.166666666666668,,,,,false,
+PyData Seattle (SciPy),DevRel/Community,TBD,,,,,OSS,,,,,,,false,,,,,,,,false,
+PyData Amsterdam ,DevRel/Community,TBD,,,,,OSS,,,,,,,false,,,,,,,,false,
+PyData Paris (Jupyter),DevRel/Community,TBD,,,,,OSS,,,,,,,false,,0,#DIV/0!,,,,,false,
 ,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,
 ,,,, ,,,,,,,,,,,,,,,,,,,
