@@ -260,12 +260,23 @@ def _is_midnight_or_tz_artifact(dt: datetime) -> bool:
     """Return True if the time is midnight or a common timezone-offset artifact.
 
     Google Sheets (and similar tools) often export date-only cells with a
-    timezone offset baked in, producing times like 23:00:00 (UTC-1) or
-    22:00:00 (UTC-2).  These should be treated as all-day / date-only.
+    timezone offset baked in, producing times like 23:00:00 (UTC-1),
+    22:00:00 (UTC-2), or small early-morning times like 05:30:00 from
+    internal fractional-day storage.  These should be treated as date-only.
     """
-    if dt.minute != 0 or dt.second != 0:
+    if dt.second != 0:
         return False
-    return dt.hour in (0, 1, 22, 23)
+    # Midnight is always date-only
+    if dt.hour == 0 and dt.minute == 0:
+        return True
+    # Common timezone offsets (on the hour, near midnight)
+    if dt.minute == 0 and dt.hour in (1, 22, 23):
+        return True
+    # Early-morning times (before 8 AM) are almost certainly artifacts
+    # from Google Sheets internal date storage, not real event times
+    if dt.hour < 8:
+        return True
+    return False
 
 
 def _to_date_or_datetime(parsed: datetime, fmt_has_time: bool) -> str:
@@ -1311,9 +1322,16 @@ function sheetToCsv_(ss, sheet) {{
   var data = sheet.getDataRange().getValues();
   return data.map(function(row) {{
     return row.map(function(cell) {{
-      var val = (cell instanceof Date)
-        ? Utilities.formatDate(cell, tz, "yyyy-MM-dd HH:mm:ss")
-        : String(cell);
+      var val;
+      if (cell instanceof Date) {{
+        // Use date-only format unless the cell has a meaningful time
+        var h = cell.getHours(), m = cell.getMinutes(), s = cell.getSeconds();
+        val = (h === 0 && m === 0 && s === 0)
+          ? Utilities.formatDate(cell, tz, "yyyy-MM-dd")
+          : Utilities.formatDate(cell, tz, "yyyy-MM-dd HH:mm:ss");
+      }} else {{
+        val = String(cell);
+      }}
       if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
           || val.indexOf('"') > -1) {{
         val = '"' + val.replace(/"/g, '""') + '"';
