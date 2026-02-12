@@ -437,11 +437,15 @@ def rows_to_events(
     """Convert DataFrame rows into FullCalendar event dicts."""
     events: list[dict] = []
     row_filter = mapping.get("row_filter")
+    # Pre-compute allowed values (comma-separated, case-insensitive)
+    filter_values: set[str] | None = None
+    if row_filter and row_filter.get("column") and row_filter.get("value"):
+        filter_values = {v.strip().lower() for v in row_filter["value"].split(",") if v.strip()}
     for _, row in df.iterrows():
-        # Per-source row filter: skip rows that don't match
-        if row_filter and row_filter.get("column") and row_filter.get("value"):
+        # Per-source row filter: skip rows that don't match any allowed value
+        if filter_values is not None:
             cell_val = str(row.get(row_filter["column"], "")).strip().lower()
-            if cell_val != row_filter["value"].strip().lower():
+            if cell_val not in filter_values:
                 continue
 
         title = str(row.get(mapping["title"], "")).strip()
@@ -673,10 +677,11 @@ def render_column_mapping_form(
             help="Only rows where this column matches the value below will appear on the calendar.",
         )
         filter_value = st.text_input(
-            "Filter value (case-insensitive)",
+            "Filter value(s) — comma-separated, case-insensitive",
             value=existing_filter.get("value", ""),
             key=f"{form_key}_row_filter_val",
             placeholder='e.g. Scheduled, Confirmed, Active',
+            help="Separate multiple allowed values with commas.",
         )
 
         if st.form_submit_button("Save mapping"):
