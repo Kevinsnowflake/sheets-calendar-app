@@ -235,6 +235,19 @@ def file_mod_time(path: str | Path) -> str:
     return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
 
 
+def latest_data_refresh(config: dict) -> str:
+    """Return the most recent modification time across all data source files."""
+    latest = ""
+    for sheet in config.get("sheets", []):
+        fp = sheet.get("file_path", "")
+        if not fp:
+            continue
+        ts = file_mod_time(fp)
+        if ts != "file missing" and ts > latest:
+            latest = ts
+    return latest or "unknown"
+
+
 def _match_file_to_source(filename: str, config: dict) -> int | None:
     """Return the config['sheets'] index that matches *filename*, or None."""
     stem = Path(filename).stem
@@ -1718,10 +1731,11 @@ def render_calendar():
                 else:
                     st.warning("Please enter a name for the view.")
 
+    last_refresh = latest_data_refresh(config)
     version_tag = f"  ·  deploy {GIT_HASH}" if GIT_HASH else ""
     st.caption(
         f"Showing {len(events)} of {len(all_events)} events "
-        f"from {n_sources} source(s){version_tag}"
+        f"from {n_sources} source(s)  ·  data refreshed {last_refresh}{version_tag}"
     )
 
     # Legend
