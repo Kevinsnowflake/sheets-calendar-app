@@ -45,7 +45,12 @@
         "start": "Date",
         "end": "End time",
         "location": "Location",
-        "custom_fields": [],
+        "custom_fields": [
+          {
+            "label": "Registration Link",
+            "column": "Registration Link"
+          }
+        ],
         "row_filter": {
           "column": "Event confirmed",
           "value": "Completed!, It's happening!"
