@@ -120,23 +120,5 @@
   ],
   "watch_folders": [],
   "refresh_folder": "",
-  "saved_views": [
-    {
-      "name": "All",
-      "sources": [
-        "AI/Coco (Krista)",
-        "Campaigns (Kevin)",
-        "Coco Use Skill (Krista)",
-        "Conferences/Events (Aba)",
-        "Livestreams (Rida)",
-        "Medium (Kevin)",
-        "SVAI Events (Chad)"
-      ],
-      "locations": [
-        "All locations"
-      ],
-      "time_filter": "All",
-      "calendar_view": "dayGridMonth"
-    }
-  ]
+  "saved_views": []
 }
