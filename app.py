@@ -1753,10 +1753,7 @@ def main():
 
     # Navigation — admin pages only visible when unlocked
     if st.session_state["admin_unlocked"]:
-        if IS_CLOUD:
-            nav_options = ["Calendar", "Manage Sources"]
-        else:
-            nav_options = ["Calendar", "Manage Sources", "Automation"]
+        nav_options = ["Calendar", "Manage Sources", "Automation"]
     else:
         nav_options = ["Calendar"]
 
