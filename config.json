@@ -45,7 +45,12 @@
         "start": "Date",
         "end": "End time",
         "location": "Location",
-        "custom_fields": [],
+        "custom_fields": [
+          {
+            "label": "Event time",
+            "column": "Start time"
+          }
+        ],
         "row_filter": {
           "column": "Event confirmed",
           "value": "Completed!, It's happening!"
