@@ -84,5 +84,6 @@
       }
     }
   ],
-  "watch_folders": []
+  "watch_folders": [],
+  "refresh_folder": "~/Documents/ExportCal"
 }
