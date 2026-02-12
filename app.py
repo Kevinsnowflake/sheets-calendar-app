@@ -2,6 +2,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import time
 from datetime import datetime, date
 from pathlib import Path
@@ -19,6 +20,20 @@ APP_DIR = Path(__file__).parent
 CONFIG_PATH = APP_DIR / "config.json"
 DATA_DIR = APP_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
+
+def _git_short_hash() -> str:
+    """Return the short git commit hash of the current checkout, or '' on failure."""
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=APP_DIR,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+    except Exception:
+        return ""
+
+GIT_HASH = _git_short_hash()
 
 REQUIRED_FIELDS = ["title", "start"]
 OPTIONAL_FIELDS = ["end", "description", "location", "color"]
@@ -1680,9 +1695,10 @@ def render_calendar():
                 else:
                     st.warning("Please enter a name for the view.")
 
+    version_tag = f"  ·  deploy {GIT_HASH}" if GIT_HASH else ""
     st.caption(
         f"Showing {len(events)} of {len(all_events)} events "
-        f"from {n_sources} source(s)"
+        f"from {n_sources} source(s){version_tag}"
     )
 
     # Legend
