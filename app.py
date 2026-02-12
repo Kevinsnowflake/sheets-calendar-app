@@ -10,6 +10,8 @@ import pandas as pd
 import streamlit as st
 from streamlit_calendar import calendar
 
+from github_sync import push_file_to_github, delete_file_from_github
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -68,9 +70,11 @@ def load_config() -> dict:
 
 
 def save_config(config: dict):
-    """Persist sheet configurations to JSON file."""
+    """Persist sheet configurations to JSON file (and sync to GitHub on cloud)."""
     with open(CONFIG_PATH, "w") as f:
         json.dump(config, f, indent=2)
+    if IS_CLOUD:
+        push_file_to_github("config.json", "Update config via app")
 
 
 def _init_saved_views_state():
@@ -120,7 +124,7 @@ def delete_view(name: str):
 # ---------------------------------------------------------------------------
 
 def save_uploaded_file(uploaded_file) -> Path:
-    """Save an uploaded file to the data/ directory and return its path."""
+    """Save an uploaded file to the data/ directory (and sync to GitHub on cloud)."""
     dest = DATA_DIR / uploaded_file.name
     counter = 1
     while dest.exists():
@@ -130,6 +134,11 @@ def save_uploaded_file(uploaded_file) -> Path:
         counter += 1
     with open(dest, "wb") as f:
         f.write(uploaded_file.getbuffer())
+    if IS_CLOUD:
+        push_file_to_github(
+            dest.relative_to(APP_DIR),
+            f"Add data file: {dest.name}",
+        )
     return dest
 
 
@@ -961,8 +970,11 @@ def render_manage_sheets():
                             try:
                                 old_fp = Path(sheet_cfg["file_path"])
                                 old = old_fp if old_fp.is_absolute() else APP_DIR / old_fp
+                                old_rel = sheet_cfg["file_path"]
                                 if old.exists():
                                     old.unlink()
+                                if IS_CLOUD:
+                                    delete_file_from_github(old_rel, f"Remove old data file: {old.name}")
                                 new_path = save_uploaded_file(replacement)
                                 config["sheets"][idx]["file_path"] = str(new_path.relative_to(APP_DIR))
                                 save_config(config)
@@ -991,6 +1003,11 @@ def render_manage_sheets():
                             old = old_fp if old_fp.is_absolute() else APP_DIR / old_fp
                             if old.exists():
                                 old.unlink()
+                            if IS_CLOUD:
+                                delete_file_from_github(
+                                    sheet_cfg.get("file_path", ""),
+                                    f"Remove data file: {old.name}",
+                                )
                         config["sheets"].pop(idx)
                         save_config(config)
                         st.rerun()
