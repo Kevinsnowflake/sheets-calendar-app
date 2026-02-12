@@ -50,7 +50,11 @@
             "label": "Confirmation",
             "column": "Event confirmed"
           }
-        ]
+        ],
+        "row_filter": {
+          "column": "Event confirmed",
+          "value": "It's happening!,  Completed!"
+        }
       },
       "source_url": "https://docs.google.com/spreadsheets/d/1pt5qSF5wgDk6y_dltEAAtBVDj441M-YaXTN0nsFqyQU/edit?gid=1233501903#gid=1233501903"
     },
