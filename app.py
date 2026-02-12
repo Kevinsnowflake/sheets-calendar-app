@@ -436,7 +436,14 @@ def rows_to_events(
 ) -> list[dict]:
     """Convert DataFrame rows into FullCalendar event dicts."""
     events: list[dict] = []
+    row_filter = mapping.get("row_filter")
     for _, row in df.iterrows():
+        # Per-source row filter: skip rows that don't match
+        if row_filter and row_filter.get("column") and row_filter.get("value"):
+            cell_val = str(row.get(row_filter["column"], "")).strip().lower()
+            if cell_val != row_filter["value"].strip().lower():
+                continue
+
         title = str(row.get(mapping["title"], "")).strip()
         start = parse_date(row.get(mapping["start"]))
         if not title or not start:
@@ -652,11 +659,39 @@ def render_column_mapping_form(
                         "column": cf_column,
                     })
 
+        # --- Row filter (optional) ---
+        st.markdown("**Row filter** — only include rows where a column matches a value:")
+        existing_filter = existing_mapping.get("row_filter", {})
+        filter_col_default = 0
+        if existing_filter.get("column", "") in headers:
+            filter_col_default = headers.index(existing_filter["column"]) + 1
+        filter_column = st.selectbox(
+            "Filter column",
+            options=none_option + headers,
+            index=filter_col_default,
+            key=f"{form_key}_row_filter_col",
+            help="Only rows where this column matches the value below will appear on the calendar.",
+        )
+        filter_value = st.text_input(
+            "Filter value (case-insensitive)",
+            value=existing_filter.get("value", ""),
+            key=f"{form_key}_row_filter_val",
+            placeholder='e.g. Scheduled, Confirmed, Active',
+        )
+
         if st.form_submit_button("Save mapping"):
             if "title" not in mapping or "start" not in mapping:
                 st.error("You must map at least **title** and **start** columns.")
                 return None
             mapping["custom_fields"] = saved_custom
+            # Save row filter if configured
+            if filter_column != "-- none --" and filter_value.strip():
+                mapping["row_filter"] = {
+                    "column": filter_column,
+                    "value": filter_value.strip(),
+                }
+            else:
+                mapping.pop("row_filter", None)
             # Clean up session state
             if cf_key in st.session_state:
                 del st.session_state[cf_key]
