@@ -1404,11 +1404,16 @@ def render_calendar():
     saved_views = get_saved_views()
     view_names = [v["name"] for v in saved_views]
 
+    # Clean up stale picker value before the widget renders
+    sv_options = ["(none)"] + view_names
+    if "saved_view_picker" in st.session_state:
+        if st.session_state["saved_view_picker"] not in sv_options:
+            del st.session_state["saved_view_picker"]
+
     sv_col, view_col = st.columns([3, 1])
 
     with sv_col:
         if view_names:
-            sv_options = ["(none)"] + view_names
             sv_left, sv_right = st.columns([3, 1])
             with sv_left:
                 selected_view_name = st.selectbox(
@@ -1429,7 +1434,6 @@ def render_calendar():
                     with col_del:
                         if st.button("Delete", key="delete_saved_view", type="secondary", use_container_width=True):
                             delete_view(selected_view_name)
-                            st.session_state["saved_view_picker"] = "(none)"
                             st.rerun()
 
     with view_col:
