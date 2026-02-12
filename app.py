@@ -1381,12 +1381,27 @@ function getSheetByGid_(ss, gid) {{
 // --- Helper: export a sheet to CSV string ---
 function sheetToCsv_(ss, sheet) {{
   var tz = ss.getSpreadsheetTimeZone();
-  var data = sheet.getDataRange().getValues();
-  return data.map(function(row) {{
-    return row.map(function(cell) {{
+  var range = sheet.getDataRange();
+  var data = range.getValues();
+  var richTexts = range.getRichTextValues();
+  return data.map(function(row, r) {{
+    return row.map(function(cell, c) {{
       var val = (cell instanceof Date)
         ? Utilities.formatDate(cell, tz, "yyyy-MM-dd")
         : String(cell);
+      // Append hyperlink URL if the cell contains one (smart chips won't
+      // be detected, but regular hyperlinks inserted via Insert > Link will).
+      try {{
+        var rt = richTexts[r][c];
+        if (rt) {{
+          var url = rt.getLinkUrl();
+          if (url && val.indexOf(url) === -1) {{
+            val = val + " (" + url + ")";
+          }}
+        }}
+      }} catch (e) {{
+        // ignore — some cells may not support getRichTextValues
+      }}
       if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
           || val.indexOf('"') > -1) {{
         val = '"' + val.replace(/"/g, '""') + '"';
