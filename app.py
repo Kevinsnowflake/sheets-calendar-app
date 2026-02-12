@@ -1801,12 +1801,35 @@ def render_calendar():
 # Main
 # ---------------------------------------------------------------------------
 
+def _check_password() -> bool:
+    """Show a password prompt and return True if the user is authenticated."""
+    if st.session_state.get("authenticated"):
+        return True
+
+    st.title("Sheets Calendar")
+    st.markdown("---")
+    pwd = st.text_input("Enter password to access this app", type="password", key="_app_pwd")
+    if st.button("Submit", key="_app_pwd_submit"):
+        if pwd == st.secrets.get("app_password", ""):
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("Incorrect password.")
+    st.stop()
+    return False  # unreachable, but keeps the type checker happy
+
+
 def main():
     st.set_page_config(
         page_title="Sheets Calendar",
         page_icon="📅",
         layout="wide",
     )
+
+    # --- Password gate (blocks everything until authenticated) ---
+    app_password = st.secrets.get("app_password", "")
+    if app_password:
+        _check_password()
 
     # Admin unlock via secret password (stored in Streamlit secrets, not in code)
     if "admin_unlocked" not in st.session_state:
