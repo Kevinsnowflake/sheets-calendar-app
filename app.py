@@ -256,25 +256,36 @@ def _has_time(fmt: str) -> bool:
     return any(code in fmt for code in ("%H", "%I", "%M", "%S", "%p"))
 
 
-def _is_midnight_or_tz_artifact(dt: datetime) -> bool:
-    """Return True if the time is midnight or a common timezone-offset artifact.
+def _is_likely_date_only(dt: datetime) -> bool:
+    """Return True if the time component is likely an artifact, not intentional.
 
-    Google Sheets (and similar tools) often export date-only cells with a
-    timezone offset baked in, producing times like 23:00:00 (UTC-1),
-    22:00:00 (UTC-2), or small early-morning times like 05:30:00 from
-    internal fractional-day storage.  These should be treated as date-only.
+    Google Sheets stores dates as floating-point serial numbers.  Cells
+    that display as date-only (e.g. ``7/16/2025``) can have hidden time
+    components from timezone offsets, copy-paste, or internal storage.
+    When exported via Apps Script ``getValues()``, these surface as times
+    like ``05:30:00``, ``16:00:00``, ``23:00:00``, etc.
+
+    Since this calendar app uses separate columns for date and time,
+    any time on a "date" column is treated as an artifact and stripped.
+    Only truly unusual fractional-second times are preserved.
     """
+    # If seconds have a fractional/non-zero value, it was likely set
+    # intentionally by some system — preserve it.
     if dt.second != 0:
         return False
     # Midnight is always date-only
     if dt.hour == 0 and dt.minute == 0:
         return True
-    # Common timezone offsets (on the hour, near midnight)
-    if dt.minute == 0 and dt.hour in (1, 22, 23):
+    # On-the-hour times are almost always timezone offsets or artifacts
+    if dt.minute == 0:
         return True
-    # Early-morning times (before 8 AM) are almost certainly artifacts
-    # from Google Sheets internal date storage, not real event times
+    # Half-hour / quarter-hour times before 8 AM are storage artifacts
     if dt.hour < 8:
+        return True
+    # Afternoon/evening on-the-half-hour — likely a hidden time from
+    # Google Sheets cell storage rather than an intentional event time
+    # in a "Date" column.  Real event times belong in a "Time" column.
+    if dt.minute in (0, 15, 30, 45):
         return True
     return False
 
@@ -287,7 +298,7 @@ def _to_date_or_datetime(parsed: datetime, fmt_has_time: bool) -> str:
     """
     if not fmt_has_time:
         return parsed.date().isoformat()
-    if _is_midnight_or_tz_artifact(parsed):
+    if _is_likely_date_only(parsed):
         return parsed.date().isoformat()
     return parsed.isoformat()
 
@@ -302,7 +313,7 @@ def parse_date(value) -> str | None:
     if pd.isna(value) or value == "":
         return None
     if isinstance(value, (datetime, date)):
-        if isinstance(value, datetime) and not _is_midnight_or_tz_artifact(value):
+        if isinstance(value, datetime) and not _is_likely_date_only(value):
             if value.hour or value.minute or value.second:
                 return value.isoformat()
         return value.date().isoformat() if isinstance(value, datetime) else value.isoformat()
@@ -1322,16 +1333,9 @@ function sheetToCsv_(ss, sheet) {{
   var data = sheet.getDataRange().getValues();
   return data.map(function(row) {{
     return row.map(function(cell) {{
-      var val;
-      if (cell instanceof Date) {{
-        // Use date-only format unless the cell has a meaningful time
-        var h = cell.getHours(), m = cell.getMinutes(), s = cell.getSeconds();
-        val = (h === 0 && m === 0 && s === 0)
-          ? Utilities.formatDate(cell, tz, "yyyy-MM-dd")
-          : Utilities.formatDate(cell, tz, "yyyy-MM-dd HH:mm:ss");
-      }} else {{
-        val = String(cell);
-      }}
+      var val = (cell instanceof Date)
+        ? Utilities.formatDate(cell, tz, "yyyy-MM-dd")
+        : String(cell);
       if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
           || val.indexOf('"') > -1) {{
         val = '"' + val.replace(/"/g, '""') + '"';
