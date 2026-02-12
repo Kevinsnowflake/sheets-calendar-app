@@ -379,7 +379,9 @@ def parse_date(value) -> str | None:
             continue
 
     # --- Formats without a year (assume current year) ---
-    current_year = datetime.now().year
+    # Prepend the current year to the value so strptime always sees a year
+    # and avoids the Python 3.13+ DeprecationWarning about year-less parsing.
+    current_year = str(datetime.now().year)
     for fmt in (
         "%B %d",      # March 3
         "%b %d",      # Mar 4, Feb 3
@@ -395,8 +397,8 @@ def parse_date(value) -> str | None:
         "%d %b",      # 3 Mar
     ):
         try:
-            parsed = datetime.strptime(value, fmt)
-            return parsed.replace(year=current_year).date().isoformat()
+            parsed = datetime.strptime(f"{current_year} {value}", f"%Y {fmt}")
+            return parsed.date().isoformat()
         except ValueError:
             continue
 
