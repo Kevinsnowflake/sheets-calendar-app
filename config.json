@@ -53,6 +53,10 @@
           {
             "label": "Registration Link",
             "column": "Registration Link"
+          },
+          {
+            "label": "Start time",
+            "column": "Start time"
           }
         ],
         "row_filter": {
