@@ -537,6 +537,10 @@ def rows_to_events(
                 val = cf.get("static_value", "").strip()
             else:
                 val = str(row.get(cf.get("column", ""), "")).strip()
+            # Clean up Google Sheets time-only epoch values (1899-12-30 ...)
+            if val and val.startswith("1899-12-3"):
+                cleaned_time = parse_time(val)
+                val = cleaned_time if cleaned_time else ""
             if val:
                 custom_data[cf["label"]] = val
         if custom_data:
