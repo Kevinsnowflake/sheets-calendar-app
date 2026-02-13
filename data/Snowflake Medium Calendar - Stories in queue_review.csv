@@ -78,7 +78,11 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 2026-02-17,07:00,Snowflake Cortex Code Eliminates the Biggest Bottleneck in dbt Workflows: Context,JIMISH KADAKIA,2026-02-12,In Review,,
 2026-02-17,12:00,Architecting Multi-Agent Workflows with Snowflake Cortex ❄️,Maseed Ilyas,2026-02-08,In Review,,
 2026-02-18,07:00,"Auditing AI Agents in Snowflake, Part 2: LLM-as-a-Judge Evaluation Pipelines",Michael van Meurer,2026-02-06,In Review,Internal,AI/ML
+2026-02-18,12:00,From Self-Service BI to Autonomous Intelligence: Architecting the Next-Generation Data Platform with Snowflake Cortex AI,JIMISH KADAKIA,2026-02-08,Scheduled,Internal,
+2026-02-19,07:00,Building a PII De-identification System for unstructured data in Snowflake,Anant Damle,2026-02-09,In Review,,
+2026-02-19,12:00,How Cortex Code and DataOps Automation AI Work Together to Deliver Trusted Data,DataOps.live,2026-02-09,In Review,,
 2026-02-20,07:00,"Auditing AI Agents in Snowflake, Part 3: Automating with the Auditor Agent",Michael van Meurer,2026-02-06,In Review,Internal,AI/ML
+2026-02-20,12:00,Sub-second analytics with Snowflake Interactive,W,2026-02-10,In Review,,
 2026-03-02,07:00,Tentative hold for Sasha/Piotr,,,,,
 2026-03-09,07:00,Tentative hold for Sasha/Piotr,,,,,
 2026-03-16,07:00,Tentative hold for Sasha/Piotr,,,,,
@@ -89,11 +93,7 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 ,,Automated data classification with Snowflake: from nowhere to production,Radovan Baco,2026-02-02,Pending Feedback,Squad,
 ,,Building a Wildlife Camera Trap Detection with Data and AI - All on Snowflake.,Ismail Abd Rahim,2026-02-05,Pending Feedback,,
 ,,Mastering Data Metric Functions in Snowflake: Governance and Performance at the Service of Data Part 1,Ferhat AOUAGHZENE,2026-02-07,Pending Feedback,,
-,,From Self-Service BI to Autonomous Intelligence: Architecting the Next-Generation Data Platform with Snowflake Cortex AI,JIMISH KADAKIA,2026-02-08,In Review,,
 ,,Ensuring Reliable Snowflake Platform Releases: Inside the Phased Bundle Rollout Strategy,JIMISH KADAKIA,2026-02-08,In Review,,
-,,Building a PII De-identification System for unstructured data in Snowflake,Anant Damle,2026-02-09,In Review,,
-,,How Cortex Code and DataOps Automation AI Work Together to Deliver Trusted Data,DataOps.live,2026-02-09,In Review,,
-,,Sub-second analytics with Snowflake Interactive,W,2026-02-10,In Review,,
 ,,Easy high QPS with Snowflake Interactive,W,2026-02-10,In Review,,
 ,,From Legacy BI to an Intelligence Layer: Lessons from Snowflake’s BI Migration,Katie Wagner,2026-02-11,In Review,,
 ,,From Insights to Actions,Khushbu Arora,2026-02-11,In Review,,
