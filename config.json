@@ -113,7 +113,12 @@
         "title": "Topic (Internal)",
         "start": "Event Date",
         "description": "LinkedIn / Youtube Description \n(no character limit)",
-        "custom_fields": []
+        "custom_fields": [
+          {
+            "label": "Event Time",
+            "column": "Event Time "
+          }
+        ]
       }
     },
     {
