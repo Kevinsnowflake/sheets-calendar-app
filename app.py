@@ -36,15 +36,13 @@ def _git_short_hash() -> str:
 GIT_HASH = _git_short_hash()
 
 REQUIRED_FIELDS = ["title", "start"]
-OPTIONAL_FIELDS = ["end", "start_time", "end_time", "description", "location", "color"]
+OPTIONAL_FIELDS = ["end", "description", "location", "color"]
 ALL_FIELDS = REQUIRED_FIELDS + OPTIONAL_FIELDS
 
 FIELD_DESCRIPTIONS = {
     "title": "Event title (required)",
     "start": "Start date / datetime (required)",
     "end": "End date / datetime",
-    "start_time": "Start time (separate column, e.g. 10:00 AM)",
-    "end_time": "End time (separate column, e.g. 11:30 AM)",
     "description": "Event description",
     "location": "Event location",
     "color": "Event colour (hex code or CSS colour name)",
@@ -505,20 +503,6 @@ def rows_to_events(
         start = parse_date(row.get(mapping["start"]))
         if not title or not start:
             continue
-
-        # Prepend time from a separate column to the title (display only,
-        # keeps the event as all-day so it renders as a full colour bar).
-        time_prefix = ""
-        if "start_time" in mapping and mapping["start_time"]:
-            st_time = parse_time(row.get(mapping["start_time"]))
-            if st_time:
-                time_prefix = st_time
-        if "end_time" in mapping and mapping["end_time"]:
-            et_time = parse_time(row.get(mapping["end_time"]))
-            if et_time:
-                time_prefix += f"–{et_time}" if time_prefix else et_time
-        if time_prefix:
-            title = f"{time_prefix}: {title}"
 
         event: dict = {
             "title": title,
