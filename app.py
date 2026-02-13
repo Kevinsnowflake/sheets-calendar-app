@@ -36,13 +36,15 @@ def _git_short_hash() -> str:
 GIT_HASH = _git_short_hash()
 
 REQUIRED_FIELDS = ["title", "start"]
-OPTIONAL_FIELDS = ["end", "description", "location", "color"]
+OPTIONAL_FIELDS = ["end", "start_time", "end_time", "description", "location", "color"]
 ALL_FIELDS = REQUIRED_FIELDS + OPTIONAL_FIELDS
 
 FIELD_DESCRIPTIONS = {
     "title": "Event title (required)",
     "start": "Start date / datetime (required)",
     "end": "End date / datetime",
+    "start_time": "Start time (separate column, e.g. 10:00 AM)",
+    "end_time": "End time (separate column, e.g. 11:30 AM)",
     "description": "Event description",
     "location": "Event location",
     "color": "Event colour (hex code or CSS colour name)",
@@ -423,6 +425,49 @@ def parse_date(value) -> str | None:
         return None
 
 
+def parse_time(value) -> str | None:
+    """Extract a time string (HH:MM) from a cell value.
+
+    Handles common formats:
+      - ``10:00 AM``, ``2:30 PM``, ``14:30``
+      - ``1899-12-30 10:00:00`` (Google Sheets time-only epoch)
+      - ``10:00 - 10:30 AM PST`` (takes the first time)
+    Returns ``HH:MM`` in 24-hour format, or None if nothing usable found.
+    """
+    if pd.isna(value) or value == "":
+        return None
+    value = str(value).strip()
+    if not value:
+        return None
+
+    # If it looks like a Google Sheets epoch time (1899-12-30 ...), extract the time
+    if value.startswith("1899-12-30") or value.startswith("1899-12-31"):
+        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
+            try:
+                parsed = datetime.strptime(value, fmt)
+                return parsed.strftime("%H:%M")
+            except ValueError:
+                continue
+
+    # Try common time-only formats (take just the first time in the string)
+    time_pattern = re.compile(
+        r'(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM|am|pm)?', re.IGNORECASE
+    )
+    m = time_pattern.search(value)
+    if m:
+        hour, minute = int(m.group(1)), int(m.group(2))
+        ampm = m.group(4)
+        if ampm:
+            ampm = ampm.upper()
+            if ampm == "PM" and hour != 12:
+                hour += 12
+            elif ampm == "AM" and hour == 12:
+                hour = 0
+        return f"{hour:02d}:{minute:02d}"
+
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Build calendar events
 # ---------------------------------------------------------------------------
@@ -461,6 +506,12 @@ def rows_to_events(
         if not title or not start:
             continue
 
+        # Combine separate time column with date if mapped
+        if "start_time" in mapping and mapping["start_time"]:
+            st_time = parse_time(row.get(mapping["start_time"]))
+            if st_time and "T" not in start:
+                start = f"{start}T{st_time}:00"
+
         event: dict = {
             "title": title,
             "start": start,
@@ -472,6 +523,13 @@ def rows_to_events(
             if end:
                 event["end"] = end
                 event["allDay"] = "T" not in start and "T" not in end
+        # Separate end_time column: combine with start date (or end date)
+        if "end_time" in mapping and mapping["end_time"]:
+            et_time = parse_time(row.get(mapping["end_time"]))
+            if et_time:
+                end_date = event.get("end", start).split("T")[0]
+                event["end"] = f"{end_date}T{et_time}:00"
+                event["allDay"] = False
 
         if "color" in mapping and mapping["color"]:
             row_color = str(row.get(mapping["color"], "")).strip()
@@ -1434,9 +1492,24 @@ function sheetToCsv_(ss, sheet) {{
   var richTexts = range.getRichTextValues();
   return data.map(function(row, r) {{
     return row.map(function(cell, c) {{
-      var val = (cell instanceof Date)
-        ? Utilities.formatDate(cell, tz, "yyyy-MM-dd")
-        : String(cell);
+      var val;
+      if (cell instanceof Date) {{
+        // Google Sheets stores time-only values with epoch date 1899-12-30.
+        // Detect this and export just the time; otherwise export date only.
+        var y = cell.getFullYear();
+        if (y === 1899) {{
+          val = Utilities.formatDate(cell, tz, "HH:mm");
+        }} else {{
+          var h = cell.getHours(), m = cell.getMinutes(), s = cell.getSeconds();
+          if (h === 0 && m === 0 && s === 0) {{
+            val = Utilities.formatDate(cell, tz, "yyyy-MM-dd");
+          }} else {{
+            val = Utilities.formatDate(cell, tz, "yyyy-MM-dd HH:mm");
+          }}
+        }}
+      }} else {{
+        val = String(cell);
+      }}
       // Append hyperlink URL if the cell contains one (smart chips won't
       // be detected, but regular hyperlinks inserted via Insert > Link will).
       try {{
