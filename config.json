@@ -8,11 +8,14 @@
       "mapping": {
         "title": "Title",
         "start": "Date",
-        "end": "Time Published",
         "custom_fields": [
           {
             "label": "Working Group",
             "column": "WG"
+          },
+          {
+            "label": "Time Published",
+            "column": "Time Published"
           }
         ]
       },
