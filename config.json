@@ -117,7 +117,7 @@
       "header_row": 6,
       "mapping": {
         "title": "Topic",
-        "start": "Date",
+        "start": "Co",
         "description": "Type",
         "custom_fields": [
           {
