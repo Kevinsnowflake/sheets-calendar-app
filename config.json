@@ -47,7 +47,6 @@
       "mapping": {
         "title": "Event Name",
         "start": "Date",
-        "end": "End time",
         "location": "Location",
         "custom_fields": [
           {
