@@ -1440,9 +1440,6 @@ function syncAll() {{
     );
   }}
 
-  // Resolve exact repo name (fixes capitalization mismatches)
-  repo = resolveRepo_(token, repo);
-
   // Fetch config.json from the repo to get the current list of sources
   var sources = loadSources_(token, repo);
   Logger.log("Found " + sources.length + " source(s) in config.json");
@@ -1466,26 +1463,6 @@ function syncAll() {{
     pushAllFiles_(token, repo, files, "Auto-sync: update all sources");
   }}
   Logger.log("Sync results:\\n" + results.join("\\n"));
-}}
-
-// --- Helper: resolve the exact repo full_name from GitHub (fixes case) ---
-function resolveRepo_(token, repo) {{
-  var resp = UrlFetchApp.fetch("https://api.github.com/repos/" + repo, {{
-    method: "get",
-    headers: {{
-      "Authorization": "Bearer " + token,
-      "Accept": "application/vnd.github+json"
-    }},
-    muteHttpExceptions: true
-  }});
-  if (resp.getResponseCode() === 200) {{
-    var data = JSON.parse(resp.getContentText());
-    if (data.full_name) {{
-      Logger.log("Resolved repo: " + data.full_name);
-      return data.full_name;
-    }}
-  }}
-  return repo; // fallback to original if lookup fails
 }}
 
 // --- Helper: fetch config.json and parse sources ---
@@ -1587,67 +1564,49 @@ function sheetToCsv_(ss, sheet) {{
   }}).join("\\n");
 }}
 
-// --- Helper: push ALL files in a single commit via the Git Data API ---
+// --- Helper: push files via the Contents API (one commit per file) ---
 function pushAllFiles_(token, repo, files, message) {{
-  var apiBase = "https://api.github.com/repos/" + repo + "/";
+  var apiBase = "https://api.github.com/repos/" + repo + "/contents/";
   var headers = {{
     "Authorization": "Bearer " + token,
     "Accept": "application/vnd.github+json"
   }};
 
-  function ghFetch_(endpoint, method, payload) {{
-    var opts = {{ method: method, headers: headers, muteHttpExceptions: true }};
-    if (payload) {{
-      opts.contentType = "application/json";
-      opts.payload = JSON.stringify(payload);
-    }}
-    var resp = UrlFetchApp.fetch(apiBase + endpoint, opts);
-    var code = resp.getResponseCode();
-    if (code < 200 || code >= 300) {{
-      throw new Error("GitHub API " + code + ": "
-        + resp.getContentText().substring(0, 300));
-    }}
-    return JSON.parse(resp.getContentText());
-  }}
-
-  // 1. Get the SHA of the current HEAD commit on main
-  var ref = ghFetch_("git/ref/heads/main", "get");
-  var headSha = ref.object.sha;
-  var commit = ghFetch_("git/commits/" + headSha, "get");
-  var baseTreeSha = commit.tree.sha;
-
-  // 2. Create blobs for each file
-  var treeItems = [];
   for (var i = 0; i < files.length; i++) {{
-    var blob = ghFetch_("git/blobs", "post", {{
-      content: Utilities.base64Encode(files[i].content, Utilities.Charset.UTF_8),
-      encoding: "base64"
+    var filePath = files[i].path;
+    var content = Utilities.base64Encode(files[i].content, Utilities.Charset.UTF_8);
+
+    // Get the current file SHA (needed for updates)
+    var sha = null;
+    var getResp = UrlFetchApp.fetch(apiBase + filePath, {{
+      method: "get",
+      headers: headers,
+      muteHttpExceptions: true
     }});
-    treeItems.push({{
-      path: files[i].path,
-      mode: "100644",
-      type: "blob",
-      sha: blob.sha
+    if (getResp.getResponseCode() === 200) {{
+      sha = JSON.parse(getResp.getContentText()).sha;
+    }}
+
+    // Create or update the file
+    var body = {{
+      message: message + " (" + filePath + ")",
+      content: content
+    }};
+    if (sha) body.sha = sha;
+
+    var putResp = UrlFetchApp.fetch(apiBase + filePath, {{
+      method: "put",
+      headers: headers,
+      contentType: "application/json",
+      payload: JSON.stringify(body),
+      muteHttpExceptions: true
     }});
+    var code = putResp.getResponseCode();
+    if (code < 200 || code >= 300) {{
+      throw new Error("GitHub API " + code + " for " + filePath + ": "
+        + putResp.getContentText().substring(0, 300));
+    }}
   }}
-
-  // 3. Create a new tree with the updated files
-  var tree = ghFetch_("git/trees", "post", {{
-    base_tree: baseTreeSha,
-    tree: treeItems
-  }});
-
-  // 4. Create the commit
-  var newCommit = ghFetch_("git/commits", "post", {{
-    message: message,
-    tree: tree.sha,
-    parents: [headSha]
-  }});
-
-  // 5. Update main to point to the new commit
-  ghFetch_("git/ref/heads/main", "patch", {{
-    sha: newCommit.sha
-  }});
 }}'''
 
     st.code(script, language="javascript")
