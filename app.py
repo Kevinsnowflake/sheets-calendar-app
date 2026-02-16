@@ -36,13 +36,14 @@ def _git_short_hash() -> str:
 GIT_HASH = _git_short_hash()
 
 REQUIRED_FIELDS = ["title", "start"]
-OPTIONAL_FIELDS = ["end", "description", "location", "color"]
+OPTIONAL_FIELDS = ["end", "title_prefix", "description", "location", "color"]
 ALL_FIELDS = REQUIRED_FIELDS + OPTIONAL_FIELDS
 
 FIELD_DESCRIPTIONS = {
     "title": "Event title (required)",
     "start": "Start date / datetime (required)",
     "end": "End date / datetime",
+    "title_prefix": "Prefix column — prepended as [Value] before the title",
     "description": "Event description",
     "location": "Event location",
     "color": "Event colour (hex code or CSS colour name)",
@@ -503,6 +504,12 @@ def rows_to_events(
         start = parse_date(row.get(mapping["start"]))
         if not title or not start:
             continue
+
+        # Prepend [prefix] to title if a prefix column is mapped
+        if "title_prefix" in mapping and mapping["title_prefix"]:
+            prefix = str(row.get(mapping["title_prefix"], "")).strip()
+            if prefix and prefix.lower() != "nan":
+                title = f"[{prefix}] {title}"
 
         event: dict = {
             "title": title,
