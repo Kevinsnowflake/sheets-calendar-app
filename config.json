@@ -139,6 +139,29 @@
           }
         ]
       }
+    },
+    {
+      "name": "DG (Chris)",
+      "file_path": "data/FY27 Program Tracker AMS - UPDATE HERE_ Program Repository_1.csv",
+      "default_color": "#6d6875",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/1JAmMFTCrmq7mGtGwXP5VL2vdZG7IpPGQYfOVWXeZe5M/edit?gid=0#gid=0",
+      "header_row": 1,
+      "mapping": {
+        "title": "Program Name",
+        "start": "Start Date",
+        "title_prefix": "Sonic Boom/ Big Bet",
+        "custom_fields": [
+          {
+            "label": "Working Group",
+            "column": "Working Group"
+          }
+        ],
+        "row_filter": {
+          "column": "Program Type",
+          "value": "Webinar, Virtual Event, In Person Event"
+        }
+      }
     }
   ],
   "watch_folders": [],
