@@ -1834,8 +1834,8 @@ def render_calendar():
         view = st.selectbox(
             "View",
             options=[
-                "dayGridMonth",
                 "dayGridFourWeek",
+                "dayGridMonth",
                 "dayGridWeek",
                 "dayGridDay",
                 "listMonth",
