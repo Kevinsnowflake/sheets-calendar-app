@@ -538,6 +538,7 @@ def rows_to_events(
             else:
                 val = str(row.get(cf.get("column", ""), "")).strip()
             # Clean up Google Sheets time-only epoch values (1899-12-30 ...)
+            # After updating the Apps Script, these export as HH:mm directly.
             if val and val.startswith("1899-12-3"):
                 cleaned_time = parse_time(val)
                 val = cleaned_time if cleaned_time else ""
@@ -1434,7 +1435,8 @@ def render_apps_script():
 // Required properties:  GITHUB_TOKEN, GITHUB_REPO
 
 /**
- * Sync all sources to GitHub. Set your trigger on this function.
+ * Sync all sources to GitHub in a SINGLE commit.
+ * Set your triggers on this function.
  */
 function syncAll() {{
   var props = PropertiesService.getScriptProperties();
@@ -1447,6 +1449,7 @@ function syncAll() {{
     );
   }}
 
+  var files = [];
   var results = [];
   for (var i = 0; i < SOURCES.length; i++) {{
     var src = SOURCES[i];
@@ -1454,13 +1457,16 @@ function syncAll() {{
       var ss = SpreadsheetApp.openById(src.spreadsheetId);
       var sheet = getSheetByGid_(ss, src.gid);
       var csv = sheetToCsv_(ss, sheet);
-      pushFile_(token, repo, src.filePath, csv);
+      files.push({{ path: src.filePath, content: csv }});
       results.push("OK  " + src.name);
     }} catch (e) {{
       results.push("ERR " + src.name + ": " + e.message);
     }}
   }}
 
+  if (files.length > 0) {{
+    pushAllFiles_(token, repo, files, "Auto-sync: update all sources");
+  }}
   Logger.log("Sync results:\\n" + results.join("\\n"));
 }}
 
@@ -1483,8 +1489,6 @@ function sheetToCsv_(ss, sheet) {{
     return row.map(function(cell, c) {{
       var val;
       if (cell instanceof Date) {{
-        // Google Sheets stores time-only values with epoch date 1899-12-30.
-        // Detect this and export just the time; otherwise export date only.
         var y = cell.getFullYear();
         if (y === 1899) {{
           val = Utilities.formatDate(cell, tz, "HH:mm");
@@ -1499,8 +1503,6 @@ function sheetToCsv_(ss, sheet) {{
       }} else {{
         val = String(cell);
       }}
-      // Append hyperlink URL if the cell contains one (smart chips won't
-      // be detected, but regular hyperlinks inserted via Insert > Link will).
       try {{
         var rt = richTexts[r][c];
         if (rt) {{
@@ -1509,9 +1511,7 @@ function sheetToCsv_(ss, sheet) {{
             val = val + " (" + url + ")";
           }}
         }}
-      }} catch (e) {{
-        // ignore — some cells may not support getRichTextValues
-      }}
+      }} catch (e) {{}}
       if (val.indexOf(",") > -1 || val.indexOf("\\n") > -1
           || val.indexOf('"') > -1) {{
         val = '"' + val.replace(/"/g, '""') + '"';
@@ -1521,62 +1521,88 @@ function sheetToCsv_(ss, sheet) {{
   }}).join("\\n");
 }}
 
-// --- Helper: push a file to GitHub via the Contents API ---
-function pushFile_(token, repo, filePath, content) {{
-  var encoded = Utilities.base64Encode(content, Utilities.Charset.UTF_8);
-  var apiBase = "https://api.github.com/repos/" + repo + "/contents/";
+// --- Helper: push ALL files in a single commit via the Git Data API ---
+function pushAllFiles_(token, repo, files, message) {{
+  var apiBase = "https://api.github.com/repos/" + repo + "/";
   var headers = {{
     "Authorization": "Bearer " + token,
     "Accept": "application/vnd.github+json"
   }};
 
-  // Get current SHA (required for updates)
-  var sha = null;
-  var getResp = UrlFetchApp.fetch(apiBase + filePath, {{
-    method: "get",
-    headers: headers,
-    muteHttpExceptions: true
-  }});
-  if (getResp.getResponseCode() === 200) {{
-    sha = JSON.parse(getResp.getContentText()).sha;
+  function ghFetch_(endpoint, method, payload) {{
+    var opts = {{ method: method, headers: headers, muteHttpExceptions: true }};
+    if (payload) {{
+      opts.contentType = "application/json";
+      opts.payload = JSON.stringify(payload);
+    }}
+    var resp = UrlFetchApp.fetch(apiBase + endpoint, opts);
+    var code = resp.getResponseCode();
+    if (code < 200 || code >= 300) {{
+      throw new Error("GitHub API " + code + ": "
+        + resp.getContentText().substring(0, 300));
+    }}
+    return JSON.parse(resp.getContentText());
   }}
 
-  var body = {{
-    message: "Auto-sync: update " + filePath,
-    content: encoded
-  }};
-  if (sha) body.sha = sha;
+  // 1. Get the SHA of the current HEAD commit on main
+  var ref = ghFetch_("git/ref/heads/main", "get");
+  var headSha = ref.object.sha;
+  var commit = ghFetch_("git/commits/" + headSha, "get");
+  var baseTreeSha = commit.tree.sha;
 
-  var putResp = UrlFetchApp.fetch(apiBase + filePath, {{
-    method: "put",
-    headers: headers,
-    contentType: "application/json",
-    payload: JSON.stringify(body),
-    muteHttpExceptions: true
+  // 2. Create blobs for each file
+  var treeItems = [];
+  for (var i = 0; i < files.length; i++) {{
+    var blob = ghFetch_("git/blobs", "post", {{
+      content: Utilities.base64Encode(files[i].content, Utilities.Charset.UTF_8),
+      encoding: "base64"
+    }});
+    treeItems.push({{
+      path: files[i].path,
+      mode: "100644",
+      type: "blob",
+      sha: blob.sha
+    }});
+  }}
+
+  // 3. Create a new tree with the updated files
+  var tree = ghFetch_("git/trees", "post", {{
+    base_tree: baseTreeSha,
+    tree: treeItems
   }});
 
-  var code = putResp.getResponseCode();
-  if (code !== 200 && code !== 201) {{
-    throw new Error("HTTP " + code + ": "
-      + putResp.getContentText().substring(0, 200));
-  }}
+  // 4. Create the commit
+  var newCommit = ghFetch_("git/commits", "post", {{
+    message: message,
+    tree: tree.sha,
+    parents: [headSha]
+  }});
+
+  // 5. Update main to point to the new commit
+  ghFetch_("git/ref/heads/main", "patch", {{
+    sha: newCommit.sha
+  }});
 }}'''
 
     st.code(script, language="javascript")
 
-    st.subheader("Step 3: Set up a scheduled trigger")
+    st.subheader("Step 3: Set up scheduled triggers")
     st.markdown(
+        "Create **3 triggers** so the calendar syncs at 7 AM, 12 PM, and 5 PM:\n\n"
         "1. In the Apps Script editor, click the **clock icon** (Triggers) "
         "in the left sidebar.\n"
-        "2. Click **+ Add Trigger** (bottom right).\n"
-        "3. Configure:\n"
+        "2. **Delete any existing triggers** (e.g. hourly) to avoid excessive commits.\n"
+        "3. Click **+ Add Trigger** and configure:\n"
         "   - **Function:** `syncAll`\n"
         "   - **Event source:** Time-driven\n"
-        "   - **Type:** Day timer (or Hour / Week — your choice)\n"
-        "   - **Time:** Pick what works for you (e.g. 6-7 AM)\n"
-        "4. Click **Save** and authorize when prompted.\n\n"
-        "All your sources will now sync to GitHub on schedule. Check the "
-        "**Execution Log** after a run to see which sources succeeded."
+        "   - **Type:** Day timer\n"
+        "   - **Time:** 7am to 8am\n"
+        "4. Repeat to add two more triggers:\n"
+        "   - One set to **12pm to 1pm**\n"
+        "   - One set to **5pm to 6pm**\n"
+        "5. Click **Save** and authorize when prompted.\n\n"
+        "Each sync now creates a **single commit** (instead of one per source), "
+        "which keeps the repo clean and ensures Streamlit Cloud redeploys reliably."
     )
 
     st.subheader("Adding new sources")
