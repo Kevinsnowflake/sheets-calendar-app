@@ -4,7 +4,7 @@ import re
 import shutil
 import subprocess
 import time
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -1835,6 +1835,7 @@ def render_calendar():
             "View",
             options=[
                 "dayGridMonth",
+                "dayGridFourWeek",
                 "dayGridWeek",
                 "dayGridDay",
                 "listMonth",
@@ -1843,6 +1844,7 @@ def render_calendar():
             key="calendar_view_select",
             format_func=lambda v: {
                 "dayGridMonth": "Month",
+                "dayGridFourWeek": "4 Weeks",
                 "dayGridWeek": "Week",
                 "dayGridDay": "Day",
                 "listMonth": "List (Month)",
@@ -1909,6 +1911,14 @@ def render_calendar():
             )
 
     # Render calendar
+    # For the 4-week view, start from the Monday of last week
+    four_week_start = None
+    if view == "dayGridFourWeek":
+        today = date.today()
+        days_since_monday = today.weekday()  # 0=Mon, 6=Sun
+        last_monday = today - timedelta(days=days_since_monday + 7)
+        four_week_start = last_monday.isoformat()
+
     calendar_options = {
         "initialView": view,
         "headerToolbar": {
@@ -1921,7 +1931,15 @@ def render_calendar():
         "navLinks": True,
         "height": 650,
         "displayEventTime": False,
+        "views": {
+            "dayGridFourWeek": {
+                "type": "dayGrid",
+                "duration": {"weeks": 4},
+            },
+        },
     }
+    if four_week_start:
+        calendar_options["initialDate"] = four_week_start
 
     custom_css = """
         .fc-event-past { opacity: 0.7; }
