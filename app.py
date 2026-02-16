@@ -1440,6 +1440,9 @@ function syncAll() {{
     );
   }}
 
+  // Resolve exact repo name (fixes capitalization mismatches)
+  repo = resolveRepo_(token, repo);
+
   // Fetch config.json from the repo to get the current list of sources
   var sources = loadSources_(token, repo);
   Logger.log("Found " + sources.length + " source(s) in config.json");
@@ -1463,6 +1466,26 @@ function syncAll() {{
     pushAllFiles_(token, repo, files, "Auto-sync: update all sources");
   }}
   Logger.log("Sync results:\\n" + results.join("\\n"));
+}}
+
+// --- Helper: resolve the exact repo full_name from GitHub (fixes case) ---
+function resolveRepo_(token, repo) {{
+  var resp = UrlFetchApp.fetch("https://api.github.com/repos/" + repo, {{
+    method: "get",
+    headers: {{
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github+json"
+    }},
+    muteHttpExceptions: true
+  }});
+  if (resp.getResponseCode() === 200) {{
+    var data = JSON.parse(resp.getContentText());
+    if (data.full_name) {{
+      Logger.log("Resolved repo: " + data.full_name);
+      return data.full_name;
+    }}
+  }}
+  return repo; // fallback to original if lookup fails
 }}
 
 // --- Helper: fetch config.json and parse sources ---
