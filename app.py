@@ -1380,33 +1380,19 @@ def render_apps_script():
         "runs as your account."
     )
 
-    # --- Build SOURCES array from config ---
+    # --- Check sources missing URLs ---
     config = load_config()
     sources = config.get("sheets", [])
-    sources_js_entries: list[str] = []
     sources_missing_url: list[str] = []
     for s in sources:
         parsed = _parse_sheet_url(s.get("source_url", ""))
-        if parsed:
-            sid, gid = parsed
-            entry = (
-                f'  {{\n'
-                f'    name: "{s.get("name", "Unnamed")}",\n'
-                f'    spreadsheetId: "{sid}",\n'
-                f'    gid: {gid},\n'
-                f'    filePath: "{s.get("file_path", "")}"\n'
-                f'  }}'
-            )
-            sources_js_entries.append(entry)
-        else:
+        if not parsed:
             sources_missing_url.append(s.get("name", "Unnamed"))
-
-    sources_js = "var SOURCES = [\n" + ",\n".join(sources_js_entries) + "\n];"
 
     if sources_missing_url:
         st.warning(
             f"These sources are missing a Google Sheet link and won't be "
-            f"included: **{', '.join(sources_missing_url)}**. "
+            f"synced: **{', '.join(sources_missing_url)}**. "
             f"Add a source link on the Manage Sources page to include them."
         )
 
@@ -1434,15 +1420,13 @@ def render_apps_script():
     )
 
     script = f'''\
-// === SOURCES (auto-generated from your calendar config) ===
-{sources_js}
-// === END SOURCES ===
-
 // GitHub credentials are read from Script Properties (Project Settings).
 // Required properties:  GITHUB_TOKEN, GITHUB_REPO
 
 /**
  * Sync all sources to GitHub in a SINGLE commit.
+ * Sources are read dynamically from config.json in the repo,
+ * so you never need to update this script when adding new sources.
  * Set your triggers on this function.
  */
 function syncAll() {{
@@ -1456,10 +1440,14 @@ function syncAll() {{
     );
   }}
 
+  // Fetch config.json from the repo to get the current list of sources
+  var sources = loadSources_(token, repo);
+  Logger.log("Found " + sources.length + " source(s) in config.json");
+
   var files = [];
   var results = [];
-  for (var i = 0; i < SOURCES.length; i++) {{
-    var src = SOURCES[i];
+  for (var i = 0; i < sources.length; i++) {{
+    var src = sources[i];
     try {{
       var ss = SpreadsheetApp.openById(src.spreadsheetId);
       var sheet = getSheetByGid_(ss, src.gid);
@@ -1475,6 +1463,54 @@ function syncAll() {{
     pushAllFiles_(token, repo, files, "Auto-sync: update all sources");
   }}
   Logger.log("Sync results:\\n" + results.join("\\n"));
+}}
+
+// --- Helper: fetch config.json and parse sources ---
+function loadSources_(token, repo) {{
+  var url = "https://api.github.com/repos/" + repo + "/contents/config.json";
+  var resp = UrlFetchApp.fetch(url, {{
+    method: "get",
+    headers: {{
+      "Authorization": "Bearer " + token,
+      "Accept": "application/vnd.github.raw+json"
+    }},
+    muteHttpExceptions: true
+  }});
+  if (resp.getResponseCode() !== 200) {{
+    throw new Error("Could not fetch config.json: HTTP " + resp.getResponseCode());
+  }}
+  var config = JSON.parse(resp.getContentText());
+  var sheets = config.sheets || [];
+  var sources = [];
+  for (var i = 0; i < sheets.length; i++) {{
+    var s = sheets[i];
+    var sourceUrl = s.source_url || "";
+    var parsed = parseSheetUrl_(sourceUrl);
+    if (parsed) {{
+      sources.push({{
+        name: s.name || "Unnamed",
+        spreadsheetId: parsed.spreadsheetId,
+        gid: parsed.gid,
+        filePath: s.file_path || ""
+      }});
+    }}
+  }}
+  return sources;
+}}
+
+// --- Helper: extract spreadsheetId and gid from a Google Sheets URL ---
+function parseSheetUrl_(url) {{
+  if (!url || url.indexOf("spreadsheets/d/") === -1) return null;
+  try {{
+    var spreadsheetId = url.split("spreadsheets/d/")[1].split("/")[0];
+    var gid = 0;
+    if (url.indexOf("gid=") > -1) {{
+      gid = parseInt(url.split("gid=").pop().split("&")[0].split("#")[0], 10);
+    }}
+    return {{ spreadsheetId: spreadsheetId, gid: gid }};
+  }} catch (e) {{
+    return null;
+  }}
 }}
 
 // --- Helper: find a sheet tab by its gid ---
@@ -1614,10 +1650,10 @@ function pushAllFiles_(token, repo, files, message) {{
 
     st.subheader("Adding new sources")
     st.markdown(
-        "When you add a new source on the **Manage Sources** page, come back "
-        "here to get an updated script with the new source included in the "
-        "`SOURCES` array. Copy-paste it into your Apps Script project to "
-        "replace the old version."
+        "The script **automatically reads your sources** from `config.json` "
+        "in the repo every time it runs. When you add a new source on the "
+        "**Manage Sources** page (with a Google Sheet link), it will be "
+        "included in the next sync automatically — no script updates needed."
     )
 
 
