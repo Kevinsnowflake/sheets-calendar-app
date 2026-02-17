@@ -15,6 +15,7 @@ What's New in Snowflake,Webinar,Big Bet,Roma Patel / Kate Pell ,2026-02-11,,Q1,3
 eBook: Top Business Intelligence (BI) Trends and Strategies 2026,Content,,Gayatri Kapur,2026-02-12,2026-02-12,Q1,1500,Analytics,Modernize Your Data Estate,,,,
 Ebook: Connect External Sources to Agents,Content,,Abbie Fontanilla,2026-02-13,2026-04-30,Q1,,Applications & Collaboration,Enterprise-ready Data Agents,,"MOPS, Design, Web",,
 HIMSS Webinar,3rd Party Webinar,,Gayatri Kapur,2026-02-17,2026-02-17,Q1,500,Healthcare & Life Sciences,Modernize Your Data Estate,Healthcare & Life Sciences,,,
+SVAI Hub Event 1,In Person Event,,Chris Lotspeich,2026-02-17,2026-02-17,Q1,,Developer,,,MOPS,,
 Zero to Snowflake,Webinar,,Abbie Fontanilla,2026-02-18,2026-02-18,Q1,,Platform,AI Data Cloud,,,,
 Data Cloud Demo,Webinar,,Abbie Fontanilla,2026-02-19,2026-02-19,Q1,,Platform,AI Data Cloud,,,,
 Predictions Webinar - PubSec,3rd Party Webinar,,Erin Troiano,2026-02-19,2026-02-19,Q1,200,Public Sector,Modernize Your Data Estate,Public Sector,"Web, MOPS, Design",,
@@ -70,7 +71,6 @@ Platform Connect,Webinar,Big Bet,Abbie Fontanilla,2026-04-07,2026-04-07,Q1,,Plat
 Iceberg Summit,In Person Event,Big Bet,Chris Lotspeich,2026-04-08,2026-04-09,Q1,,Developer,Get Your Data AI Ready,,MOPS,,
 Openflow (BUILD recap + pre-Summit),Webinar,,JC Quiambao,2026-04-08,2026-04-08,Q1,1000,Data Engineering,Get Your Data AI Ready,,,,
 ROI of Gen AI and Agents,Virtual Event,Big Bet,Julie Hoyt,2026-04-09,2026-04-09,Q1,4000,AI & ML,Enterprise-ready Data Agents,,"MOPS, Video, Design, Web",New web page needed,FY27 Q1 ROI of Gen AI and Agents Virtual Event Project Timeline 
-Snowflake Connect: Data Engineering | Building Transformation Pipelines for AI-ready data ,Virtual Event,Big Bet,JC Quiambao,2026-04-22,2026-04-22,Q1,4500,Data Engineering,Get Your Data AI Ready,,"MOPS, Video, Design, Web",,FY27Q1 Snowflake Connect [DE] Transformation Technologies
 eBook: AME Data Trends,Content,,Lydia Luke,2026-04-14,,Q1,,Media & Entertainment,AI Data Cloud,Media & Entertainment,"MOPS, Design, Web",,
 Build Data Engineering Pipelines Using Snowpark in Snowflake Notebooks,Webinar,,JC Quiambao,2026-04-15,2026-04-15,Q1,2000,Data Engineering,Get Your Data AI Ready,,,,
 DSC Webinar: From AI to ROI,3rd Party Webinar,,Julie Hoyt,2026-04-15,2026-04-15,Q1,350,AI & ML,Enterprise-ready Data Agents,,MOPS,,
@@ -82,6 +82,7 @@ Snowflake Connect: Analytics ,Virtual Event,Big Bet,Gayatri Kapur,2026-04-16,202
 Webinar Replay: Accelerate - AME ,3rd Party Webinar,Big Bet,Lydia Luke,2026-04-20,,Q1,,Media & Entertainment,AI Data Cloud,Media & Entertainment,"MOPS, Video",,
 Accelerate ACME,Virtual Event,Big Bet,Roger Erra,2026-04-21,2026-04-21,Q1,1850,Media & Entertainment,AI Data Cloud,Media & Entertainment,"MOPS, Video, Design, Web",,
 Ebook: Databricks Compete Customer Book,Content,,Abbie Fontanilla,2026-04-21,2026-04-30,Q1,,Platform,AI Data Cloud,,"MOPS, Design, Web",,
+Snowflake Connect: Data Engineering | Building Transformation Pipelines for AI-ready data ,Virtual Event,Big Bet,JC Quiambao,2026-04-22,2026-04-22,Q1,4500,Data Engineering,Get Your Data AI Ready,,"MOPS, Video, Design, Web",,FY27Q1 Snowflake Connect [DE] Transformation Technologies
 Accelerate MFG,Virtual Event,Big Bet,Roger Erra,2026-04-22,2026-04-22,Q1,2000,Manufacturing,AI Data Cloud,Manufacturing,"MOPS, Video, Design, Web",,
 Google Next,In Person Event,,Chris Lotspeich,2026-04-22,2026-04-24,Q1,,Platform,,,"MOPS, Web",,
 VHOL: Enrich Agents with 3rd Party Data and Easy Distribution,Webinar,,Abbie Fontanilla,2026-04-22,2026-04-22,Q1,,Applications & Collaboration,Enterprise-ready Data Agents,,"MOPS, Video, Design, Web",,
@@ -125,7 +126,6 @@ Series Kick-off 'All Things Semantic Views',Webinar,,Roma Patel,2026-07-15,,Q2,,
 Applied Analytics Webinar Hold (Work with PMM to pick a topic),Webinar,,Roma Patel,2026-07-22,,Q2,,Analytics,Modernize Your Data Estate,,,,
 Snowflake Connect: DE | New Architecture for Iceberg,Webinar,Big Bet,JC Quiambao,2026-07-29,2026-07-29,Q2,4500,Data Engineering,Get Your Data AI Ready,,"MOPS, Video, Design, Web",,
 TDWI Custom Webinar,3rd Party Webinar,,Roma Patel,2026-07-30,,Q2,300,Analytics,Modernize Your Data Estate,,,,
-SVAI Hub Event 1,In Person Event,,Chris Lotspeich,2026-02-17,2026-02-17,Q1,,Developer,,,MOPS,,
 SVAI Hub Event 1,In Person Event,,Chris Lotspeich,TBD,TBD,Q2,,Developer,,,MOPS,,
 SVAI Hub Event 2,In Person Event,,Chris Lotspeich,TBD,TBD,Q1,,Developer,,,MOPS,,
 SVAI Hub Event 2,In Person Event,,Chris Lotspeich,TBD,TBD,Q2,,Developer,,,MOPS,,
