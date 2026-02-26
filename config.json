@@ -197,23 +197,6 @@
       ],
       "time_filter": "All",
       "calendar_view": "dayGridMonth"
-    },
-    {
-      "name": "All",
-      "sources": [
-        "AI/Coco (Krista)",
-        "Campaigns (Kevin)",
-        "Coco Use Skill (Krista)",
-        "Conferences/Events (Aba)",
-        "Livestreams (Rida)",
-        "Medium (Kevin)",
-        "SVAI Events (Chad)"
-      ],
-      "locations": [
-        "All locations"
-      ],
-      "time_filter": "All",
-      "calendar_view": "dayGridMonth"
     }
   ]
 }
