@@ -1992,12 +1992,14 @@ def render_calendar():
             for cf_label, cf_value in ext["custom"].items():
                 st.markdown(f"**{cf_label}:** {cf_value}")
 
-        # Auto-scroll to event detail
+        # Auto-scroll to event detail (cache-bust with timestamp so it fires every click)
         import streamlit.components.v1 as components
+        _scroll_ts = int(time.time() * 1000)
         components.html(
-            """<script>
+            f"""<script>
+            /* {_scroll_ts} */
             const el = window.parent.document.getElementById('event-detail');
-            if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            if (el) el.scrollIntoView({{behavior: 'smooth', block: 'start'}});
             </script>""",
             height=0,
         )
