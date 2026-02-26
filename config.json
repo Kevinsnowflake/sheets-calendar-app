@@ -173,6 +173,7 @@
       "mapping": {
         "title": "Title ",
         "start": "Post date",
+        "title_prefix": "Type",
         "custom_fields": []
       }
     }
