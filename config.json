@@ -162,6 +162,19 @@
           "value": "Webinar, Virtual Event, In Person Event"
         }
       }
+    },
+    {
+      "name": "DSH Content (Ami)",
+      "file_path": "data/2026 Data Superhero Program Tracker - FY27 DSH Content.csv",
+      "default_color": "#d337d8",
+      "source_type": "upload",
+      "source_url": "https://docs.google.com/spreadsheets/d/14rx2HVWRM6I9dizifQAZ5zTx8BOaJrfKRbgq8868lMQ/edit?gid=946100640#gid=946100640",
+      "header_row": 1,
+      "mapping": {
+        "title": "Title ",
+        "start": "Post date",
+        "custom_fields": []
+      }
     }
   ],
   "watch_folders": [],
