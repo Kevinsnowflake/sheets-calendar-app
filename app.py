@@ -1680,7 +1680,37 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
         {e.get("extendedProps", {}).get("location", "").strip() for e in events} - {""}
     )
 
-    with st.expander("Filters", expanded=True):
+    with st.expander("Filters", expanded=False):
+        # --- Saved views (inside filters) ---
+        saved_views = get_saved_views()
+        view_names = [v["name"] for v in saved_views]
+        if view_names:
+            sv_options = ["(none)"] + view_names
+            if "saved_view_picker" in st.session_state:
+                if st.session_state["saved_view_picker"] not in sv_options:
+                    del st.session_state["saved_view_picker"]
+            sv_left, sv_right = st.columns([3, 1])
+            with sv_left:
+                selected_view_name = st.selectbox(
+                    "Saved Views",
+                    options=sv_options,
+                    key="saved_view_picker",
+                    help="Load a previously saved combination of filters.",
+                )
+            with sv_right:
+                st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
+                if selected_view_name != "(none)":
+                    col_load, col_del = st.columns(2)
+                    with col_load:
+                        if st.button("Load", key="load_saved_view", use_container_width=True):
+                            match = next((v for v in saved_views if v["name"] == selected_view_name), None)
+                            if match:
+                                _apply_saved_view(match)
+                    with col_del:
+                        if st.button("Delete", key="delete_saved_view", type="secondary", use_container_width=True):
+                            delete_view(selected_view_name)
+                            st.rerun()
+
         filter_cols = st.columns([2, 2, 2, 1])
 
         # --- Source filter ---
@@ -1807,8 +1837,6 @@ def _apply_saved_view(view_data: dict):
 
 def render_calendar():
     """Main calendar view."""
-    st.header("Event Calendar")
-
     config = load_config()
 
     n_sources = len(config.get("sheets", [])) + len(config.get("watch_folders", []))
@@ -1819,95 +1847,34 @@ def render_calendar():
         )
         return
 
-    # --- Saved views & calendar view selector row ---
-    saved_views = get_saved_views()
-    view_names = [v["name"] for v in saved_views]
-
-    # Clean up stale picker value before the widget renders
-    sv_options = ["(none)"] + view_names
-    if "saved_view_picker" in st.session_state:
-        if st.session_state["saved_view_picker"] not in sv_options:
-            del st.session_state["saved_view_picker"]
-
-    sv_col, view_col = st.columns([3, 1])
-
-    with sv_col:
-        if view_names:
-            sv_left, sv_right = st.columns([3, 1])
-            with sv_left:
-                selected_view_name = st.selectbox(
-                    "Saved Views",
-                    options=sv_options,
-                    key="saved_view_picker",
-                    help="Load a previously saved combination of filters.",
-                )
-            with sv_right:
-                st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-                if selected_view_name != "(none)":
-                    col_load, col_del = st.columns(2)
-                    with col_load:
-                        if st.button("Load", key="load_saved_view", use_container_width=True):
-                            match = next((v for v in saved_views if v["name"] == selected_view_name), None)
-                            if match:
-                                _apply_saved_view(match)
-                    with col_del:
-                        if st.button("Delete", key="delete_saved_view", type="secondary", use_container_width=True):
-                            delete_view(selected_view_name)
-                            st.rerun()
-
-    with view_col:
-        view = st.selectbox(
-            "View",
-            options=[
-                "dayGridFourWeek",
-                "dayGridMonth",
-                "dayGridWeek",
-                "dayGridDay",
-                "listMonth",
-                "listWeek",
-            ],
-            key="calendar_view_select",
-            format_func=lambda v: {
-                "dayGridMonth": "Month",
-                "dayGridFourWeek": "4 Weeks",
-                "dayGridWeek": "Week",
-                "dayGridDay": "Day",
-                "listMonth": "List (Month)",
-                "listWeek": "List (Week)",
-            }.get(v, v),
-        )
+    # View selector stays above the calendar for quick access
+    view = st.selectbox(
+        "View",
+        options=[
+            "dayGridFourWeek",
+            "dayGridMonth",
+            "dayGridWeek",
+            "dayGridDay",
+            "listMonth",
+            "listWeek",
+        ],
+        key="calendar_view_select",
+        format_func=lambda v: {
+            "dayGridMonth": "Month",
+            "dayGridFourWeek": "4 Weeks",
+            "dayGridWeek": "Week",
+            "dayGridDay": "Day",
+            "listMonth": "List (Month)",
+            "listWeek": "List (Week)",
+        }.get(v, v),
+    )
 
     # Load all events
     with st.spinner("Loading events..."):
         all_events = build_events(config)
 
-    # Apply filters
+    # Apply filters (includes Saved Views inside the expander)
     events = filter_events(all_events, config)
-
-    # --- Save current view ---
-    with st.expander("Save current view", expanded=False):
-        save_col1, save_col2 = st.columns([3, 1])
-        with save_col1:
-            new_view_name = st.text_input(
-                "View name",
-                placeholder="e.g. Conferences Only",
-                key="new_view_name_input",
-            )
-        with save_col2:
-            st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
-            if st.button("Save", key="save_view_btn", use_container_width=True):
-                if new_view_name.strip():
-                    view_data = {
-                        "sources": st.session_state.get("source_filter", []),
-                        "locations": st.session_state.get("location_filter", ["All locations"]),
-                        "time_filter": st.session_state.get("time_filter_select", "All"),
-                        "calendar_view": st.session_state.get("calendar_view_select", "dayGridMonth"),
-                    }
-                    save_view(new_view_name.strip(), view_data)
-                    st.success(f"Saved view \"{new_view_name.strip()}\"")
-                    st.rerun()
-                else:
-                    st.warning("Please enter a name for the view.")
 
     last_refresh = latest_data_refresh(config)
     version_tag = f"  ·  deploy {GIT_HASH}" if GIT_HASH else ""
@@ -1916,7 +1883,28 @@ def render_calendar():
         f"from {n_sources} source(s)  ·  data refreshed {last_refresh}{version_tag}"
     )
 
-    # Legend
+    # --- Sidebar: Save current view ---
+    with st.sidebar.expander("Save current view", expanded=False):
+        new_view_name = st.text_input(
+            "View name",
+            placeholder="e.g. Conferences Only",
+            key="new_view_name_input",
+        )
+        if st.button("Save", key="save_view_btn", use_container_width=True):
+            if new_view_name.strip():
+                view_data = {
+                    "sources": st.session_state.get("source_filter", []),
+                    "locations": st.session_state.get("location_filter", ["All locations"]),
+                    "time_filter": st.session_state.get("time_filter_select", "All"),
+                    "calendar_view": st.session_state.get("calendar_view_select", "dayGridMonth"),
+                }
+                save_view(new_view_name.strip(), view_data)
+                st.success(f"Saved view \"{new_view_name.strip()}\"")
+                st.rerun()
+            else:
+                st.warning("Please enter a name for the view.")
+
+    # --- Sidebar: Legend ---
     legend_items: list[tuple[str, str]] = []
     for idx, s in enumerate(config.get("sheets", [])):
         legend_items.append((
@@ -1926,7 +1914,7 @@ def render_calendar():
     for wf in config.get("watch_folders", []):
         legend_items.append((wf.get("name", "Folder"), wf.get("default_color", "#3788d8")))
 
-    with st.expander("Legend", expanded=False):
+    with st.sidebar.expander("Legend", expanded=False):
         for name, color in legend_items:
             st.markdown(
                 f'<span style="display:inline-block;width:14px;height:14px;'
@@ -1978,6 +1966,8 @@ def render_calendar():
     if state and state.get("eventClick"):
         evt = state["eventClick"]["event"]
         ext = evt.get("extendedProps", {})
+
+        st.markdown('<div id="event-detail"></div>', unsafe_allow_html=True)
         st.divider()
         st.subheader(evt.get("title", "Event Details"))
         detail_cols = st.columns(2)
@@ -2003,6 +1993,16 @@ def render_calendar():
         if ext.get("custom"):
             for cf_label, cf_value in ext["custom"].items():
                 st.markdown(f"**{cf_label}:** {cf_value}")
+
+        # Auto-scroll to event detail
+        import streamlit.components.v1 as components
+        components.html(
+            """<script>
+            const el = window.parent.document.getElementById('event-detail');
+            if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+            </script>""",
+            height=0,
+        )
 
 
 # ---------------------------------------------------------------------------
