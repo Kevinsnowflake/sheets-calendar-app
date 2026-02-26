@@ -1680,6 +1680,36 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
         {e.get("extendedProps", {}).get("location", "").strip() for e in events} - {""}
     )
 
+    # --- Sidebar: Source filter ---
+    with st.sidebar.expander("Sources", expanded=True):
+        if "source_filter" in st.session_state:
+            valid = [s for s in st.session_state["source_filter"] if s in all_sources]
+            if valid != st.session_state["source_filter"]:
+                st.session_state["source_filter"] = valid
+
+        def _on_select_all():
+            if st.session_state["select_all_sources"]:
+                st.session_state["source_filter"] = list(all_sources)
+            else:
+                st.session_state["source_filter"] = []
+
+        def _on_source_change():
+            if set(st.session_state["source_filter"]) == set(all_sources):
+                st.session_state["select_all_sources"] = True
+            else:
+                st.session_state["select_all_sources"] = False
+
+        st.checkbox("Select all", key="select_all_sources", on_change=_on_select_all)
+        selected_sources = st.multiselect(
+            "Sources",
+            options=all_sources,
+            key="source_filter",
+            placeholder="Select sources to display...",
+            help="Choose which sources to show on the calendar.",
+            on_change=_on_source_change,
+            label_visibility="collapsed",
+        )
+
     with st.expander("Filters", expanded=False):
         # --- Saved views (inside filters) ---
         saved_views = get_saved_views()
@@ -1711,40 +1741,10 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
                             delete_view(selected_view_name)
                             st.rerun()
 
-        filter_cols = st.columns([2, 2, 2, 1])
-
-        # --- Source filter ---
-        with filter_cols[0]:
-            # Clean up stale selections (e.g. a source was removed from config)
-            if "source_filter" in st.session_state:
-                valid = [s for s in st.session_state["source_filter"] if s in all_sources]
-                if valid != st.session_state["source_filter"]:
-                    st.session_state["source_filter"] = valid
-
-            def _on_select_all():
-                if st.session_state["select_all_sources"]:
-                    st.session_state["source_filter"] = list(all_sources)
-                else:
-                    st.session_state["source_filter"] = []
-
-            def _on_source_change():
-                if set(st.session_state["source_filter"]) == set(all_sources):
-                    st.session_state["select_all_sources"] = True
-                else:
-                    st.session_state["select_all_sources"] = False
-
-            st.checkbox("Select all", key="select_all_sources", on_change=_on_select_all)
-            selected_sources = st.multiselect(
-                "Sources",
-                options=all_sources,
-                key="source_filter",
-                placeholder="Select sources to display...",
-                help="Choose which sources to show on the calendar. Starts blank — add the ones you want.",
-                on_change=_on_source_change,
-            )
+        filter_cols = st.columns([2, 2, 1])
 
         # --- Keyword search (searches all text) ---
-        with filter_cols[1]:
+        with filter_cols[0]:
             keyword = st.text_input(
                 "Search",
                 placeholder="Search titles, descriptions, custom fields...",
@@ -1752,13 +1752,11 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
             ).strip().lower()
 
         # --- Location filter ---
-        with filter_cols[2]:
+        with filter_cols[1]:
             if all_locations:
                 location_options = ["All locations"] + all_locations
-                # Initialize default if key not yet in session state
                 if "location_filter" not in st.session_state:
                     st.session_state["location_filter"] = ["All locations"]
-                # Clean up stale location selections
                 valid_locs = [l for l in st.session_state["location_filter"] if l in location_options]
                 if valid_locs != st.session_state["location_filter"]:
                     st.session_state["location_filter"] = valid_locs if valid_locs else ["All locations"]
@@ -1775,7 +1773,7 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
                 st.text_input("Locations", value="No location data", disabled=True)
 
         # --- All-day vs timed toggle ---
-        with filter_cols[3]:
+        with filter_cols[2]:
             time_filter = st.selectbox(
                 "Type",
                 options=["All", "All-day", "Timed"],
