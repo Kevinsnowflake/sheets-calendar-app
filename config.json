@@ -174,7 +174,12 @@
         "title": "Title ",
         "start": "Post date",
         "title_prefix": "Type",
-        "custom_fields": []
+        "custom_fields": [
+          {
+            "label": "Link",
+            "column": "Link "
+          }
+        ]
       }
     }
   ],
