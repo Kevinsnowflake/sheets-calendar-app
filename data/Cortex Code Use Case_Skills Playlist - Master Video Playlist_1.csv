@@ -7,7 +7,7 @@ Cortex Code Self-Recording Guide,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,
 Use Case Title,DRI,Status,Audience,"CLI, UI, both?",Script,Raw footage,Headshot,Draft for Review,Final RAW file,Final YT Video Link,Thumb text (3-5 words),Youtube Title (50-60 characters),Youtube Description,Link to LI Social Post(s)
-Cortex Code Overview (101),James Cha-Earley,Published,All,CLI,Coco Overview  Social Cut,Cortex Code: 101 Overview,JamesChaEarly_headshot.jpg,Final 16:9 edit; ,16:9 MP4 ; Final Social 9:16,Link (https://youtu.be/lftWaAcG2nE),Cortex Code CLI Overview,Build In Snowflake Faster With Cortex Code CLI,"Learn how Cortex Code CLI brings Snowflake expertise into your terminal or favorite IDE, so you can turn plain-language prompts into real work inside Snowflake. 
+Cortex Code Overview (101),James Cha-Earley,Published,All,CLI,Coco Overview  Social Cut,Cortex Code: 101 Overview,JamesChaEarly_headshot.jpg,Final 16:9 edit; ,16:9 MP4 ; Final Social 9:16,Link / Short,Cortex Code CLI Overview,Build In Snowflake Faster With Cortex Code CLI,"Learn how Cortex Code CLI brings Snowflake expertise into your terminal or favorite IDE, so you can turn plain-language prompts into real work inside Snowflake. 
 
 Explore built-in skills for pipelines, semantic views, and agents, plus how to extend Cortex Code with your own skills.",
 dbt Development in a Single Prompt ,Uche Nkadi,Published,DE,CLI,Q1 Coco + DE Use Cases Video Briefs,2_dbt_101,,Draft Link (https://f.io/bvtr3TtL),Source MP4 (https://drive.google.com/drive/folders/1Kzx7UpWoAZkkPPxR7BWdDaxIz1vCDg01?usp=drive_link),Link / ,dbt Development in a Single Prompt,Build dbt Projects in Snowflake with a Single Prompt,"Build a complete dbt project in Snowflake with a single prompt using Cortex Code CLI.
@@ -20,8 +20,8 @@ Airflow - Debugging a failed DAG run ,Jacob Prall,Editing in progress,DE,CLI,Q1 
 
 This workflow fits Airflow running locally, on Kubernetes, or on MWAA, and supports follow-up prompts for data quality checks and downstream impact analysis.",
 dbt Core functionality,Zachary Blackwood,Editing in progress,DE,CLI,Q1 Coco + DE Use Cases Video Briefs,6_dbt_Core,,,,,,,,
-Data Exploration / Analysis,Tyler Simons,Blocked,All,CLI,,Cortex Code: 101 Data Visualizations,Tyler-Simons-Headshot.jpg,,,,,,,
-Building Cortex Data Agents,James Cha-Earley,Blocked,All,CLI,,Cortex Code: 201 Building Data Agent,JamesChaEarly_headshot.jpg,https://f.io/MOQ_vBvu,,,,,,
+Data Exploration / Analysis,Tyler Simons,Scripting,All,CLI,Q1 Coco Use Cases Video Briefs,Cortex Code: 101 Data Visualizations,Tyler-Simons-Headshot.jpg,,,,,,,
+Building Cortex Data Agents,James Cha-Earley,Scripting,All,CLI,,Cortex Code: 201 Building Data Agent,JamesChaEarly_headshot.jpg,https://f.io/MOQ_vBvu,,,,,,
 Building Incremental Pipelines with Dynamic Tables (formerly convert streams/tasks to DTs),PD Dutta / Vino Duraisamy,Scripting,DE,CLI,,,,,,,,,,
 Create and optimize semantic models,Abhinav Vadrevu,New submission,All,,,,,,,,,,,
 Agent Optimize (Root Cause Analysis),James Cha-Earley,New submission,,,,,JamesChaEarly_headshot.jpg,,,,,,,
@@ -31,7 +31,8 @@ Data Science Agent,Vinay Sridhar,New submission,,,,,,,,,,,,
 Authoring Snowpark Pipelines (https://docs.google.com/document/d/1lMuyHbF5S702toUFPV1S9bkOgSFVyyVgMrFu-JSooAE/edit?disco=AAABzZRNiRs&tab=t.0),Vino Duraisamy,New submission,DE,,,,,,,,,,,
 How to Build a Skill,Vino Duraisamy,New submission,All,,,,,,,,,,,
 Cortex Search Services,James Cha-Earley,New submission,,,,,JamesChaEarly_headshot.jpg,,,,,,,
-Snowflake Postgres,Christopher Heim,New submission,"DE, App Devs",,,,,,,,,,,
+Snowflake Postgres,Elizabeth Christensen,New submission,"DE, App Devs",,Cortex Code Video Script: Apps on Postgres,,,,,,,,,
 Internal app development with Streamlit,Arnaud Miribel,New submission,,,,,,,,,,,,
 Managing admin functions (e.g. cost/RBAC),Dash Desai,New submission,,,,,,,,,,,,
 Snowpipe Streaming End-to-End (https://docs.google.com/document/d/1lMuyHbF5S702toUFPV1S9bkOgSFVyyVgMrFu-JSooAE/edit?disco=AAABzZRNiRs&tab=t.0),Vino Duraisamy,New submission,DE,,,,,,,,,,,
+Marketplace Discovery via CoCo,,New submission,All ,,,,,,,,,,,
