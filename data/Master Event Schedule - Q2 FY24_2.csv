@@ -186,7 +186,6 @@ AI SQL and Snowflake intelligence focus more"
 ",confirmed,
 87,2026-01-20 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Use Snowflake SQL to find a needle in a haystack,1-20-2025 - Livestream #87: Use Snowflake SQL to find a needle in a haystack ,,,,,,,Vino Duraisamy,Himanshu Kandpal,,,,,,,,,,,Greg G.,Squad Member,scheduled
 P1,2026-01-21 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Vibe Code Data Apps,01-21-2025 - Livestream #P1: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,700+ attendees with alot of questions - follow on session promised - to be scheduled on 2/4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
 88,2026-01-28 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Dynamic Iceberg Tables,1-28-2025 - Livestream #88: Dynamic Iceberg Tables ,,,,,,,Gilberto Hernandez,Parag Jain,,,,,,,,,,,Jena Donlin,,
 89,2026-02-04 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Back by Popular Demand - Snowflake and Replit,02-04-2026 - Livestream #P2: Replit,,,,,,,Vino Duraisamy,Manny Bernabe,,,,,,,,,,,Elsa Mayer,Partner,
 90,2026-02-10 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Cortex Code in Action: Live Demos + AMA,2/10 LinkedIn Live: Cortex Code In Action,,,,,,,James Cha-Earley,Umesh Unnikrishnan,,,,,,,,,,,Krista R. ,,
@@ -195,8 +194,9 @@ P1,2026-01-21 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Vibe Code Data Apps
 91,2026-02-19 00:00,Snowflake Developer,10:00 - 10:30 AM PST,"ML Updates at BUILD Londong - online ML, Notebooks and Cortex Code",02-12-2026 - Livestream #90: ML Updates at Build London,,,,,,,Josh Reini,Sumit Kumar,,,,,,,,,,,Lucy Zhu,,
 ,2026-02-24 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Why Interoperability Matters - Canceled,,,,,,,,Vino Duraisamy,,,,,,,,,,,,Carlos Nai,Season of Iceberg,
 92,2026-02-25 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex/AI Streams: Building Production-Ready Semantic Views with Cortex Code,LinkedIn Live: Semantic Views for Snowflake Intelligence,,,,,,,James Cha-Earley,Abhinav Vadrevu,,,,,,,,,,,Krista R. ,,
-93,2026-03-03 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Iceberg with AWS,Season of Iceberg | LinkedIn Live,,,,,,,Vino Duraisamy,,,,,,,,,,,,Carlos Nai,Season of Iceberg -- moved from 2/24,
-94,2026-03-05 00:00,Snowflake Developer,10:00 - 10:30 AM PST,General Availability: Replicate CDC from Oracle to Snowflake via Openflow,3-5-2025 - Livestream #??: How-to Set Up Near Real-Time Oracle CDC to Snowflake using Openflow,,,,,,,,,,,,,,,,,,,Maria Ho,Moved from 11/18,
+93,2026-03-03 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Iceberg with AWS,Season of Iceberg | LinkedIn Live,,,,,,,Vino Duraisamy,"External -- Sandeep Adawankar
+Matthew Rahmann",,,,,,,,,,,Carlos Nai,Season of Iceberg -- moved from 2/24,
+94,2026-03-05 00:00,Snowflake Developer,10:00 - 10:30 AM PST,General Availability: Replicate CDC from Oracle to Snowflake via Openflow,3-5-2025 - Livestream #??: How-to Set Up Near Real-Time Oracle CDC to Snowflake using Openflow,,,,,,,Vino Duraisamy,Jakub Puchalski,,,,,,,,,,,Maria Ho,Moved from 11/18,
 95,2026-03-11 00:00,Snowflake Developer,10:00 - 10:30 AM PST,Cortex Code for dbt Projects,3-11-2025 - Livestream #94: Cortex Code for dbt Projects,,,,,,,Vino Duraisamy,"Uche Nkadi
 Bryan Gislason",,,,,,,,,,,Jena Donlin,,
 96,2026-03-12 00:00,Snowflake Developer,10:00 - 10:30 AM PST,CoCo + Openflow,,,,,,,,Vino Duraisamy,,,,,,,,,,,,,,
