@@ -146,3 +146,8 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 ,,No Data Left Behind — Populating Raw Data Zones with Openflow,Harald Erb,2026-03-09,In Review,,
 ,,Are you using Databricks and want to try the power of Snowflake?,Umesh Patel,2026-03-09,In Review,,
 ,,Accelerating Data Delivery using OSI with Snowflake and Collibra,Anand Akella,2026-03-09,In Review,,
+,,Centralized PAT Issuance in Snowflake (for Cortex REST API),Chris Cardillo,2026-03-10,In Review,,
+,,Getting the Most of Out of Your Structured Data with Snowflake Cortex Agents,Daria Rostovtseva,2026-03-10,In Review,,
+,,Snowflake task and pipe failures: how we alert the team in real time with AWS Lambda and Slack,Radovan Bacovic,2026-03-10,In Review,,
+,,Snowflake as an Agent Runtime: From Static Pipelines to Autonomous Data Systems,Eylon Steiner,2026-03-10,In Review,,
+,,How Data Architects Encode Enterprise Strategy into Cortex Code Using Skills,DataOps.live,2026-03-11,In Review,,
