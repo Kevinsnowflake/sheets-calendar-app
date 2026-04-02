@@ -2117,6 +2117,13 @@ def main():
     if app_password:
         _check_password()
 
+    # Keepalive: lightweight fragment that runs every 2 minutes to prevent
+    # the Streamlit WebSocket from timing out during idle periods.
+    @st.fragment(run_every="2m")
+    def _keepalive():
+        pass
+    _keepalive()
+
     # Admin unlock via secret password (stored in Streamlit secrets, not in code)
     if "admin_unlocked" not in st.session_state:
         st.session_state["admin_unlocked"] = False
