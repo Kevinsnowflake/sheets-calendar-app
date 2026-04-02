@@ -166,6 +166,7 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 2026-03-31,07:00,Architectural Orchestration of Financial Intelligence: Implementing Snowflake Cortex Agents for Unified Structured and Unstructured Analysis,Eylon Steiner,2026-03-19,Scheduled,,
 2026-03-31,12:00,AI-Driven Semantic Models: Automating “Talk to Your Data”,Matt Massey,2026-03-20,Scheduled,,
 2026-03-31,14:00,Snowflake Terraform Without the Terror: From Manual Ops to IaC Confidence,Sahil Bhange,2026-03-26,Scheduled,,
+2026-04-01,14:00,Snowflake Supports Directory Imports,Qinyi Ding,2026-03-31,In Review,,
 2026-04-01,12:00,Why Your Iceberg Table Path Looks Like a Cat Walked Across the Keyboard,Sahil Walia,2026-03-20,Scheduled,,
 2026-04-01,07:00,How to Migrate Tableau to Streamlit in Minutes Using Prompt-Driven AI,Ai Huynh,2026-03-21,Scheduled,,
 2026-04-02,14:00,[redacted],Samir Kakkar,2026-03-24,Scheduled,,
@@ -197,5 +198,4 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 ,,Streamlining DevOps for Data in Snowflake,Umesh Patel,2026-03-30,In Review,,
 ,,Agentic Triage on Snowflake,Vince Luongo,2026-03-30,In Review,,
 ,,"Building a Secure Multi-Agent AI System with Azure AD, Snowflake MCP, and OpenAI",Ashish Kumar,2026-03-31,In Review,,
-,,Snowflake Supports Directory Imports,Qinyi Ding,2026-03-31,In Review,,
 ,,dbt for Cortex AI : A design pattern,Chinmayee Lakkad,2026-03-31,In Review,,
