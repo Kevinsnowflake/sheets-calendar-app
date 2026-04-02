@@ -1712,35 +1712,37 @@ def filter_events(events: list[dict], config: dict | None = None) -> list[dict]:
         {e.get("extendedProps", {}).get("location", "").strip() for e in events} - {""}
     )
 
-    # --- Sidebar: Source filter ---
-    with st.sidebar.expander("Sources", expanded=True):
-        if "source_filter" in st.session_state:
-            valid = [s for s in st.session_state["source_filter"] if s in all_sources]
-            if valid != st.session_state["source_filter"]:
-                st.session_state["source_filter"] = valid
+    # --- Sidebar: Source filter (form-based to batch selections) ---
+    if "source_filter" not in st.session_state:
+        st.session_state["source_filter"] = []
+    else:
+        valid = [s for s in st.session_state["source_filter"] if s in all_sources]
+        if valid != st.session_state["source_filter"]:
+            st.session_state["source_filter"] = valid
 
-        def _on_select_all():
-            if st.session_state["select_all_sources"]:
-                st.session_state["source_filter"] = list(all_sources)
-            else:
-                st.session_state["source_filter"] = []
-
-        def _on_source_change():
-            if set(st.session_state["source_filter"]) == set(all_sources):
-                st.session_state["select_all_sources"] = True
-            else:
-                st.session_state["select_all_sources"] = False
-
-        st.checkbox("Select all", key="select_all_sources", on_change=_on_select_all)
-        selected_sources = st.multiselect(
+    with st.sidebar.form("source_filter_form"):
+        st.markdown("**Sources**")
+        sel_all = st.checkbox(
+            "Select all",
+            value=set(st.session_state["source_filter"]) == set(all_sources) and len(all_sources) > 0,
+        )
+        if sel_all:
+            default_sources = list(all_sources)
+        else:
+            default_sources = st.session_state["source_filter"]
+        chosen = st.multiselect(
             "Sources",
             options=all_sources,
-            key="source_filter",
+            default=default_sources,
             placeholder="Select sources to display...",
-            help="Choose which sources to show on the calendar.",
-            on_change=_on_source_change,
+            help="Choose sources, then click Apply.",
             label_visibility="collapsed",
         )
+        applied = st.form_submit_button("Apply", use_container_width=True)
+        if applied:
+            st.session_state["source_filter"] = chosen
+
+    selected_sources = st.session_state["source_filter"]
 
     # --- Sidebar: Saved views ---
     saved_views = get_saved_views()
