@@ -237,11 +237,11 @@ def file_mod_time(path: str | Path) -> str:
     return datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
 
 
-def latest_data_refresh(config: dict) -> str:
+@st.cache_data(show_spinner=False, ttl=300)
+def latest_data_refresh(_fingerprint: str, file_paths: tuple[str, ...]) -> str:
     """Return the most recent modification time across all data source files."""
     latest = ""
-    for sheet in config.get("sheets", []):
-        fp = sheet.get("file_path", "")
+    for fp in file_paths:
         if not fp:
             continue
         ts = file_mod_time(fp)
@@ -1904,7 +1904,9 @@ def render_calendar():
     # Apply filters (includes Saved Views inside the expander)
     events = filter_events(all_events, config)
 
-    last_refresh = latest_data_refresh(config)
+    fingerprint = _config_fingerprint(config)
+    data_file_paths = tuple(s.get("file_path", "") for s in config.get("sheets", []))
+    last_refresh = latest_data_refresh(fingerprint, data_file_paths)
     version_tag = f"  ·  deploy {GIT_HASH}" if GIT_HASH else ""
     st.caption(
         f"Showing {len(events)} of {len(all_events)} events "
@@ -1951,88 +1953,89 @@ def render_calendar():
                 unsafe_allow_html=True,
             )
 
-    # Render calendar
-    # For the 4-week view, start from the Monday of last week
-    four_week_start = None
-    if view == "dayGridFourWeek":
-        today = date.today()
-        days_since_monday = today.weekday()  # 0=Mon, 6=Sun
-        last_monday = today - timedelta(days=days_since_monday + 7)
-        four_week_start = last_monday.isoformat()
+    # Render calendar inside a fragment so clicking events only reruns this
+    # section, not the entire app (filters, sidebar, config loading, etc.)
+    @st.fragment
+    def _calendar_fragment():
+        four_week_start = None
+        if view == "dayGridFourWeek":
+            today = date.today()
+            days_since_monday = today.weekday()
+            last_monday = today - timedelta(days=days_since_monday + 7)
+            four_week_start = last_monday.isoformat()
 
-    calendar_options = {
-        "initialView": view,
-        "headerToolbar": {
-            "left": "prev,next today",
-            "center": "title",
-            "right": "",
-        },
-        "editable": False,
-        "selectable": False,
-        "navLinks": True,
-        "height": 650,
-        "displayEventTime": False,
-        "views": {
-            "dayGridFourWeek": {
-                "type": "dayGrid",
-                "duration": {"weeks": 4},
+        calendar_options = {
+            "initialView": view,
+            "headerToolbar": {
+                "left": "prev,next today",
+                "center": "title",
+                "right": "",
             },
-        },
-    }
-    if four_week_start:
-        calendar_options["initialDate"] = four_week_start
+            "editable": False,
+            "selectable": False,
+            "navLinks": True,
+            "height": 650,
+            "displayEventTime": False,
+            "views": {
+                "dayGridFourWeek": {
+                    "type": "dayGrid",
+                    "duration": {"weeks": 4},
+                },
+            },
+        }
+        if four_week_start:
+            calendar_options["initialDate"] = four_week_start
 
-    custom_css = """
-        .fc-event-past { opacity: 0.7; }
-        .fc-event { cursor: pointer; padding: 2px 4px; border-radius: 3px; }
-        .fc-toolbar-title { font-size: 1.3em !important; }
-    """
+        custom_css = """
+            .fc-event-past { opacity: 0.7; }
+            .fc-event { cursor: pointer; padding: 2px 4px; border-radius: 3px; }
+            .fc-toolbar-title { font-size: 1.3em !important; }
+        """
 
-    state = calendar(events=events, options=calendar_options, custom_css=custom_css, key=f"main_cal_{view}")
+        state = calendar(events=events, options=calendar_options, custom_css=custom_css, key=f"main_cal_{view}")
 
-    # Show event details on click
-    if state and state.get("eventClick"):
-        evt = state["eventClick"]["event"]
-        ext = evt.get("extendedProps", {})
+        if state and state.get("eventClick"):
+            evt = state["eventClick"]["event"]
+            ext = evt.get("extendedProps", {})
 
-        st.markdown('<div id="event-detail"></div>', unsafe_allow_html=True)
-        st.divider()
-        st.subheader(evt.get("title", "Event Details"))
-        detail_cols = st.columns(2)
-        with detail_cols[0]:
-            start_str = evt.get("start", "")
-            st.markdown(f"**Start:** {start_str}")
-            if evt.get("end"):
-                st.markdown(f"**End:** {evt['end']}")
-        with detail_cols[1]:
-            if ext.get("location"):
-                st.markdown(f"**Location:** {ext['location']}")
-            if ext.get("source"):
-                source_text = ext["source"]
-                if ext.get("source_url"):
-                    source_text = f"[{ext['source']}]({ext['source_url']})"
-                st.markdown(f"**Source:** {source_text}")
-            elif ext.get("source_url"):
-                st.markdown(f"**Source:** [Open original sheet]({ext['source_url']})")
-        if ext.get("description"):
-            st.markdown(f"**Description:** {ext['description']}")
+            st.markdown('<div id="event-detail"></div>', unsafe_allow_html=True)
+            st.divider()
+            st.subheader(evt.get("title", "Event Details"))
+            detail_cols = st.columns(2)
+            with detail_cols[0]:
+                start_str = evt.get("start", "")
+                st.markdown(f"**Start:** {start_str}")
+                if evt.get("end"):
+                    st.markdown(f"**End:** {evt['end']}")
+            with detail_cols[1]:
+                if ext.get("location"):
+                    st.markdown(f"**Location:** {ext['location']}")
+                if ext.get("source"):
+                    source_text = ext["source"]
+                    if ext.get("source_url"):
+                        source_text = f"[{ext['source']}]({ext['source_url']})"
+                    st.markdown(f"**Source:** {source_text}")
+                elif ext.get("source_url"):
+                    st.markdown(f"**Source:** [Open original sheet]({ext['source_url']})")
+            if ext.get("description"):
+                st.markdown(f"**Description:** {ext['description']}")
 
-        # Custom fields
-        if ext.get("custom"):
-            for cf_label, cf_value in ext["custom"].items():
-                st.markdown(f"**{cf_label}:** {cf_value}")
+            if ext.get("custom"):
+                for cf_label, cf_value in ext["custom"].items():
+                    st.markdown(f"**{cf_label}:** {cf_value}")
 
-        # Auto-scroll to event detail (cache-bust with timestamp so it fires every click)
-        import streamlit.components.v1 as components
-        _scroll_ts = int(time.time() * 1000)
-        components.html(
-            f"""<script>
-            /* {_scroll_ts} */
-            const el = window.parent.document.getElementById('event-detail');
-            if (el) el.scrollIntoView({{behavior: 'smooth', block: 'start'}});
-            </script>""",
-            height=0,
-        )
+            import streamlit.components.v1 as components
+            _scroll_ts = int(time.time() * 1000)
+            components.html(
+                f"""<script>
+                /* {_scroll_ts} */
+                const el = window.parent.document.getElementById('event-detail');
+                if (el) el.scrollIntoView({{behavior: 'smooth', block: 'start'}});
+                </script>""",
+                height=0,
+            )
+
+    _calendar_fragment()
 
 
 # ---------------------------------------------------------------------------
