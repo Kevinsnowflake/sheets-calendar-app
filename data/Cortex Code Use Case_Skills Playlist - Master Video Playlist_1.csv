@@ -10,7 +10,7 @@ Use Case Title,DRI,Status,Audience,"CLI, UI, both?",Final YT Link,Final RAW file
 Building Incremental Pipelines with Dynamic Tables (formerly convert streams/tasks to DTs),PD Dutta / Vino Duraisamy,7-Blocked,DE,CLI,Link / Short,,Cortex Code Video Script: Dynamic Tables,,,,,,
 Marketplace Discovery via CoCo,Robbie Hostetler Sartaj Kaur,2-Recording scheduled,All ,Both,,,Cortex Code Video Script: Marketplace Discovery,,,,,,
 Internal app development with Streamlit,Arnaud Miribel,1-Scripting,All,Both,,,Cortex Code Video Script: Streamlit Apps,,,,,,
-Managing admin functions (e.g. cost/RBAC),Dash Desai,7-Blocked,Admins,Both,,,,,,,,,
+Managing admin functions (e.g. cost/RBAC),Dash Desai,1-Scripting,Admins,Both,,,"Cortex Code Video Script: Admin Functions (e.g. RBAC, cost-intelligence)",,,,,,
 Create and optimize semantic models,Abhinav Vadrevu,1-Scripting,All,Both,Link / Short,,Cortex Code Video Script: Semantic Views/Semantic Models,,,,,,
 Snowflake Postgres,Elizabeth Christensen Jacob Prall,2-Recording scheduled,"DE, App Devs",,,,Cortex Code Video Script: Apps on Postgres,,,,,,
 dbt data modeling using Agent Teams (Multi-Agent Orchestration),Vino Duraisamy,1-Scripting,DE,,,,,,,,,,
