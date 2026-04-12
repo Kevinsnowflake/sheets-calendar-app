@@ -214,3 +214,8 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG
 ,,AI-Powered Intellectual Property Similarity Detection on Snowflake,Reza Brianca,2026-04-09,In Review,,
 ,,How to 3x Your Snowflake Data Engineering Productivity with AI (and Slash Token Costs),Eylon Steiner,2026-04-09,In Review,,
 ,,From Zero to DR: Snowflake Disaster Recovery Using the Snowsight Wizard,Satish Kumar,2026-04-11,In Review,,
+,,Snowflake AI SQL User Guide: AI_AGG,Douglas Day,2026-04-11,In Review,,
+,,Snowflake AI SQL User Guide: AI_SUMMARIZE_AGG,Douglas Day,2026-04-11,In Review,,
+,,Snowflake AI SQL User Guide: AI_FILTER,Douglas Day,2026-04-11,In Review,,
+,,Snowflake AI SQL User Guide: AI_SIMILARITY,Douglas Day,2026-04-11,In Review,,
+,,Snowflake AI SQL User Guide: AI_EMBED,Douglas Day,2026-04-11,In Review,,
