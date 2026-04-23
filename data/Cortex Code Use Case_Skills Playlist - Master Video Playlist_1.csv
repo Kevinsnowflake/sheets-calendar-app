@@ -10,7 +10,7 @@ Use Case Title,DRI,Status,Audience,Where?,Script + YT,Wrike,YT Link,Thumbnail PN
 Internal app development with Streamlit,Arnaud Miribel,1-Scripting,All,Both,Cortex Code Video Script: Streamlit Apps,,,,,,
 Managing admin functions (e.g. cost/RBAC),Rida Safdar,1-Scripting,Admins,Both,"Cortex Code Video Script: Admin Functions (e.g. RBAC, cost-intelligence)",,,,,,
 Create and optimize semantic models,Abhinav Vadrevu,1-Scripting,All,Both,Cortex Code Video Script: Semantic Views/Semantic Models,,Link / Short,,,,
-DCM Projects,Jena Donlin Jan Sommerfeld,2-Ready to record,"DE, App Devs",CLI,Cortex Code Video Script: DCM Projects,,,,,,
+DCM Projects,Jena Donlin Jan Sommerfeld,4-Editing in progress,"DE, App Devs",CLI,Cortex Code Video Script: DCM Projects,,,,,,
 Snowpark-Python,Qinyi DingAsh Ubrani,2-Ready to record,,CLI,Cortex Code Video Script: snowpark-python,,,,,,
 Snowpark-Connect,Brandon Carver,4-Editing in progress,,CLI,Cortex Code Video Script: snowpark-connect,Done (https://www.wrike.com/open.htm?id=4433488245),,,,,
 ML: Financial Quant Research,Lucy Zhu Doris Lee,4-Editing in progress,ML / DS,,Coco for ML video series,,,,,,
