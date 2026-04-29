@@ -35,7 +35,7 @@ Data Exploration / Analysis,Tyler Simons,7-Published,All,CLI,Q1 Coco Use Cases V
 Building Cortex Data Agents,James Cha-Earley,7-Published,All,CLI,Cortex Code Video Script: Cortex Agents,,Link / Short,,Source MP4 (https://drive.google.com/drive/folders/1Zu2wsrlCvcToKUGZIuyqhZKQfwj_EuOq?usp=drive_link),Cortex Code: 201 Building Data Agent,https://f.io/MOQ_vBvu
 dbt data modeling using Agent Teams (Multi-Agent Orchestration),Vino Duraisamy,8-Blocked,DE,,,,,,,,
 Building Incremental Pipelines with Dynamic Tables (formerly convert streams/tasks to DTs),PD Dutta / Vino Duraisamy,8-Blocked,DE,CLI,Cortex Code Video Script: Dynamic Tables,,Link / Short,,,,
-Openflow,Shiyi Gu,8-Blocked,,,,,,,,,
+Openflow,Maria Ho,8-Blocked,DE,,,,,,,,
 Authoring Snowpark Pipelines,Vino Duraisamy,9-Not doing,DE,,,,,,,,
 How to Build a Skill,Vino Duraisamy,9-Not doing,All,,,,,,,,
 Snowpipe Streaming End-to-End (https://docs.google.com/document/d/1lMuyHbF5S702toUFPV1S9bkOgSFVyyVgMrFu-JSooAE/edit?disco=AAABzZRNiRs&tab=t.0),Vino Duraisamy,9-Not doing,DE,,,,,,,,
