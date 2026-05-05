@@ -248,6 +248,7 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG,Cortex Code
 2026-05-05,14:00,Building an Ontology-Driven Supply Chain Intelligence Platform on Snowflake,Anup Moncy,2026-04-27,In Review,,,
 2026-05-06,07:00,Beyond Zero-shot: Fine-Tuning Document Extraction Models with Snowflake Cortex,Neeraj Jain,2026-04-30,In Review,,,
 2026-05-06,12:00,Managing Data Products Lifecycle on Snowflake,Jwala Vedantam,2026-04-30,In Review,,,
+2026-05-06,10:00,How Motorq Scales Real-Time Analytics for Billions of Signals with Snowflake Managed Iceberg Tables,sai venkatesh,2026-05-04,In Review,,,
 2026-05-07,07:00,"ACCUMULATE: Any Aggregate You Can Imagine, in Pure SQL",Davide Mauri,2026-04-30,In Review,,,
 2026-05-07,12:00,From 1.1 Million Filings to Real-Time Investment Intelligence: Building a 100M-Chunk Document Pipeline on Snowflake,Mubashir Masood,2026-05-01,In Review,,,
 ,,Cortex AISQL a Snowflake Golden Tool,Sonal Mishra,2026-02-25,Pending Feedback,Squad,,
@@ -256,4 +257,3 @@ Date,Time Published,Title,Author,Submission Date,Status,Persona,WG,Cortex Code
 ,,Are Chatbots Really the User Experience That Leads to Value?,Michael van Meurer,2026-05-01,In Review,,,
 ,,How to trace Snowflake Cortex REST API calls with Langfuse and sync the observability data back into Snowflake for enterprise-grade analytics.,Navnit Shukla,2026-05-01,In Review,,,
 ,,Mastering AI Cost and Access: The Imperative of Governance for Snowflake Cortex Code,Pierre-Mickaël Chancrin,2026-05-04,In Review,,,
-,,How Motorq Scales Real-Time Analytics for Billions of Signals with Snowflake Managed Iceberg Tables,sai venkatesh,2026-05-04,In Review,,,
